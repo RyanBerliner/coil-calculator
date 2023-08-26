@@ -20,11 +20,15 @@
 <div>Solved spring weight: <span id="spring-weight"></span></div>
 
 <script>
-  const leverageNode = document.getElementById('leverage');
-  const normWeightNode = document.getElementById('norm-weight');
   const targetSagDistNode = document.getElementById('target-sag-dist');
   const springWeightNode = document.getElementById('spring-weight');
   const form = document.querySelector('form');
+
+  let riderWeight = 0;
+  let wheelTravel = 0;
+  let stroke = 0;
+  let sag = 0;
+  let springWeight = 0;
   
   document.addEventListener('change', calculateWeight);
 
@@ -35,12 +39,12 @@
 
   function calculateWeight() {
     const data = new FormData(form);
-    const riderWeight = data.get('rider-weight');
-    const travel = data.get('travel');
-    const stroke = data.get('stroke');
-    const sag = data.get('sag');
+    riderWeight = parseInt(data.get('rider-weight'));
+    wheelTravel = parseInt(data.get('travel'));
+    stroke = parseInt(data.get('stroke'));
+    sag = parseInt(data.get('sag'));
 
-    const leverage = travel / stroke;
+    const leverage = wheelTravel / stroke;
     // TODO: add in average weight of the bike itself?
     const rearTireBias = 0.65; // the rear wheel supports 65% of the riders weight
     const normWeight = riderWeight  * leverage * rearTireBias;
@@ -52,10 +56,10 @@
     // k   spring rate
     // x   deformation (sometimes called displacement)
 
-    // normWeight= k * targetSagDistance;
-    let k = normWeight / targetSagDistance; // lbs/mm
-    k *= 25.4 // lbs/in
-    springWeightNode.innerHTML = k;
+    // normWeight = springWeight * targetSagDistance;
+    springWeight = normWeight / targetSagDistance; // lbs/mm
+    springWeight *= 25.4 // lbs/in
+    springWeightNode.innerHTML = springWeight;
   }
 
   calculateWeight();
