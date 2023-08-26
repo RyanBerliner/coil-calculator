@@ -1,7 +1,7 @@
 <form style="margin: 1rem 0;">
   <label style="display: block">
     Rider Weight (lbs)
-    <input type="number" name="rider-weight" value="145">
+    <input type="number" name="rider-weight" value="165">
   </label>
   <label style="display: block">
     Rear wheel travel (mm)
@@ -17,9 +17,11 @@
   </label>
   <label style="display: block">
     Spring Weight (lbs/in)
-    <input type="number" name="spring-weight" value="400">
+    <input type="number" name="spring-weight" value="0">
   </label>
 </form>
+
+<canvas></canvas>
 
 <script>
   const sagInput = document.querySelector('input[name="sag"]');
@@ -79,4 +81,61 @@
   }
 
   calculateCharacteristics();
+
+  // the rest is the animation
+
+  const canvasNode = document.querySelector('canvas');
+  canvasNode.height = 500;
+  canvasNode.width = 500;
+
+  const context = canvasNode.getContext('2d');
+
+  context.fillStyle = '#efefef';
+  context.fillRect(0, 0, canvasNode.width, canvasNode.height);
+
+  context.lineWidth = 10;
+  context.lineCap = 'round';
+
+  const centerX = canvasNode.width / 2;
+  const coilWidth = 75;
+  const coilHeight = 400;
+  const coilCount = 6;
+  const leftEdge = centerX - (coilWidth / 2);
+  const rightEdge = centerX + (coilWidth / 2);
+  const topEdge = (canvasNode.height - coilHeight) / 2;
+  const bottomEdge = topEdge + coilHeight;
+
+  // the background coils
+  context.beginPath();
+  context.strokeStyle = 'grey';
+  let coilGap = coilHeight / (coilCount + 0.5);
+  for (let i = 0; i <= coilCount; i++) {
+    let coilStartY = topEdge + (i * coilGap);
+    context.moveTo(leftEdge, coilStartY);
+    context.lineTo(rightEdge, coilStartY + coilGap / 2);
+    context.stroke();
+  }
+
+  // the foreground coils
+  context.beginPath();
+  context.strokeStyle = 'lightgrey';
+  coilGap = coilHeight / (coilCount + 0.5);
+  for (let i = 1; i <= coilCount; i++) {
+    let coilStartY = topEdge + (i * coilGap);
+    context.moveTo(leftEdge, coilStartY);
+    context.lineTo(rightEdge, coilStartY - coilGap / 2);
+    context.stroke();
+  }
+
+  // the top edge
+  context.beginPath();
+  context.strokeStyle = 'lightgrey';
+  context.moveTo(leftEdge, topEdge);
+  context.lineTo(rightEdge, topEdge);
+  context.stroke();
+
+  // the bottom edge
+  context.moveTo(leftEdge, bottomEdge);
+  context.lineTo(rightEdge, bottomEdge);
+  context.stroke();
 </script>
