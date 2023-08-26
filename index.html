@@ -1,7 +1,7 @@
 <form style="margin: 1rem 0;">
   <label style="display: block">
     Rider Weight (lbs)
-    <input type="number" name="rider-weight" value="140">
+    <input type="number" name="rider-weight" value="145">
   </label>
   <label style="display: block">
     Rear wheel travel (mm)
@@ -57,4 +57,6 @@
     k *= 25.4 // lbs/in
     springWeightNode.innerHTML = k;
   }
+
+  calculateWeight();
 </script>
