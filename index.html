@@ -11,17 +11,19 @@
     Shock stroke (mm)
     <input type="number" name="stroke" value="60">
   </label>
-  <label style="display: block">
-    Preferred Sag (%)
+  <label style="display: block; margin-top: 1rem;">
+    Sag (%)
     <input type="number" name="sag" value="27">
+  </label>
+  <label style="display: block">
+    Spring Weight (lbs/in)
+    <input type="number" name="spring-weight" value="400">
   </label>
 </form>
 
-<div>Solved spring weight: <span id="spring-weight"></span></div>
-
 <script>
-  const targetSagDistNode = document.getElementById('target-sag-dist');
-  const springWeightNode = document.getElementById('spring-weight');
+  const sagInput = document.querySelector('input[name="sag"]');
+  const springWeightInput = document.querySelector('input[name="spring-weight"]');
   const form = document.querySelector('form');
 
   let riderWeight = 0;
@@ -29,26 +31,31 @@
   let stroke = 0;
   let sag = 0;
   let springWeight = 0;
+  let solveFor = 'weight';
   
-  document.addEventListener('change', calculateWeight);
+  document.addEventListener('change', function(event) {
+    if (event.target.getAttribute('name') === 'sag') solveFor = 'weight';
+    else solveFor = 'sag';
+    calculateCharacteristics();
+  });
 
   form.addEventListener('submit', function(event) {
     event.preventDefault();
-    calculateWeight();
+    calculateCharacteristics();
   });
 
-  function calculateWeight() {
+  function calculateCharacteristics() {
     const data = new FormData(form);
     riderWeight = parseInt(data.get('rider-weight'));
     wheelTravel = parseInt(data.get('travel'));
     stroke = parseInt(data.get('stroke'));
     sag = parseInt(data.get('sag'));
+    springWeight = parseInt(data.get('spring-weight'));
 
     const leverage = wheelTravel / stroke;
-    // TODO: add in average weight of the bike itself?
+    // TODO: add in (part of) average weight of the bike itself?
     const rearTireBias = 0.65; // the rear wheel supports 65% of the riders weight
     const normWeight = riderWeight  * leverage * rearTireBias;
-    const targetSagDistance = stroke * sag / 100; 
 
     // hooks law to solve for the spring rate
     // F = k*x
@@ -56,11 +63,20 @@
     // k   spring rate
     // x   deformation (sometimes called displacement)
 
-    // normWeight = springWeight * targetSagDistance;
-    springWeight = normWeight / targetSagDistance; // lbs/mm
-    springWeight *= 25.4 // lbs/in
-    springWeightNode.innerHTML = springWeight;
+    if (solveFor === 'weight') {
+      const targetSagDistance = stroke * sag / 100;
+      springWeight = normWeight / targetSagDistance; // lbs/mm
+      springWeight *= 25.4 // lbs/in
+      springWeight = parseInt(springWeight);
+      springWeightInput.value = springWeight;
+    } else {
+      sag = normWeight / springWeight; // in
+      sag *= 25.4 // mm
+      sag /= stroke / 100 // %
+      sag = Math.round(sag * 100) / 100; // round to 2 decimals (so users can see something is changing
+      sagInput.value = sag;
+    }
   }
 
-  calculateWeight();
+  calculateCharacteristics();
 </script>
