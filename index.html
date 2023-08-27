@@ -93,12 +93,12 @@
   context.fillStyle = '#efefef';
   context.fillRect(0, 0, canvasNode.width, canvasNode.height);
 
-  context.lineWidth = 10;
+  context.lineWidth = 14;
   context.lineCap = 'round';
 
   const centerX = canvasNode.width / 2;
   const coilWidth = 75;
-  const coilHeight = 400;
+  const coilHeight = 300;
   const coilCount = 6;
   const leftEdge = centerX - (coilWidth / 2);
   const rightEdge = centerX + (coilWidth / 2);
@@ -107,29 +107,46 @@
 
   // the background coils
   context.beginPath();
-  context.strokeStyle = 'grey';
+  context.strokeStyle = '#d46633';
   let coilGap = coilHeight / (coilCount + 0.5);
   for (let i = 0; i <= coilCount; i++) {
     let coilStartY = topEdge + (i * coilGap);
+    let coilEndY = coilStartY + coilGap / 2;
+    let deltaY = coilEndY - coilStartY;
     context.moveTo(leftEdge, coilStartY);
-    context.lineTo(rightEdge, coilStartY + coilGap / 2);
+    const funcY = x => -0.5 * coilWidth * Math.cos(Math.PI * (1 / deltaY) * x);
+
+    for (let x = 0; x <= deltaY; x += 1) {
+      const y = funcY(x);
+      context.lineTo(leftEdge + y + coilWidth / 2, coilStartY + x);
+    }
+
+    context.lineTo(rightEdge, coilStartY + deltaY);
     context.stroke();
   }
 
   // the foreground coils
   context.beginPath();
-  context.strokeStyle = 'lightgrey';
-  coilGap = coilHeight / (coilCount + 0.5);
+  context.strokeStyle = '#f07909';
   for (let i = 1; i <= coilCount; i++) {
     let coilStartY = topEdge + (i * coilGap);
+    let coilEndY = coilStartY - coilGap / 2;
+    let deltaY = coilEndY - coilStartY;
     context.moveTo(leftEdge, coilStartY);
-    context.lineTo(rightEdge, coilStartY - coilGap / 2);
+    const funcY = x => -0.5 * coilWidth * Math.cos(Math.PI * (1 / deltaY) * x);
+
+    for (let x = 0; x >= deltaY; x -= 1) {
+      const y = funcY(x);
+      context.lineTo(leftEdge + y + coilWidth / 2, coilStartY + x);
+    }
+
+    context.lineTo(rightEdge, coilStartY + deltaY);
     context.stroke();
   }
 
   // the top edge
   context.beginPath();
-  context.strokeStyle = 'lightgrey';
+  context.strokeStyle = '#f07909';
   context.moveTo(leftEdge, topEdge);
   context.lineTo(rightEdge, topEdge);
   context.stroke();
