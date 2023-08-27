@@ -93,10 +93,9 @@
   context.fillStyle = '#efefef';
   context.fillRect(0, 0, canvasNode.width, canvasNode.height);
 
-
-  const coilThickness = 20;
-  const coilWidth = 120;
-  const coilHeight = 380;
+  const coilThickness = 10;
+  const coilWidth = 60;
+  const coilHeight = 190;
   const coilCount = 6;
   const coilBG = '#d46633';
   const coilFG = '#f07909';
@@ -128,7 +127,7 @@
   }
 
   // draw the shaft in the middle
-  const shaftWidth = 24;
+  const shaftWidth = 12;
   context.translate(coilWidth / 2 - shaftWidth / 2, 0);
   context.beginPath();
   context.fillStyle = 'lightgrey';
@@ -138,7 +137,7 @@
   // bump stop
   const bumpStopWidthBottom = coilWidth * 0.7;
   const bumpStopWidthTop = coilWidth * 0.5;
-  const bumpStopHeight = 60;
+  const bumpStopHeight = 30;
   context.fillStyle = 'black';
   context.translate(coilWidth / 2 - bumpStopWidthBottom / 2, coilHeight - bumpStopHeight);
   context.beginPath();
@@ -151,7 +150,7 @@
 
   // top preload cylinder 
   const pcWidth = coilWidth * 0.75;
-  const pcHeight = 180;
+  const pcHeight = 90;
   context.translate(coilWidth / 2 - pcWidth / 2, pcHeight / -2);
   context.lineWidth = 3;
   context.strokeStyle = 'black';
@@ -164,7 +163,7 @@
   context.stroke();
 
   // top preload cylinder (bottom part)
-  const pcBottomHeight = 110;
+  const pcBottomHeight = 55;
   context.translate(0, pcHeight);
   context.beginPath();
   context.moveTo(0, 0);
@@ -210,8 +209,8 @@
   context.stroke();
 
   // draw the plate on the bottom
-  const extraWidth = 20;
-  const bottomPlateHeight = 10;
+  const extraWidth = 10;
+  const bottomPlateHeight = 5;
   context.translate(extraWidth / -2, coilHeight);
   context.beginPath();
   context.fillStyle = 'black';
@@ -219,7 +218,7 @@
   context.setTransform(middleTransform);
 
   // draw the plate on the top
-  const topPlateHeight = 20;
+  const topPlateHeight = 10;
   context.translate(extraWidth / -2, topPlateHeight / -2 - coilThickness / 2);
   context.beginPath();
   context.fillStyle = 'black';
@@ -227,9 +226,9 @@
   context.setTransform(middleTransform);
 
   // bottom mount
-  const bottomMountWidth = 65;
-  const bottomMountHeight = 40;
-  const holeRadius = 20;
+  const bottomMountWidth = 32;
+  const bottomMountHeight = 20;
+  const holeRadius = 10;
   context.translate(coilWidth / 2 - bottomMountWidth / 2, coilHeight + bottomPlateHeight);
   context.beginPath();
   context.fillStyle = 'black';
@@ -246,7 +245,7 @@
 
   context.beginPath();
   context.strokeStyle = 'tan';
-  context.lineWidth = 5;
+  context.lineWidth = 3;
   context.arc(bottomMountWidth / 2, bottomMountHeight, holeRadius, 2 * Math.PI, false);
   context.stroke();
 
