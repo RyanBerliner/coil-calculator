@@ -85,8 +85,8 @@
   // the rest is the animation
 
   const canvasNode = document.querySelector('canvas');
-  canvasNode.height = 500;
-  canvasNode.width = 500;
+  canvasNode.height = 700;
+  canvasNode.width = 700;
 
   const context = canvasNode.getContext('2d');
 
@@ -101,7 +101,8 @@
   const coilCount = 6;
 
   // we want to draw this in the center of the screen
-  context.translate(250 - coilWidth / 2, 250 - coilHeight / 2);
+  context.translate(350 - coilWidth / 2, 350 - coilHeight / 2);
+  let middleTransform = context.getTransform();
 
   // the background coils
   context.beginPath();
@@ -122,6 +123,28 @@
     context.lineTo(coilWidth, coilStartY + deltaY);
     context.stroke();
   }
+
+  // draw the shaft in the middle
+  const shaftWidth = 24;
+  context.translate(coilWidth / 2 - shaftWidth / 2, 0);
+  context.beginPath();
+  context.fillStyle = 'lightgrey';
+  context.fillRect(0, 0, shaftWidth, coilHeight);
+  context.setTransform(middleTransform);
+
+  // bump stop
+  const bumpStopWidthBottom = coilWidth * 0.7;
+  const bumpStopWidthTop = coilWidth * 0.5;
+  const bumpStopHeight = 60;
+  context.fillStyle = 'black';
+  context.translate(coilWidth / 2 - bumpStopWidthBottom / 2, coilHeight - bumpStopHeight);
+  context.beginPath();
+  context.moveTo((bumpStopWidthBottom - bumpStopWidthTop) / 2, 0);
+  context.lineTo((bumpStopWidthBottom - bumpStopWidthTop) / 2 + bumpStopWidthTop, 0);
+  context.lineTo(bumpStopWidthBottom, bumpStopHeight);
+  context.lineTo(0, bumpStopHeight);
+  context.fill();
+  context.setTransform(middleTransform);
 
   // the foreground coils
   context.beginPath();
@@ -153,4 +176,12 @@
   context.moveTo(0, coilHeight);
   context.lineTo(coilWidth, coilHeight);
   context.stroke();
+
+  // draw the plate on the bottom
+  const extraWidth = 20;
+  context.translate(extraWidth / -2, coilHeight);
+  context.beginPath();
+  context.fillStyle = 'black';
+  context.fillRect(0, 0, coilWidth + extraWidth, 10);
+  context.setTransform(middleTransform);
 </script>
