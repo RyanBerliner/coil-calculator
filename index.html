@@ -179,9 +179,38 @@
 
   // draw the plate on the bottom
   const extraWidth = 20;
+  const bottomPlateHeight = 10;
   context.translate(extraWidth / -2, coilHeight);
   context.beginPath();
   context.fillStyle = 'black';
-  context.fillRect(0, 0, coilWidth + extraWidth, 10);
+  context.fillRect(0, 0, coilWidth + extraWidth, bottomPlateHeight);
   context.setTransform(middleTransform);
+
+  // bottom mount
+  const bottomMountWidth = 65;
+  const bottomMountHeight = 40;
+  const holeRadius = 20;
+  context.translate(coilWidth / 2 - bottomMountWidth / 2, coilHeight + bottomPlateHeight);
+  context.beginPath();
+  context.fillStyle = 'black';
+
+  context.moveTo(0,0);
+  context.lineTo(bottomMountWidth, 0);
+  context.arcTo(bottomMountWidth, bottomMountHeight + bottomMountWidth / 2, 0, bottomMountHeight + bottomMountWidth / 2, bottomMountWidth / 2);
+  context.arcTo(0, bottomMountHeight + bottomMountWidth / 2, 0, 0, bottomMountWidth / 2);
+
+  context.moveTo(bottomMountWidth / 2, bottomMountHeight);
+  context.arc(bottomMountWidth / 2, bottomMountHeight, holeRadius, 2 * Math.PI, false);
+
+  context.fill('evenodd');
+
+  context.beginPath();
+  context.strokeStyle = 'tan';
+  context.lineWidth = 5;
+  context.arc(bottomMountWidth / 2, bottomMountHeight, holeRadius, 2 * Math.PI, false);
+  context.stroke();
+
+  context.setTransform(middleTransform);
+
+
 </script>
