@@ -96,32 +96,30 @@
   context.lineWidth = 20;
   context.lineCap = 'round';
 
-  const centerX = canvasNode.width / 2;
   const coilWidth = 120;
   const coilHeight = 380;
   const coilCount = 6;
-  const leftEdge = centerX - (coilWidth / 2);
-  const rightEdge = centerX + (coilWidth / 2);
-  const topEdge = (canvasNode.height - coilHeight) / 2;
-  const bottomEdge = topEdge + coilHeight;
+
+  // we want to draw this in the center of the screen
+  context.translate(250 - coilWidth / 2, 250 - coilHeight / 2);
 
   // the background coils
   context.beginPath();
   context.strokeStyle = '#d46633';
   let coilGap = coilHeight / (coilCount + 0.5);
   for (let i = 0; i <= coilCount; i++) {
-    let coilStartY = topEdge + (i * coilGap);
+    let coilStartY = i * coilGap;
     let coilEndY = coilStartY + coilGap / 2;
     let deltaY = coilEndY - coilStartY;
-    context.moveTo(leftEdge, coilStartY);
+    context.moveTo(0, coilStartY);
     const funcY = x => -0.5 * coilWidth * Math.cos(Math.PI * (1 / deltaY) * x);
 
     for (let x = 0; x <= deltaY; x += 1) {
       const y = funcY(x);
-      context.lineTo(leftEdge + y + coilWidth / 2, coilStartY + x);
+      context.lineTo(y + coilWidth / 2, coilStartY + x);
     }
 
-    context.lineTo(rightEdge, coilStartY + deltaY);
+    context.lineTo(coilWidth, coilStartY + deltaY);
     context.stroke();
   }
 
@@ -129,30 +127,30 @@
   context.beginPath();
   context.strokeStyle = '#f07909';
   for (let i = 1; i <= coilCount; i++) {
-    let coilStartY = topEdge + (i * coilGap);
+    let coilStartY = i * coilGap;
     let coilEndY = coilStartY - coilGap / 2;
     let deltaY = coilEndY - coilStartY;
-    context.moveTo(leftEdge, coilStartY);
+    context.moveTo(0, coilStartY);
     const funcY = x => -0.5 * coilWidth * Math.cos(Math.PI * (1 / deltaY) * x);
 
     for (let x = 0; x >= deltaY; x -= 1) {
       const y = funcY(x);
-      context.lineTo(leftEdge + y + coilWidth / 2, coilStartY + x);
+      context.lineTo(0 + y + coilWidth / 2, coilStartY + x);
     }
 
-    context.lineTo(rightEdge, coilStartY + deltaY);
+    context.lineTo(coilWidth, coilStartY + deltaY);
     context.stroke();
   }
 
   // the top edge
   context.beginPath();
   context.strokeStyle = '#f07909';
-  context.moveTo(leftEdge, topEdge);
-  context.lineTo(rightEdge, topEdge);
+  context.moveTo(0, 0);
+  context.lineTo(coilWidth, 0);
   context.stroke();
 
   // the bottom edge
-  context.moveTo(leftEdge, bottomEdge);
-  context.lineTo(rightEdge, bottomEdge);
+  context.moveTo(0, coilHeight);
+  context.lineTo(coilWidth, coilHeight);
   context.stroke();
 </script>
