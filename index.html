@@ -93,20 +93,23 @@
   context.fillStyle = '#efefef';
   context.fillRect(0, 0, canvasNode.width, canvasNode.height);
 
-  context.lineWidth = 20;
-  context.lineCap = 'round';
 
+  const coilThickness = 20;
   const coilWidth = 120;
   const coilHeight = 380;
   const coilCount = 6;
+  const coilBG = '#d46633';
+  const coilFG = '#f07909';
 
   // we want to draw this in the center of the screen
   context.translate(350 - coilWidth / 2, 350 - coilHeight / 2);
   let middleTransform = context.getTransform();
 
   // the background coils
+  context.lineWidth = coilThickness;
+  context.lineCap = 'round';
   context.beginPath();
-  context.strokeStyle = '#d46633';
+  context.strokeStyle = coilBG;
   let coilGap = coilHeight / (coilCount + 0.5);
   for (let i = 0; i <= coilCount; i++) {
     let coilStartY = i * coilGap;
@@ -146,9 +149,38 @@
   context.fill();
   context.setTransform(middleTransform);
 
+  // top preload cylinder 
+  const pcWidth = coilWidth * 0.75;
+  const pcHeight = 180;
+  context.translate(coilWidth / 2 - pcWidth / 2, pcHeight / -2);
+  context.lineWidth = 3;
+  context.strokeStyle = 'black';
+  context.beginPath();
+  context.moveTo(0,0);
+  for (let i = 0; i <= pcHeight; i++) {
+    context.moveTo(i % 6 === 0 ? -2 : 0, 1 * i);
+    context.lineTo(pcWidth + (i % 6 === 0 ? 2 : 0), 1 * i);
+  }
+  context.stroke();
+
+  // top preload cylinder (bottom part)
+  const pcBottomHeight = 110;
+  context.translate(0, pcHeight);
+  context.beginPath();
+  context.moveTo(0, 0);
+  context.lineTo(pcWidth, 0);
+  context.lineTo(pcWidth, pcBottomHeight * 0.9);
+  context.lineTo(pcWidth * 0.9, pcBottomHeight);
+  context.lineTo(pcWidth * 0.1, pcBottomHeight);
+  context.lineTo(0, pcBottomHeight * 0.9);
+  context.lineTo(0, 0);
+  context.fill();
+  context.setTransform(middleTransform);
+
   // the foreground coils
   context.beginPath();
-  context.strokeStyle = '#f07909';
+  context.lineWidth = coilThickness;
+  context.strokeStyle = coilFG;
   for (let i = 1; i <= coilCount; i++) {
     let coilStartY = i * coilGap;
     let coilEndY = coilStartY - coilGap / 2;
@@ -167,7 +199,7 @@
 
   // the top edge
   context.beginPath();
-  context.strokeStyle = '#f07909';
+  context.strokeStyle = coilFG;
   context.moveTo(0, 0);
   context.lineTo(coilWidth, 0);
   context.stroke();
@@ -184,6 +216,14 @@
   context.beginPath();
   context.fillStyle = 'black';
   context.fillRect(0, 0, coilWidth + extraWidth, bottomPlateHeight);
+  context.setTransform(middleTransform);
+
+  // draw the plate on the top
+  const topPlateHeight = 20;
+  context.translate(extraWidth / -2, topPlateHeight / -2 - coilThickness / 2);
+  context.beginPath();
+  context.fillStyle = 'black';
+  context.fillRect(0, 0, coilWidth + extraWidth, topPlateHeight);
   context.setTransform(middleTransform);
 
   // bottom mount
