@@ -95,7 +95,7 @@
 
   const coilThickness = 10;
   const coilWidth = 60;
-  const coilHeight = 190;
+  const coilHeight = 200;
   const coilCount = 6;
   const coilBG = '#d46633';
   const coilFG = '#f07909';
@@ -195,10 +195,64 @@
   context.beginPath();
   context.lineWidth = mountThickness;
   context.strokeStyle = 'white';
-  context.fillStyle = 'black';
   context.arc(coilWidth / 2, 0, mountRadius, 2 * Math.PI, false);
-  context.stroke();
   context.fill();
+  context.stroke();
+
+  const damper1Radius = coilWidth / 4;
+  const damper2Radius = coilWidth / 2.5;
+  const nutRadius = 5;
+  context.translate(coilWidth + damper1Radius / 3.9, damper1Radius * 0.2);
+  context.rotate(-44 * Math.PI / 180);
+
+  context.beginPath();
+  context.moveTo(0,0);
+  context.lineTo(damper1Radius, 0);
+  context.arcTo(damper1Radius * 0.8, damper1Radius * 0.7, damper2Radius, damper1Radius + damper2Radius, damper1Radius);
+  context.lineTo(damper2Radius, damper1Radius + damper2Radius);
+  context.lineTo(-damper2Radius, damper1Radius + damper2Radius);
+  context.arcTo(damper1Radius * -0.8, damper1Radius * 0.7, -damper1Radius, 0, damper1Radius);
+  context.lineTo(-damper1Radius, 0);
+  context.fill();
+
+  context.beginPath();
+  context.arc(0, 0, damper1Radius, Math.PI * 2, false);
+  context.fill();
+  context.beginPath();
+  context.fillStyle = '#00abff';
+  context.arc(0, 0, damper1Radius * 0.8, Math.PI * 2, false);
+  context.fill();
+  context.beginPath();
+  context.arc(0, 0, nutRadius, Math.PI * 2, false);
+  context.fill();
+  context.stroke();
+
+
+  const leverWidth = 6;
+  const leverHeight = 15;
+  const beforeLever = context.getTransform();
+  context.rotate(-105 * Math.PI / 180);
+  context.beginPath();
+  context.fillStyle = '#00abff';
+  context.fillRect(leverWidth / -2, nutRadius + mountThickness, leverWidth, leverHeight);
+  context.fill();
+  context.setTransform(beforeLever);
+
+  context.translate(0, damper1Radius + damper2Radius);
+  context.beginPath();
+  context.fillStyle = 'black';
+  context.arc(0, 0, damper2Radius, Math.PI * 2, false);
+  context.fill();
+  context.beginPath();
+  context.lineWidth = mountThickness;
+  context.arc(0, 0, damper2Radius * 0.8, Math.PI * 2, false);
+  context.fill();
+  context.stroke();
+  context.beginPath();
+  context.fillStyle = 'black';
+  context.arc(0, 0, nutRadius, Math.PI * 2, false);
+  context.fill();
+  context.stroke();
 
   context.setTransform(middleTransform);
 
