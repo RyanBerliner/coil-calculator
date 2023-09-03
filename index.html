@@ -111,7 +111,10 @@
     const bottomMountCenterHole = 20;
     const bottomMountWidth = 21;
     const mountRadius = 6;
+    const topMountCenterHole = 17;
+    const topMountRadius = 4;
     const bushingWidth = 2;
+    const preloadHeight = stroke * 1.2;
     const coilBG = '#d46633';
     const coilFG = '#f07909';
 
@@ -162,7 +165,6 @@
     context.setTransform(middleTransform);
 
     // top preload cylinder 
-    const preloadHeight = stroke * 1.2;
     context.translate(preloadWidth / -2, -coilHeight - preloadHeight / 2);
     context.lineWidth = 3;
     context.strokeStyle = 'black';
@@ -188,33 +190,28 @@
     context.fill();
     context.setTransform(middleTransform);
 
-    /*
-    // top mount
-    const topMountHeight = 12;
-    const topMountWidth = coilWidth;
-    const mountRadius = 7;
-    const mountThickness = 2;
-    context.translate(0, -pcHeight / 2 - topMountHeight);
+    const topOfMount = -topMountRadius - bushingWidth * 2;
+    const mountWidth = (coilWidth * 3 + preloadWidth) / 4;
+    const rounding = 3;
+
+    context.translate(-mountWidth / 2, -coilHeight - preloadHeight / 2 - topMountCenterHole);
     context.beginPath();
     context.moveTo(0, 0);
-    context.arcTo(topMountWidth / 2, -mountRadius - mountThickness - 2*mountThickness, topMountWidth, 0, mountRadius + 3*mountThickness);
-    context.arcTo(topMountWidth, 0, topMountWidth, topMountHeight, mountRadius / 2);
-    context.arcTo(topMountWidth, topMountHeight, 0, topMountHeight, mountRadius / 2);
-    context.arcTo(0, topMountHeight, 0, 0, mountRadius / 2);
-    context.arcTo(0, 0, topMountWidth / 2, -mountRadius - mountThickness - 2*mountThickness, mountRadius / 2);
-    context.fillStyle = 'black';
+    context.arcTo(mountWidth / 2 - topMountRadius - bushingWidth / 2, topOfMount, mountWidth / 2 + topMountRadius + bushingWidth / 2, topOfMount, rounding);
+    context.arcTo(mountWidth / 2 + topMountRadius + bushingWidth / 2, topOfMount, mountWidth, 0, rounding);
+    context.arcTo(mountWidth, 0, mountWidth, topMountCenterHole, rounding);
+    context.arcTo(mountWidth, topMountCenterHole, 0, topMountCenterHole, rounding);
+    context.arcTo(0, topMountCenterHole, 0, 0, rounding);
+    context.arcTo(0, 0, mountWidth / 2 - topMountRadius - bushingWidth / 2, topOfMount, rounding);
     context.fill();
 
     context.beginPath();
-    context.lineWidth = mountThickness;
+    context.lineWidth = bushingWidth;
     context.strokeStyle = 'white';
-    context.arc(coilWidth / 2, 0, mountRadius, 2 * Math.PI, false);
-    context.fill();
+    context.arc(mountWidth / 2, 0, topMountRadius, 2 * Math.PI, false);
     context.stroke();
+
     context.setTransform(middleTransform);
-
-    */
-
 
     // the foreground coils
     context.translate(coilWidth / -2, -coilHeight);
