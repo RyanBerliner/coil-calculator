@@ -9,7 +9,7 @@
   </label>
   <label style="display: block">
     Shock stroke (mm)
-    <input type="number" name="stroke" value="60">
+    <input type="range" name="stroke" value="60" min="15" max="120">
   </label>
   <label style="display: block; margin-top: 1rem;">
     Sag (%)
@@ -35,7 +35,7 @@
   let springWeight = 0;
   let solveFor = 'weight';
   
-  document.addEventListener('change', function(event) {
+  document.addEventListener('input', function(event) {
     if (event.target.getAttribute('name') === 'sag') solveFor = 'weight';
     else solveFor = 'sag';
     calculateCharacteristics();
@@ -108,6 +108,10 @@
     const trueShaftHeight = stroke + (bumpStopHeight - bumpStopSquish);
     const preloadWidth = 33;
     const plateThickness = coilThickness / 1.3;
+    const bottomMountCenterHole = 20;
+    const bottomMountWidth = 21;
+    const mountRadius = 6;
+    const bushingWidth = 2;
     const coilBG = '#d46633';
     const coilFG = '#f07909';
 
@@ -262,33 +266,30 @@
     context.fillRect(0, 0, coilWidth + coilThickness, plateThickness);
     context.setTransform(middleTransform);
 
-    /*
-
     // bottom mount
-    const bottomMountWidth = 32;
-    const bottomMountHeight = 20;
-    const holeRadius = 10;
-    const bushingWidth = 3;
-    context.translate(coilWidth / 2 - bottomMountWidth / 2, coilHeight + bottomPlateHeight);
+    context.translate(bottomMountWidth / -2, 0);
     context.beginPath();
     context.fillStyle = 'black';
 
     context.moveTo(0,0);
     context.lineTo(bottomMountWidth, 0);
-    context.arcTo(bottomMountWidth, bottomMountHeight + bottomMountWidth / 2, 0, bottomMountHeight + bottomMountWidth / 2, bottomMountWidth / 2);
-    context.arcTo(0, bottomMountHeight + bottomMountWidth / 2, 0, 0, bottomMountWidth / 2);
+    const outerRadius = bottomMountWidth / 2;
 
-    context.moveTo(bottomMountWidth / 2, bottomMountHeight);
-    context.arc(bottomMountWidth / 2, bottomMountHeight, holeRadius, 2 * Math.PI, false);
+    context.arcTo(bottomMountWidth, bottomMountCenterHole + outerRadius, 0, bottomMountCenterHole + outerRadius, outerRadius);
+    context.arcTo(0, bottomMountCenterHole + outerRadius, 0, 0, outerRadius);
+
+    context.moveTo(bottomMountWidth / 2, bottomMountCenterHole);
+    context.arc(bottomMountWidth / 2, bottomMountCenterHole, mountRadius, 2 * Math.PI, false);
 
     context.fill('evenodd');
+    context.setTransform(middleTransform);
+
 
     context.beginPath();
     context.strokeStyle = 'tan';
     context.lineWidth = bushingWidth;
-    context.arc(bottomMountWidth / 2, bottomMountHeight, holeRadius, 2 * Math.PI, false);
+    context.arc(0, bottomMountCenterHole, mountRadius, 2 * Math.PI, false);
     context.stroke();
-    */
 
     context.resetTransform();
   }
