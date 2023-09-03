@@ -21,12 +21,15 @@
   </label>
 </form>
 
+<button id="simulate">press & hold to simulate sag</button>
+
 <canvas></canvas>
 
 <script>
   const sagInput = document.querySelector('input[name="sag"]');
   const springWeightInput = document.querySelector('input[name="spring-weight"]');
   const form = document.querySelector('form');
+  const button = document.getElementById('simulate');
 
   let riderWeight = 0;
   let wheelTravel = 0;
@@ -34,12 +37,16 @@
   let sag = 0;
   let springWeight = 0;
   let solveFor = 'weight';
+  let simulating = false;
   
   document.addEventListener('input', function(event) {
     if (event.target.getAttribute('name') === 'sag') solveFor = 'weight';
     else solveFor = 'sag';
     calculateCharacteristics();
   });
+
+  button.addEventListener('mousedown', () => simulating = true);
+  button.addEventListener('mouseup', () => simulating = false);
 
   form.addEventListener('submit', function(event) {
     event.preventDefault();
@@ -294,6 +301,9 @@
   function doPhysics() {
     context.clearRect(0, 0, canvasNode.width, canvasNode.height);
     drawShock(stroke, 0);
+    context.resetTransform();
+    context.font = '12px arial';
+    context.fillText(`Simulating: ${simulating ? 'true' : 'false'}`, 0, 12);
     requestAnimationFrame(doPhysics);
   }
 
