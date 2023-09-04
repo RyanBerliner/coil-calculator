@@ -32,12 +32,16 @@
   const button = document.getElementById('simulate');
 
   let riderWeight = 0;
+  let normWeight = 0;
   let wheelTravel = 0;
   let stroke = 0;
   let sag = 0;
   let springWeight = 0;
   let solveFor = 'weight';
   let simulating = false;
+  let acc = 0;
+  let vel = 0;
+  let pos = 0;
   
   document.addEventListener('input', function(event) {
     if (event.target.getAttribute('name') === 'sag') solveFor = 'weight';
@@ -64,7 +68,7 @@
     const leverage = wheelTravel / stroke;
     // TODO: add in (part of) average weight of the bike itself?
     const rearTireBias = 0.65; // the rear wheel supports 65% of the riders weight
-    const normWeight = riderWeight  * leverage * rearTireBias;
+    normWeight = riderWeight  * leverage * rearTireBias;
 
     // hooks law to solve for the spring rate
     // F = k*x
@@ -298,13 +302,42 @@
     context.resetTransform();
   }
 
-  function doPhysics() {
-    context.clearRect(0, 0, canvasNode.width, canvasNode.height);
-    drawShock(stroke, 0);
-    context.resetTransform();
-    context.font = '12px arial';
-    context.fillText(`Simulating: ${simulating ? 'true' : 'false'}`, 0, 12);
+  let last = 0;
+
+  function doPhysics(timestamp) {
     requestAnimationFrame(doPhysics);
+    if (!last) {
+      last = timestamp;
+      return;
+    }
+
+    const elapsed = (timestamp - last) / 1000; // sec
+    last = timestamp;
+
+    const forces = [];
+    let springConstant = springWeight / 2.205; // KG/in
+    springConstant = springConstant / 25.4; // KG/mm
+    let weight = normWeight / 2.205; // KG
+
+    forces.push(simulating ? weight : 0);
+    forces.push(-springConstant * pos);
+    forces.push(-vel * 0.2); // damping
+    
+    acc = forces.reduce((sum, x) => sum + x, 0);
+
+    // everything else just falls into place
+    vel += acc;
+    if (vel > 0 && pos >= stroke) {
+      vel = 0, pos = stroke;
+
+    } else if (vel < 0 && pos <= 0) {
+      vel = 0, pos = 0;
+    } else {
+      pos += vel * elapsed;
+    }
+
+    context.clearRect(0, 0, canvasNode.width, canvasNode.height);
+    drawShock(stroke, pos);
   }
 
   requestAnimationFrame(doPhysics);
