@@ -315,21 +315,19 @@
     last = timestamp;
 
     const forces = [];
-    let springConstant = springWeight / 2.205; // KG/in
-    springConstant = springConstant / 25.4; // KG/mm
-    let weight = normWeight / 2.205; // KG
+    let springConstant = springWeight * 4.448; // N/in
+    springConstant = springConstant / 25.4; // N/mm
+    let weight = normWeight * 4.448; // N
 
     forces.push(simulating ? weight : 0);
     forces.push(-springConstant * pos);
-    forces.push(-vel * 0.2); // damping
+    forces.push(-vel * 5); // damping
     
     acc = forces.reduce((sum, x) => sum + x, 0);
 
-    // everything else just falls into place
-    vel += acc;
+    vel += acc * elapsed;
     if (vel > 0 && pos >= stroke) {
       vel = 0, pos = stroke;
-
     } else if (vel < 0 && pos <= 0) {
       vel = 0, pos = 0;
     } else {
