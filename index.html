@@ -101,7 +101,7 @@
 
   const context = canvasNode.getContext('2d');
 
-  function drawShock(stroke, compression) {
+  function drawShock(stroke, compression, showSag) {
     context.fillStyle = '#efefef';
     context.fillRect(0, 0, canvasNode.width, canvasNode.height);
 
@@ -298,6 +298,29 @@
     context.lineWidth = bushingWidth;
     context.arc(0, bottomMountCenterHole, mountRadius, 2 * Math.PI, false);
     context.stroke();
+    context.setTransform(middleTransform);
+
+    if (showSag) {
+      const w = 20;
+      context.translate(coilWidth, -bumpStopHeight + bumpStopSquish);
+      context.beginPath();
+      context.fillStyle = 'black';
+      context.strokeStyle = 'black';
+
+      context.rect(0, -stroke, w, compression);
+      context.stroke();
+      context.fill();
+
+      context.moveTo(w / 2, -stroke + compression);
+      context.lineTo(w / 2, 0);
+      context.moveTo(0, 0);
+      context.lineTo(w, 0);
+      context.stroke();
+
+      context.beginPath();
+      context.font = 'bold 16px sans-serif';
+      context.fillText(Math.round(compression / stroke * 100) + ' % SAG', w + 8, (-stroke + compression) - (compression / 2) + 5);
+    }
 
     context.resetTransform();
   }
@@ -338,7 +361,7 @@
     }
 
     context.clearRect(0, 0, canvasNode.width, canvasNode.height);
-    drawShock(stroke, pos);
+    drawShock(stroke, pos, simulating);
   }
 
   requestAnimationFrame(doPhysics);
