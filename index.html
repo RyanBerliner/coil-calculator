@@ -1,19 +1,19 @@
 <form style="margin: 1rem 0;">
   <label style="display: block">
     Rider Weight (lbs)
-    <input type="number" name="rider-weight" value="165">
+    <input type="number" name="rider-weight" value="165" min="0">
   </label>
   <label style="display: block">
     Rear wheel travel (mm)
-    <input type="number" name="travel" value="160">
+    <input type="number" name="travel" value="160" min="0">
   </label>
   <label style="display: block">
     Shock stroke (mm)
-    <input type="range" name="stroke" value="60" min="15" max="120">
+    <input type="number" name="stroke" value="60" min="0">
   </label>
   <label style="display: block; margin-top: 1rem;">
     Sag (%)
-    <input type="number" name="sag" value="27">
+    <input type="number" name="sag" value="27" min="0">
   </label>
   <label style="display: block">
     Spring Weight (lbs/in)
@@ -59,11 +59,11 @@
 
   function calculateCharacteristics() {
     const data = new FormData(form);
-    riderWeight = parseInt(data.get('rider-weight'));
-    wheelTravel = parseInt(data.get('travel'));
-    stroke = parseInt(data.get('stroke'));
-    sag = parseInt(data.get('sag'));
-    springWeight = parseInt(data.get('spring-weight'));
+    riderWeight = parseInt(data.get('rider-weight') || 0);
+    wheelTravel = parseInt(data.get('travel') || 0);
+    stroke = parseInt(data.get('stroke') || 0);
+    sag = Math.max(1, parseInt(data.get('sag') || 1));
+    springWeight = parseInt(data.get('spring-weight') || 0);
 
     const leverage = wheelTravel / stroke;
     // TODO: add in (part of) average weight of the bike itself?
@@ -96,14 +96,26 @@
   // the rest is the animation
 
   const canvasNode = document.querySelector('canvas');
-  canvasNode.height = 700;
-  canvasNode.width = 700;
-
   const context = canvasNode.getContext('2d');
+  const cHeight = 700;
+  const cWidth = 700;
+  canvasNode.height = cHeight;
+  canvasNode.width = cWidth;
+
+  if (window.devicePixelRatio > 1) {
+    canvasNode.width = cWidth * window.devicePixelRatio;
+    canvasNode.height = cHeight * window.devicePixelRatio;
+    canvasNode.style.width = cWidth + 'px';
+    canvasNode.style.height = cHeight + 'px';
+    context.scale(window.devicePixelRatio, window.devicePixelRatio);  
+  }
+
+  const baseTransform = context.getTransform();
+
 
   function drawShock(stroke, compression, showSag) {
     context.fillStyle = '#efefef';
-    context.fillRect(0, 0, canvasNode.width, canvasNode.height);
+    context.fillRect(0, 0, cHeight, cWidth);
 
     // all in mm
     const originalCoilHeight = stroke * 2.33;
@@ -130,7 +142,7 @@
     const coilFG = '#f07909';
 
     // we want to draw this in the center of the canvas
-    context.translate(canvasNode.width / 2, canvasNode.height / 2);
+    context.translate(cWidth / 2, cHeight / 2);
     let middleTransform = context.getTransform();
 
     // the background coils
@@ -318,11 +330,11 @@
       context.stroke();
 
       context.beginPath();
-      context.font = 'bold 16px sans-serif';
-      context.fillText(Math.round(compression / stroke * 100) + ' % SAG', w + 8, (-stroke + compression) - (compression / 2) + 5);
+      context.font = 'bold 32px sans-serif';
+      context.fillText(Math.round(compression / stroke * 100) + '%', w*1.5, stroke / -2 + 10);
     }
 
-    context.resetTransform();
+    context.setTransform(baseTransform);
   }
 
   let last = 0;
@@ -360,7 +372,7 @@
       pos += vel * elapsed;
     }
 
-    context.clearRect(0, 0, canvasNode.width, canvasNode.height);
+    context.clearRect(0, 0, cWidth, cHeight);
     drawShock(stroke, pos, simulating);
   }
 
