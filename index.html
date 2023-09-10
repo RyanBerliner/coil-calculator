@@ -1,36 +1,38 @@
 <style>
 
-canvas {position:fixed;top:0;left:0;}
-div {position:relative;margin-top: 66vh;text-align: center;}
+html {font-family:sans-serif;font-size:16px;}
+html,body {margin:0;padding:0;}
+form {margin:3rem auto;padding:0 1rem;display:flex;flex-direction:column;align-items:center;}
+input {font-size:1rem;padding:0.2em 0.4em;max-width:6em;}
+button {font-size:1rem;padding:0.2em 0.4em;display:block;margin:auto;}
+label {display:block;margin-bottom:1rem;}
+label span {display:inline-block;min-width:12rem}
 
 </style>
 
 <canvas></canvas>
 
 <div>
-  <button id="simulate">press & hold to simulate sag</button>
-  <form style="margin: 1rem 0;">
-    <label style="display: block">
-      Rider Weight (lbs)
-      <input type="range" name="rider-weight" value="165" min="50" max="400" step="5">
-      <span></span>
+  <button id="simulate"><span style="font-size:2rem">Press & Hold</span><br/>to simulate sag</button>
+  <form>
+    <label>
+      <span>Rider Weight (lbs)</span>
+      <input type="number" name="rider-weight" value="165">
     </label>
-    <label style="display: block">
-      Rear wheel travel (mm)
-      <input type="range" name="travel" value="160" min="50" max="400" step="5">
-      <span></span>
+    <label>
+      <span>Rear wheel travel (mm)</span>
+      <input type="number" name="travel" value="160">
     </label>
-    <label style="display: block">
-      Shock stroke (mm)
-      <input type="range" name="stroke" value="60" min="10" max="200" step="5">
-      <span></span>
+    <label>
+      <span>Shock stroke (mm)</span>
+      <input type="number" name="stroke" value="60">
     </label>
-    <label style="display: block; margin-top: 1rem;">
+    <label style="display: none;">
       Sag (%)
-      <input type="number" name="sag" value="27" min="0">
+      <input type="number" name="sag" value="27">
     </label>
-    <label style="display: block">
-      Spring Weight (lbs/in)
+    <label>
+      <span>Spring Weight (lbs/in)</span>
       <input type="number" name="spring-weight" value="0">
     </label>
   </form>
@@ -76,7 +78,7 @@ div {position:relative;margin-top: 66vh;text-align: center;}
     const data = new FormData(form);
     riderWeight = parseInt(data.get('rider-weight') || 0);
     wheelTravel = parseInt(data.get('travel') || 0);
-    stroke = parseInt(data.get('stroke') || 0);
+    stroke = parseInt(data.get('stroke') || 1);
     sag = Math.max(1, parseInt(data.get('sag') || 1));
     springWeight = parseInt(data.get('spring-weight') || 0);
 
@@ -112,12 +114,12 @@ div {position:relative;margin-top: 66vh;text-align: center;}
 
   const canvasNode = document.querySelector('canvas');
   const context = canvasNode.getContext('2d');
-  let cHeight = window.innerHeight;
-  let cWidth = window.innerWidth;
-  let baseTransform = context.getTransform();
+  let cHeight;
+  let cWidth;
+  let baseTransform;
 
   function setCanvas() {
-    cHeight = window.innerHeight;
+    cHeight = window.innerHeight / 2;
     cWidth = window.innerWidth;
     canvasNode.height = cHeight;
     canvasNode.width = cWidth;
@@ -140,9 +142,6 @@ div {position:relative;margin-top: 66vh;text-align: center;}
   });
 
   function drawShock(stroke, compression, showSag) {
-    context.fillStyle = '#efefef';
-    context.fillRect(0, 0, cWidth, cHeight);
-
     // all in mm
     const originalCoilHeight = stroke * 2.33;
     const coilHeight = originalCoilHeight - compression;
@@ -168,9 +167,11 @@ div {position:relative;margin-top: 66vh;text-align: center;}
     const coilBG = '#d46633';
     const coilFG = '#f07909';
 
-    // we want to draw this in the center of the canvas
-    const shockHeight = stroke + topMountCenterHole + bottomMountCenterHole + preloadHeight + pcBottomHeight;
-    context.translate(cWidth / 2, cHeight / 2 + shockHeight / 2 - cHeight / 6); // leave a 1/3 of the screen on the bottom for the button
+    // we want to draw this in the center of the canvas and make as big as possible
+    const shockHeight = originalCoilHeight + preloadHeight / 2;
+    const scaleAmount = cHeight / (shockHeight + 200);  // extra num for padding top and bottom
+    context.translate(cWidth / 2, cHeight / 2 + shockHeight / 2 * scaleAmount);
+    context.scale(scaleAmount, scaleAmount);
     let middleTransform = context.getTransform();
 
     // the background coils
