@@ -1,68 +1,72 @@
 <style>
 
-html {font-family:sans-serif;font-size:16px;}
+html {font-family:sans-serif;font-size:16px;line-height:1.4;}
 html,body {margin:0;padding:0;}
 form {margin:3rem auto;padding:0 1rem;display:flex;flex-direction:column;align-items:center;}
 input {font-size:1rem;padding:0.2em 0.4em;max-width:6em;}
 button {font-size:1rem;padding:0.2em 0.4em;display:block;margin:auto;}
-label {display:block;margin-bottom:1rem;}
-label span {display:inline-block;min-width:12rem}
+button span {font-size:1.5rem;font-weight:700;}
+form > * {
+  width:100%;
+  display:flex;
+  margin-bottom:1rem;
+  align-items:center;
+  max-width:450px;
+  justify-content:space-between;
+}
+form > *:last-child {padding-top:0.9em;border-top:1px solid;text-align:right;}
+label span {display:inline-block;}
 
 </style>
 
 <canvas></canvas>
 
-<div>
-  <button id="simulate"><span style="font-size:2rem">Press & Hold</span><br/>to simulate sag</button>
-  <form>
-    <label>
-      <span>Rider Weight (lbs)</span>
-      <input type="number" name="rider-weight" value="165">
-    </label>
-    <label>
-      <span>Rear wheel travel (mm)</span>
-      <input type="number" name="travel" value="160">
-    </label>
-    <label>
-      <span>Shock stroke (mm)</span>
-      <input type="number" name="stroke" value="60">
-    </label>
-    <label style="display: none;">
-      Sag (%)
-      <input type="number" name="sag" value="27">
-    </label>
-    <label>
-      <span>Spring Weight (lbs/in)</span>
-      <input type="number" name="spring-weight" value="0">
-    </label>
-  </form>
-</div>
+<button id="simulate"><span>Press & Hold</span><br/>to visualize sag</button>
+
+<form>
+  <label>
+    <span>Rider Weight (lbs)</span>
+    <input type="number" name="rider-weight" value="165">
+  </label>
+  <label>
+    <span>Rear wheel travel (mm)</span>
+    <input type="number" name="travel" value="160">
+  </label>
+  <label>
+    <span>Shock stroke (mm)</span>
+    <input type="number" name="stroke" value="60">
+  </label>
+  <label>
+    <span>
+      <strong>Spring Weight (lbs/in)</strong><br/>
+      Reset to recommended <a href="#" data-sag="27"></a>
+    </span>
+    <input type="number" name="spring-weight" value="400">
+  </label>
+  <div>
+    <strong>Calculated Sag</strong>
+    <span style="font-size:1.5rem;"><span id="sag-output"></span>%</span>
+  </div>
+</form>
+
 
 <script>
-  const sagInput = document.querySelector('input[name="sag"]');
   const springWeightInput = document.querySelector('input[name="spring-weight"]');
   const form = document.querySelector('form');
   const button = document.getElementById('simulate');
 
-  let riderWeight = 0;
-  let normWeight = 0;
-  let wheelTravel = 0;
-  let stroke = 0;
-  let sag = 0;
-  let springWeight = 0;
-  let solveFor = 'weight';
+  let riderWeight;
+  let normWeight;
+  let wheelTravel;
+  let stroke;
+  let sag;
+  let springWeight;
   let simulating = false;
   let acc = 0;
   let vel = 0;
   let pos = 0;
 
   document.addEventListener('input', function(event) {
-    if (event.target.getAttribute('name') === 'sag') solveFor = 'weight';
-    else solveFor = 'sag';
-
-    if (event.target.getAttribute('type') === 'range') {
-      event.target.nextElementSibling.innerHTML = event.target.value;
-    }
     calculateCharacteristics();
   });
 
@@ -74,12 +78,27 @@ label span {display:inline-block;min-width:12rem}
     calculateCharacteristics();
   });
 
+  document.addEventListener('click', (e) => {
+    const val = e.target.getAttribute('data-val');
+    if (val) {
+      event.preventDefault();
+      springWeightInput.value = val;
+      calculateCharacteristics();
+    }
+  });
+
+  function getSpringWeight(sagAmount) {
+    const targetSagDistance = stroke * sagAmount / 100;
+    let weight = normWeight / targetSagDistance; // lbs/mm
+    weight *= 25.4 // lbs/in
+    return parseInt(weight);
+  }
+
   function calculateCharacteristics() {
     const data = new FormData(form);
     riderWeight = parseInt(data.get('rider-weight') || 0);
     wheelTravel = parseInt(data.get('travel') || 0);
     stroke = parseInt(data.get('stroke') || 1);
-    sag = Math.max(1, parseInt(data.get('sag') || 1));
     springWeight = parseInt(data.get('spring-weight') || 0);
 
     const leverage = wheelTravel / stroke;
@@ -93,19 +112,17 @@ label span {display:inline-block;min-width:12rem}
     // k   spring rate
     // x   deformation (sometimes called displacement)
 
-    if (solveFor === 'weight') {
-      const targetSagDistance = stroke * sag / 100;
-      springWeight = normWeight / targetSagDistance; // lbs/mm
-      springWeight *= 25.4 // lbs/in
-      springWeight = parseInt(springWeight);
-      springWeightInput.value = springWeight;
-    } else {
-      sag = normWeight / springWeight; // in
-      sag *= 25.4 // mm
-      sag /= stroke / 100 // %
-      sag = Math.round(sag * 100) / 100; // round to 2 decimals (so users can see something is changing
-      sagInput.value = sag;
-    }
+    sag = normWeight / springWeight; // in
+    sag *= 25.4 // mm
+    sag /= stroke / 100 // %
+    sag = Math.round(sag * 100) / 100; // round to 2 decimals (so users can see something is changing
+    document.getElementById('sag-output').innerHTML = sag;
+
+    document.querySelectorAll('[data-sag]').forEach(el => {
+      const weight = getSpringWeight(parseInt(el.getAttribute('data-sag')));
+      el.innerHTML = weight + ' lbs/in';
+      el.setAttribute('data-val', weight);
+    });
   }
 
   calculateCharacteristics();
@@ -357,9 +374,11 @@ label span {display:inline-block;min-width:12rem}
       context.lineTo(w, 0);
       context.stroke();
 
+      /*
       context.beginPath();
       context.font = 'bold 32px sans-serif';
       context.fillText(Math.round(compression / stroke * 100) + '%', w*1.5, stroke / -2 + 10);
+      */
     }
 
     context.setTransform(baseTransform);
@@ -387,7 +406,7 @@ label span {display:inline-block;min-width:12rem}
 
     // we want to find the critical damping so it occilates a nice amount
     const criticalDamping = 2 * Math.sqrt(springConstant * weight) * elapsed; // https://en.wikipedia.org/wiki/Damping
-    forces.push(-vel * criticalDamping * 0.6); // we want a little bounce so multiple by a coefficent < 1 (arbitrary for style)
+    forces.push(-vel * criticalDamping * 0.9); // we want a little bounce so multiple by a coefficent < 1 (arbitrary for style)
     
     acc = forces.reduce((sum, x) => sum + x, 0);
 
