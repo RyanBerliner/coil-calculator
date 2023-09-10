@@ -74,7 +74,9 @@
       });
 
       button.addEventListener('mousedown', () => simulating = true);
+      button.addEventListener('touchstart', () => simulating = true);
       button.addEventListener('mouseup', () => simulating = false);
+      button.addEventListener('touchend', () => simulating = false);
 
       form.addEventListener('submit', function(event) {
         event.preventDefault();
