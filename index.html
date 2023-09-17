@@ -431,8 +431,9 @@
         forces.push(-springConstant * pos);
 
         // we want to find the critical damping so it occilates a nice amount
-        const criticalDamping = 2 * Math.sqrt(springConstant * weight) * elapsed; // https://en.wikipedia.org/wiki/Damping
-        forces.push(-vel * criticalDamping * 0.65); // we want a little bounce so multiple by a coefficent < 1 (arbitrary for style)
+        let criticalDamping = 2 * Math.sqrt(springConstant * weight) * elapsed; // https://en.wikipedia.org/wiki/Damping
+        if (vel > 0) criticalDamping /= 3;  // compression damping third of rebound damping
+        forces.push(-vel * criticalDamping);
         
         acc = forces.reduce((sum, x) => sum + x, 0);
 
