@@ -6,7 +6,23 @@
       html {font-family:sans-serif;font-size:16px;line-height:1.4;}
       html,body {margin:0;padding:0;}
       form {margin:3rem auto;padding:0 1rem;display:flex;flex-direction:column;align-items:center;}
-      input {font-size:1rem;padding:0.2em 0.4em;max-width:6em;}
+      input {
+        font-size:1rem;
+        padding:0.2em 0.4em;
+        max-width:6em;
+        background-color:white;
+        border:1px solid #d5d5d5;
+        border-top-color:rgb(213, 213, 213);
+        border-bottom-color:rgb(213, 213, 213);
+        border-top-color:#00000017;
+        border-bottom-color:#00000036;
+        appearance:none;
+        border-radius:0.35em;
+        font-size:1rem;
+        padding:0.25em 0.65em;
+        line-height:1;
+        box-shadow:0 0.05em 0.15em #0000001a, 0 0.15em 0.9em #00000005;
+      }
       button {
         appearance: none;
         font-size:1rem;
@@ -38,9 +54,20 @@
         max-width:450px;
         justify-content:space-between;
       }
-      form > *:last-child {padding-top:0.9em;border-top:1px solid;text-align:right;}
+      form > *:last-child {
+        padding-top:0.9em;
+        border-top:1px solid #efefef;
+        text-align:right;
+        font-weight:700;
+      }
       label span {display:inline-block;margin-right:1rem;}
       label a {white-space: nowrap}
+      aside {
+        margin:0 auto;
+        max-width:450px;
+        display:flex;
+      }
+      aside p {margin:0 0 0 10px;}
     </style>
   </head>
   <body>
@@ -68,11 +95,22 @@
       </label>
       <div>
         <strong>Calculated Sag</strong>
-        <span style="font-size:1.5rem;"><span id="sag-output"></span>%</span>
+        <span style="font-size:1.5rem;"><span id="sag-output"></span>% *</span>
       </div>
     </form>
 
-    <footer style="text-align:center">View code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a></footer>
+    <aside>
+      <strong>*</strong>
+      <p>
+        The calculations taking place here currently assume a <em>linear</em>
+        suspension curve. Most frames have some level of "progressiveness" built into their design.
+        As a result the calculated sag displayed above will likely be <em>a little low</em>
+        when compared to reality. <a href="https://github.com/RyanBerliner/coil-calculator/issues/1">
+        This issue is noted here</a> and may be fixed in the future.
+      </p>
+    </aside>
+
+    <footer style="max-width:420px;margin:20px auto;">View code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a></footer>
 
     <script>
       const springWeightInput = document.querySelector('input[name="spring-weight"]');
