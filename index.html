@@ -71,6 +71,60 @@
     </style>
   </head>
   <body>
+    <div>
+      <label>
+        Average ratio
+        <input type="number" value="0" />
+      </label>
+      <label>
+        Curve point 1
+        <input type="number" value="0" />
+      </label>
+      <label>
+        Curve point 2
+        <input type="number" value="0" />
+      </label>
+      <label>
+        Curve point 3
+        <input type="number" value="0" />
+      </label>
+      <label>
+        Curve point 4
+        <input type="number" value="0" />
+      </label>
+      <label>
+        Curve point 5
+        <input type="number" value="0" />
+      </label>
+    </div>
+    <script>
+      const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
+      const averageInput = inputs[0];
+      const pointInputs = inputs.slice(1, 6);
+
+      averageInput.addEventListener('change', function(event) {
+        const avg = pointInputs.reduce((t, i) => parseFloat(i.value || 0) + t, 0) / pointInputs.length; 
+        const diff = parseFloat(event.target.value) - avg;
+        pointInputs.forEach(i => {
+          i.value = parseFloat(i.value) + diff;
+        });
+      });
+
+      pointInputs.forEach(input => {
+        input.addEventListener('change', function(event) {
+          const total = pointInputs.reduce((t, i) => parseFloat(i.value || 0) + t, 0); 
+          const avgTotal = parseFloat(averageInput.value) * pointInputs.length;
+          const diffTotal = avgTotal - total;
+          // TODO: distribute proportionally based on the index we are changing
+          pointInputs.forEach(i => {
+            if (i === input) return;
+            i.value = parseFloat(i.value) + (diffTotal/(pointInputs.length-1));
+          });
+        });
+      });
+      
+    </script>
+
     <canvas></canvas>
     <button id="simulate"><span>Press & Hold</span><br/>to visualize sag</button>
     <form>
