@@ -140,7 +140,7 @@
       });
       curveCanvas.addEventListener('mousedown', function(event) {
         prevY = y;
-        const i = Math.round(x/(curveWidth/resolution));
+        const i = Math.round(x/(curveWidth/(resolution-1)));
         if (i >= 0 && i < points.length) currentX = i;
       });
       curveCanvas.addEventListener('mouseup', function(event) {
