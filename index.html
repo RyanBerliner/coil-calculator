@@ -71,60 +71,28 @@
     </style>
   </head>
   <body>
-    <div>
-      <label>
-        Average ratio
-        <input type="number" value="0" />
-      </label>
-      <label>
-        Curve point 1
-        <input type="number" value="0" />
-      </label>
-      <label>
-        Curve point 2
-        <input type="number" value="0" />
-      </label>
-      <label>
-        Curve point 3
-        <input type="number" value="0" />
-      </label>
-      <label>
-        Curve point 4
-        <input type="number" value="0" />
-      </label>
-      <label>
-        Curve point 5
-        <input type="number" value="0" />
-      </label>
-    </div>
     <canvas id="curve"></canvas>
     <script>
-      const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
-      const averageInput = inputs[0];
-      const pointInputs = inputs.slice(1, 6);
+      function assert(condition) {
+        if (!condition) console.error(...Array.from(arguments).slice(1));
+      }
 
-      averageInput.addEventListener('change', function(event) {
-        const avg = pointInputs.reduce((t, i) => parseFloat(i.value || 0) + t, 0) / pointInputs.length; 
-        const diff = parseFloat(event.target.value) - avg;
-        pointInputs.forEach(i => {
-          i.value = parseFloat(i.value) + diff;
-        });
+      const leverage = 100;
+      const resolution = 5;
+      const points = Array(resolution).fill(leverage);
+
+      function updatePoint(idx, diff) {
+        points[idx] += diff
+        for (let i = 0; i < points.length; i++) {
+          if (i === idx) continue;
+          points[i] -= diff/(points.length-1);
+        }
+
+        avg = points.reduce((i, t) => i+t, 0) / points.length;
+        assert(avg === leverage, 'Points in invalid state', points, avg);
+
         drawCurve();
-      });
-
-      pointInputs.forEach(input => {
-        input.addEventListener('change', function(event) {
-          const total = pointInputs.reduce((t, i) => parseFloat(i.value || 0) + t, 0); 
-          const avgTotal = parseFloat(averageInput.value) * pointInputs.length;
-          const diffTotal = avgTotal - total;
-          // TODO: distribute proportionally based on the index we are changing
-          pointInputs.forEach(i => {
-            if (i === input) return;
-            i.value = parseFloat(i.value) + (diffTotal/(pointInputs.length-1));
-          });
-          drawCurve();
-        });
-      });
+      }
 
       // Animation stuff
       const curveCanvas = document.querySelector('canvas#curve');
@@ -151,10 +119,10 @@
         curveContext.beginPath();
         curveContext.lineWidth = 2;
         curveContext.strokeStyle = '#000';
-        curveContext.moveTo(100, getY(pointInputs[0].value));
-        for (let i = 1; i < pointInputs.length; i++) {
-          const inp = pointInputs[i];
-          curveContext.lineTo(100 * (i + 1), getY(inp.value));
+        curveContext.moveTo(0, getY(points[0]));
+        for (let i = 1; i < points.length; i++) {
+          const val = points[i];
+          curveContext.lineTo((curveWidth/(resolution-1)) * (i), getY(val));
         }
         curveContext.stroke();
       }
@@ -166,19 +134,17 @@
       curveCanvas.addEventListener('mousemove', function(event) {
         y = event.clientY;
         x = event.clientX;
-        if (currentX == null) return;
-        pointInputs[currentX].value = parseFloat(pointInputs[currentX].value) + (prevY - y);
-        pointInputs[currentX].dispatchEvent(new Event('change'));
+        if (prevY == null) return;
+        updatePoint(currentX, prevY-y)
         prevY = y;
       });
       curveCanvas.addEventListener('mousedown', function(event) {
         prevY = y;
-        const i = Math.round(x/100)-1;
-        if (i >= 0 && i < pointInputs.length) currentX = i;
+        const i = Math.round(x/(curveWidth/resolution));
+        if (i >= 0 && i < points.length) currentX = i;
       });
       curveCanvas.addEventListener('mouseup', function(event) {
         prevY = null;
-        currentX = null;
       });
 
     </script>
