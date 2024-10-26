@@ -74,11 +74,12 @@
     <canvas id="curve"></canvas>
     <script>
       function assert(condition) {
-        if (!condition) console.error(...Array.from(arguments).slice(1));
+        if (!condition) console.error('ASSERTION FAILURE:', ...Array.from(arguments).slice(1));
       }
 
-      const leverage = 100;
-      const resolution = 5;
+      const leverage = 150;
+      const resolution = 100;
+      assert(resolution >= 2, 'Must use a curve resolution of 2 or higher')
       const points = Array(resolution).fill(leverage);
 
       function updatePoint(idx, diff) {
@@ -89,7 +90,7 @@
         }
 
         avg = points.reduce((i, t) => i+t, 0) / points.length;
-        assert(avg === leverage, 'Points in invalid state', points, avg);
+        assert(avg.toFixed(2) === leverage.toFixed(2), 'Points in invalid state', points, avg);
 
         drawCurve();
       }
