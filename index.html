@@ -97,6 +97,7 @@
         <input type="number" value="0" />
       </label>
     </div>
+    <canvas id="curve"></canvas>
     <script>
       const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
       const averageInput = inputs[0];
@@ -108,6 +109,7 @@
         pointInputs.forEach(i => {
           i.value = parseFloat(i.value) + diff;
         });
+        drawCurve();
       });
 
       pointInputs.forEach(input => {
@@ -120,12 +122,68 @@
             if (i === input) return;
             i.value = parseFloat(i.value) + (diffTotal/(pointInputs.length-1));
           });
+          drawCurve();
         });
       });
-      
+
+      // Animation stuff
+      const curveCanvas = document.querySelector('canvas#curve');
+      const curveContext = curveCanvas.getContext('2d');
+
+      const curveHeight = window.outerHeight / 3;
+      const curveWidth = window.innerWidth;
+      curveCanvas.height = curveHeight;
+      curveCanvas.width = curveWidth;
+
+      if (window.devicePixelRatio > 1) {
+        curveCanvas.width = curveWidth * window.devicePixelRatio;
+        curveCanvas.height = curveHeight * window.devicePixelRatio;
+        curveCanvas.style.width = curveWidth + 'px';
+        curveCanvas.style.height = curveHeight + 'px';
+        curveContext.scale(window.devicePixelRatio, window.devicePixelRatio);  
+      }
+
+      function drawCurve() {
+        function getY(y) {
+          return curveHeight - y;
+        }
+        curveContext.clearRect(0, 0, curveWidth, curveHeight);
+        curveContext.beginPath();
+        curveContext.lineWidth = 2;
+        curveContext.strokeStyle = '#000';
+        curveContext.moveTo(100, getY(pointInputs[0].value));
+        for (let i = 1; i < pointInputs.length; i++) {
+          const inp = pointInputs[i];
+          curveContext.lineTo(100 * (i + 1), getY(inp.value));
+        }
+        curveContext.stroke();
+      }
+
+      drawCurve();
+
+      // canvas interaction
+      let x = 0, y = 0, prevY = null, currentX = null; 
+      curveCanvas.addEventListener('mousemove', function(event) {
+        y = event.clientY;
+        x = event.clientX;
+        if (currentX == null) return;
+        pointInputs[currentX].value = parseFloat(pointInputs[currentX].value) + (prevY - y);
+        pointInputs[currentX].dispatchEvent(new Event('change'));
+        prevY = y;
+      });
+      curveCanvas.addEventListener('mousedown', function(event) {
+        prevY = y;
+        const i = Math.round(x/100)-1;
+        if (i >= 0 && i < pointInputs.length) currentX = i;
+      });
+      curveCanvas.addEventListener('mouseup', function(event) {
+        prevY = null;
+        currentX = null;
+      });
+
     </script>
 
-    <canvas></canvas>
+    <canvas id="animation"></canvas>
     <button id="simulate"><span>Press & Hold</span><br/>to visualize sag</button>
     <form>
       <label>
@@ -253,7 +311,7 @@
 
       // the rest is the animation
 
-      const canvasNode = document.querySelector('canvas');
+      const canvasNode = document.querySelector('canvas#animation');
       const context = canvasNode.getContext('2d');
       let cHeight;
       let cWidth;
