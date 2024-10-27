@@ -78,12 +78,14 @@
       }
 
       const leverage = 150;
-      const resolution = 100;
-      assert(resolution >= 2, 'Must use a curve resolution of 2 or higher')
+      const resolution = 6;
+      assert(resolution >= 2, 'Must use a curve resolution of 2 or higher');
       const points = Array(resolution).fill(leverage);
 
       function updatePoint(idx, diff) {
-        points[idx] += diff
+        points[idx] += diff;
+        const impactWidth = 20;
+        // get the number of nodes we have available around the index within the imapct width
         for (let i = 0; i < points.length; i++) {
           if (i === idx) continue;
           points[i] -= diff/(points.length-1);
@@ -113,17 +115,49 @@
       }
 
       function drawCurve() {
+        // i think this is how i want to smooth the curve
+        // https://en.wikipedia.org/wiki/Cubic_Hermite_spline
+
+        // use finite difference to calculate the slopes at each point
+        let slopes = [];
+        for (let i = 0; i < points.length; i++) {
+          // NOTE: that our points are uniformly spaces right now to all our runs are just set to 1 for simplicity
+          let partials = [];
+          if (i > 0) {
+            partials.push((points[i]-points[i-1])/1);
+          }
+          if (i < points.length-1) {
+            partials.push((points[i+1]-points[i])/1);
+          }
+          slopes[i] = (1/partials.length)*(partials.reduce((x,y) => x+y, 0));
+        }
+
         function getY(y) {
           return curveHeight - y;
         }
+
+        const segmentWidth = curveWidth/(resolution-1);
         curveContext.clearRect(0, 0, curveWidth, curveHeight);
         curveContext.beginPath();
         curveContext.lineWidth = 2;
         curveContext.strokeStyle = '#000';
         curveContext.moveTo(0, getY(points[0]));
-        for (let i = 1; i < points.length; i++) {
-          const val = points[i];
-          curveContext.lineTo((curveWidth/(resolution-1)) * (i), getY(val));
+        let lastmod = 0;
+        for (let i = 1; i <= curveWidth; i++) {
+          const index = Math.floor(i/segmentWidth);
+          const mod = i%segmentWidth;
+          // cannot use === 0 because of precision issues
+          if (mod < lastmod || i === curveWidth) { 
+            curveContext.lineTo(i, getY(points[index]));
+          }
+          lastmod = mod;
+
+          // this is when we need to interpolate
+          const p0 = points[index], p1 = points[index+1], m0 = slopes[index], m1 = slopes[index+1];
+          function inter(t) {
+            return ((2*t**3 - 3*t**2 + 1)*p0) + ((t**3 - 2*t**2 + t)*m0) + ((-2*t**3 + 3*t**2)*p1) + ((t**3 - t**2)*m1);
+          }
+          curveContext.lineTo(i, getY(inter(mod/segmentWidth)));
         }
         curveContext.stroke();
       }
