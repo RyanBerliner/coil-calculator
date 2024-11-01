@@ -234,6 +234,7 @@
       let normWeight;
       let wheelTravel;
       let stroke;
+      let sag;
       let springWeight;
       let simulating = false;
       let acc = 0;
@@ -286,7 +287,7 @@
         const leverage = wheelTravel / stroke;
         // TODO: add in (part of) average weight of the bike itself?
         const rearTireBias = 0.65; // the rear wheel supports 65% of the riders weight
-        const adjustedRiderWeight = riderWeight * rearTireBias;
+        normWeight = riderWeight  * leverage * rearTireBias;
 
         // hooks law to solve for the spring rate
         // F = k*x
@@ -294,17 +295,7 @@
         // k   spring rate
         // x   deformation (sometimes called displacement)
 
-        function momentaryLeverage(strokeX) {
-          // NOTE: that the curves we create give us information in travelX not strokeX
-          // so we are going to have to do some converting or figuring
-          return leverage + (2*strokeX);
-        }
-
-        // the leverage equation solved
-        let sag = adjustedRiderWeight * leverage / (springWeight - (2*adjustedRiderWeight)); // in
-        console.log('sag in in', sag);
-        normWeight = adjustedRiderWeight * momentaryLeverage(sag);
-        console.log('the norm weight', normWeight);
+        sag = normWeight / springWeight; // in
         sag *= 25.4 // mm
         sag /= stroke / 100 // %
         sag = Math.round(sag * 100) / 100; // round to 2 decimals (so users can see something is changing
@@ -585,8 +576,6 @@
         const forces = [];
         let springConstant = springWeight * 4.448; // N/in
         springConstant = springConstant / 25.4; // N/mm
-        // TODO: we should not reference norm weight as a constant but should
-        // recalculate based on the leverage curve (can use the pos)
         let weight = normWeight * 4.448; // N
 
         forces.push(simulating ? weight : 0);
