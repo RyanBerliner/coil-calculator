@@ -117,15 +117,16 @@
         let X = 0;
         let Y = 0;
         const strokeLineFuncs = travelLineFuncs.map(({m, b, q, p}) => {
+          const domainEnd = (p/(m*p+b))-(X/(m*X+b))+Y;
           const ret =  {
             m,
             b,
             X,
             Y,
-            q: ((1/m)*(Math.log((m*q) + b)))+Y-((1/m)*(Math.log((m*X)+b))),
-            p: ((1/m)*(Math.log((m*p) + b)-Math.log((m*X)+b)))+Y,
+            q: (q/(m*q+b))-(X/(m*X+b))+Y,
+            p: domainEnd,
           }
-          Y = ((1/m)*(Math.log((m*p) + b)-Math.log((m*X)+b)))+Y;
+          Y = domainEnd;
           X = p;
           return ret;
         });
