@@ -80,11 +80,59 @@
       const curveHeight = window.outerHeight / 3;
       const curveWidth = window.innerWidth;
 
-      const resolution = 6;
+      const resolution = 3;
       const maxLeverageMultiplier = 2;
       const scale = curveHeight / maxLeverageMultiplier;
       assert(resolution >= 2, 'Must use a curve resolution of 2 or higher');
       const points = Array(resolution).fill(1);
+
+      function makeSolvers() {
+        // TODO: remove the static values here & reference the globals
+        //       that are set in the shock specs
+        let travel = 160;
+        let stroke = 60;
+        const baseLeverage = travel/stroke;
+        const piecewiseRange = travel / (resolution-1);
+        console.log('base leverage', baseLeverage);
+        console.log('piecewise range', piecewiseRange);
+        console.log('points', points);
+
+        const travelLineFuncs = [];
+        for (let i = 0; i < points.length-1; i++) {
+          const x0 = i*piecewiseRange;
+          const x1 = (i+1)*piecewiseRange;
+          const y0 = points[i]*baseLeverage;
+          const y1 = points[i+1]*baseLeverage;
+          const m = (y1-y0)/(x1-x0);
+          const b = y0-(m*x0);
+          travelLineFuncs.push({
+            m,
+            b,
+            q: x0,
+            p: x1, // consider setting to inf (or undefined) for last point?)
+          });
+        }
+        console.log('travel line funcs', travelLineFuncs);
+
+        let X = 0;
+        let Y = 0;
+        const strokeLineFuncs = travelLineFuncs.map(({m, b, q, p}) => {
+          const ret =  {
+            m,
+            b,
+            X,
+            Y,
+            q: ((1/m)*(Math.log((m*q) + b)))+Y-((1/m)*(Math.log((m*X)+b))),
+            p: ((1/m)*(Math.log((m*p) + b)-Math.log((m*X)+b)))+Y,
+          }
+          Y = ((1/m)*(Math.log((m*p) + b)-Math.log((m*X)+b)))+Y;
+          X = p;
+          return ret;
+        });
+
+        console.log('stroke line funcs', strokeLineFuncs);
+
+      }
 
       function updatePoint(idx, diff) {
         points[idx] += diff;
@@ -96,6 +144,7 @@
         avg = points.reduce((i, t) => i+t, 0) / points.length;
         assert(avg.toFixed(2) == 1, 'Points in invalid state', points, avg);
 
+        makeSolvers();
         drawCurve();
       }
 
@@ -170,6 +219,7 @@
         curveContext.stroke();
       }
 
+      makeSolvers();
       drawCurve();
 
       // canvas interaction
