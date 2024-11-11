@@ -86,16 +86,9 @@
       assert(resolution >= 2, 'Must use a curve resolution of 2 or higher');
       const points = Array(resolution).fill(1);
 
-      function makeSolvers() {
-        // TODO: remove the static values here & reference the globals
-        //       that are set in the shock specs
-        let travel = 160;
-        let stroke = 60;
+      function getVariables(travel, stroke) {
         const baseLeverage = travel/stroke;
         const piecewiseRange = travel / (resolution-1);
-        console.log('base leverage', baseLeverage);
-        console.log('piecewise range', piecewiseRange);
-        console.log('points', points);
 
         const travelLineFuncs = [];
         for (let i = 0; i < points.length-1; i++) {
@@ -112,12 +105,11 @@
             p: x1, // consider setting to inf (or undefined) for last point?)
           });
         }
-        console.log('travel line funcs', travelLineFuncs);
 
         let X = 0;
         let Y = 0;
         const strokeLineFuncs = travelLineFuncs.map(({m, b, q, p}) => {
-          const ret =  {
+          const ret = {
             m,
             b,
             X,
@@ -125,16 +117,15 @@
             q,
             p,
             // these are actually "stroke" q, p
-            newq: (q/(m*q+b))-(X/(m*X+b))+Y,
-            newp: (p/(m*p+b))-(X/(m*X+b))+Y,
+            strokeq: (q/(m*q+b))-(X/(m*X+b))+Y,
+            strokep: (p/(m*p+b))-(X/(m*X+b))+Y,
           }
           Y = (p/(m*p+b))-(X/(m*X+b))+Y
           X = p;
           return ret;
         });
 
-        console.log('stroke line funcs', strokeLineFuncs);
-
+        return strokeLineFuncs;
       }
 
       function updatePoint(idx, diff) {
@@ -147,8 +138,49 @@
         avg = points.reduce((i, t) => i+t, 0) / points.length;
         assert(avg.toFixed(2) == 1, 'Points in invalid state', points, avg);
 
-        makeSolvers();
+        getVariables();
         drawCurve();
+      }
+
+      function findRoot(variables, k, w, r) {
+        for (let i = 0; i < variables.length; i++) {
+          console.log('variable', variables[i]);
+          const {
+            m,
+            b,
+            X,
+            Y,
+            strokeq,
+            strokep,
+          } = variables[i];
+
+          function getVal(x) {
+            return (m*x) - (m*Y) + Math.log((m*X)+b) - Math.log((k*x) / (w*r));
+          }
+
+          function getDer(x) {
+            return -1/x;
+          }
+
+          let inspecting = strokeq || 1/Number.MAX_SAFE_INTEGER;  // prevent /0 error when getting dir
+          let iteration = 0;
+          let lastValue = undefined;
+          const foundRoot = () => lastValue > -0.000001 && lastValue < 0.000001;
+          // this is newtons method https://en.wikipedia.org/wiki/Newton's_method
+          while (iteration < 1000 && !foundRoot()) {
+            iteration++;
+            lastValue = getVal(inspecting);
+            const dir = getDer(inspecting);
+            inspecting -= lastValue/dir;
+          }
+
+          console.log('iteration count', iteration);
+
+          if (foundRoot() && inspecting >= strokeq && inspecting < strokep) {
+            return inspecting;
+          }
+        }
+        return 0;
       }
 
       // Animation stuff
@@ -222,7 +254,7 @@
         curveContext.stroke();
       }
 
-      makeSolvers();
+      getVariables();
       drawCurve();
 
       // canvas interaction
@@ -345,10 +377,11 @@
         stroke = parseInt(data.get('stroke') || 1);
         springWeight = parseInt(data.get('spring-weight') || 0);
 
-        const leverage = wheelTravel / stroke;
+        const variables = getVariables(wheelTravel / 25.4, stroke / 25.4);
+
         // TODO: add in (part of) average weight of the bike itself?
         const rearTireBias = 0.65; // the rear wheel supports 65% of the riders weight
-        normWeight = riderWeight  * leverage * rearTireBias;
+        normWeight = riderWeight * rearTireBias;
 
         // hooks law to solve for the spring rate
         // F = k*x
@@ -356,7 +389,11 @@
         // k   spring rate
         // x   deformation (sometimes called displacement)
 
-        sag = normWeight / springWeight; // in
+
+        // This is what we need to swap out
+        sag = findRoot(variables, springWeight, riderWeight, rearTireBias);
+        console.log('the final sag', sag);
+
         sag *= 25.4 // mm
         sag /= stroke / 100 // %
         sag = Math.round(sag * 100) / 100; // round to 2 decimals (so users can see something is changing
