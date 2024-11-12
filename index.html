@@ -68,17 +68,73 @@
         display:flex;
       }
       aside p {margin:0 0 0 10px;}
+
+      .row {
+        display: flex;
+        align-items: start;
+        justify-content: center;
+        width: 900px;
+        margin: 40px auto;
+      }
+
+      .column {
+        width: 50%;
+        flex-basis: 50%;
+      }
+
+      canvas#curve {
+        outline: 2px solid red;
+      }
     </style>
   </head>
   <body>
-    <canvas id="curve"></canvas>
+
+    <div class="row">
+      <div class="column">
+        <canvas id="animation"></canvas>
+        <button id="simulate"><span>Press & Hold</span><br/>to visualize sag</button>
+      </div>
+      <div class="column">
+        <form>
+          <label>
+            <span>Rider Weight (lbs)</span>
+            <input type="number" name="rider-weight" value="165">
+          </label>
+          <label>
+            <span>Rear wheel travel (mm)</span>
+            <input type="number" name="travel" value="160">
+          </label>
+          <label>
+            <span>Shock stroke (mm)</span>
+            <input type="number" name="stroke" value="60">
+          </label>
+          <label>
+            <span>
+              <strong>Spring Weight (lbs/in)</strong><br/>
+              Reset to 30% sag using <a href="#" data-sag="30"></a>
+            </span>
+            <input type="number" name="spring-weight" value="400">
+          </label>
+          <div>
+            <strong>Calculated Sag</strong>
+            <span style="font-size:1.5rem;"><span id="sag-output"></span>% *</span>
+          </div>
+        </form>
+
+        <canvas id="curve"></canvas>
+
+        <footer style="text-align:center;padding: 20px;">View code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a></footer>
+      </div>
+    </div>
+
     <script>
       function assert(condition) {
         if (!condition) console.error('ASSERTION FAILURE:', ...Array.from(arguments).slice(1));
       }
 
+      const curveCanvas = document.querySelector('canvas#curve');
       const curveHeight = window.outerHeight / 3;
-      const curveWidth = window.innerWidth;
+      const curveWidth = curveCanvas.parentElement.offsetWidth;
 
       const resolution = 3;
       const maxLeverageMultiplier = 2;
@@ -185,7 +241,6 @@
       }
 
       // Animation stuff
-      const curveCanvas = document.querySelector('canvas#curve');
       const curveContext = curveCanvas.getContext('2d');
 
       curveCanvas.height = curveHeight;
@@ -261,8 +316,9 @@
       // canvas interaction
       let x = 0, y = 0, prevY = null, currentX = null; 
       curveCanvas.addEventListener('mousemove', function(event) {
-        y = event.clientY;
-        x = event.clientX;
+        const { left, top } = curveCanvas.getBoundingClientRect();
+        y = event.clientY-top;
+        x = event.clientX-left;
         if (prevY == null) return;
         updatePoint(currentX, (prevY-y)/scale);
         prevY = y;
@@ -277,47 +333,6 @@
       });
 
     </script>
-
-    <canvas id="animation"></canvas>
-    <button id="simulate"><span>Press & Hold</span><br/>to visualize sag</button>
-    <form>
-      <label>
-        <span>Rider Weight (lbs)</span>
-        <input type="number" name="rider-weight" value="165">
-      </label>
-      <label>
-        <span>Rear wheel travel (mm)</span>
-        <input type="number" name="travel" value="160">
-      </label>
-      <label>
-        <span>Shock stroke (mm)</span>
-        <input type="number" name="stroke" value="60">
-      </label>
-      <label>
-        <span>
-          <strong>Spring Weight (lbs/in)</strong><br/>
-          Reset to 30% sag using <a href="#" data-sag="30"></a>
-        </span>
-        <input type="number" name="spring-weight" value="400">
-      </label>
-      <div>
-        <strong>Calculated Sag</strong>
-        <span style="font-size:1.5rem;"><span id="sag-output"></span>% *</span>
-      </div>
-    </form>
-
-    <aside style="padding:20px;">
-      <strong>*</strong>
-      <p>
-        The calculations taking place here currently assume a <em>linear</em>
-        suspension curve. Most frames have some level of "progressiveness" built into their design.
-        As a result the calculated sag displayed above will likely be <em>a little low</em>
-        when compared to reality. <a href="https://github.com/RyanBerliner/coil-calculator/issues/1">
-        This issue is noted here</a> and may be fixed in the future.
-      </p>
-    </aside>
-
-    <footer style="text-align:center;padding: 20px;">View code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a></footer>
 
     <script>
       const springWeightInput = document.querySelector('input[name="spring-weight"]');
@@ -419,7 +434,7 @@
 
       function setCanvas() {
         cHeight = window.outerHeight / 2;
-        cWidth = window.innerWidth;
+        cWidth = canvasNode.parentElement.offsetWidth;
         canvasNode.height = cHeight;
         canvasNode.width = cWidth;
 
