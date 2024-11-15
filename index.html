@@ -128,18 +128,14 @@
     </div>
 
     <script>
-      function assert(condition) {
-        if (!condition) console.error('ASSERTION FAILURE:', ...Array.from(arguments).slice(1));
-      }
-
       const curveCanvas = document.querySelector('canvas#curve');
       const curveHeight = window.outerHeight / 3;
       const curveWidth = curveCanvas.parentElement.offsetWidth;
 
-      const resolution = 3;
+      const resolution = 6;
       const maxLeverageMultiplier = 2;
       const scale = curveHeight / maxLeverageMultiplier;
-      assert(resolution >= 2, 'Must use a curve resolution of 2 or higher');
+      console.assert(resolution >= 2, 'Must use a curve resolution of 2 or higher');
       const points = Array(resolution).fill(1);
 
       function getVariables(travel, stroke) {
@@ -192,7 +188,7 @@
         }
 
         avg = points.reduce((i, t) => i+t, 0) / points.length;
-        assert(avg.toFixed(2) == 1, 'Points in invalid state', points, avg);
+        console.assert(avg.toFixed(2) == 1, 'Points in invalid state', points, avg);
 
         getVariables();
         drawCurve();
