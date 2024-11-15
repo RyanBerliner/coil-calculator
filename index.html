@@ -177,18 +177,51 @@
           return ret;
         });
 
+        console.log(strokeLineFuncs);
+
         return strokeLineFuncs;
       }
 
       function updatePoint(idx, diff) {
         points[idx] += diff;
-        for (let i = 0; i < points.length; i++) {
-          if (i === idx) continue;
-          points[i] -= diff/(points.length-1);
+
+        const targetArea = resolution-1;
+
+        let area = 0;
+        for (let i = 0; i < points.length-1; i++) {
+          const x0 = i;
+          const x1 = i+1;
+          const y0 = points[i];
+          const y1 = points[i+1];
+          const m = (y1-y0)/(x1-x0);
+          const b = y0-(m*x0);
+          const q = x0;
+          const p = x1;
+          area += ((m*(Math.pow(p,2) - Math.pow(q,2)))/2) + (b*p) - (b*q)
         }
 
-        avg = points.reduce((i, t) => i+t, 0) / points.length;
-        console.assert(avg.toFixed(2) == 1, 'Points in invalid state', points, avg);
+        const perPointDiff = (targetArea - area)/(resolution-1);
+
+        for (let i = 0; i < points.length; i++) {
+          // need to update each one to retain the area under the curve
+          points[i] += perPointDiff;
+        }
+
+        // TODO: only do verifacation like this when deving
+        area = 0;
+        for (let i = 0; i < points.length-1; i++) {
+          const x0 = i;
+          const x1 = i+1;
+          const y0 = points[i];
+          const y1 = points[i+1];
+          const m = (y1-y0)/(x1-x0);
+          const b = y0-(m*x0);
+          const q = x0;
+          const p = x1;
+          area += ((m*(Math.pow(p,2) - Math.pow(q,2)))/2) + (b*p) - (b*q)
+        }
+        console.assert(area < targetArea+0.1, 'Points in invalid state', area, targetArea);
+        console.assert(area > targetArea-0.1, 'Points in invalid state', area, targetArea);
 
         getVariables();
         drawCurve();
@@ -197,7 +230,6 @@
 
       function findRoot(variables, k, w, r) {
         for (let i = 0; i < variables.length; i++) {
-          console.log('variable', variables[i]);
           const {
             m,
             b,
@@ -226,8 +258,6 @@
             const dir = getDer(inspecting);
             inspecting -= lastValue/dir;
           }
-
-          console.log('iteration count', iteration);
 
           // TODO: consider making the top end unbounded for the last func (related to other todo)
           if (foundRoot() && inspecting >= strokeq && inspecting < strokep) {
@@ -405,7 +435,6 @@
 
         // This is what we need to swap out
         sag = findRoot(variables, springWeight, riderWeight, rearTireBias);
-        console.log('the final sag', sag);
 
         sag *= 25.4 // mm
         sag /= stroke / 100 // %
