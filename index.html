@@ -245,13 +245,16 @@
             strokep,
           } = variables[i];
 
+          console.log('iteration', i);
+
           function getVal(x) {
             let value = (m*x) - (m*Y) + Math.log((m*X)+b) - Math.log((k*x) / (w*r));
+            console.log(m,b,x,X,Y,w,r);
             return value;
           }
 
           function getDer(x) {
-            return -1/x;
+            return m-1/x;
           }
 
           let inspecting = strokeq || 1/Number.MAX_SAFE_INTEGER;  // prevent /0 error when getting dir
@@ -265,7 +268,7 @@
             const dir = getDer(inspecting);
             inspecting -= lastValue/dir;
             // TODO: try to adjust this to return the instable states exactly
-            if (isNaN(inspecting)) return NaN;
+            // if (isNaN(inspecting)) return NaN;
           }
 
           if (foundRoot() && inspecting >= strokeq && inspecting < strokep) {
