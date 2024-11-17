@@ -264,6 +264,8 @@
             lastValue = getVal(inspecting);
             const dir = getDer(inspecting);
             inspecting -= lastValue/dir;
+            // TODO: try to adjust this to return the instable states exactly
+            if (isNaN(inspecting)) return NaN;
           }
 
           if (foundRoot() && inspecting >= strokeq && inspecting < strokep) {
@@ -271,7 +273,7 @@
           }
         }
 
-        return NaN;
+        return variables[variables.length-1].strokep;
       }
 
       // Animation stuff
