@@ -161,6 +161,8 @@
         let X = 0;
         let Y = 0;
         const strokeLineFuncs = travelLineFuncs.map(({m, b, q, p}) => {
+          // the problem to solve is that if m === 0 this is undefined. need to find value as m approaches m
+          const yValueAtPofIntegral = ((Math.log(m*p+b)-Math.log(m*q+b))/m)+Y;
           const ret = {
             m,
             b,
@@ -169,10 +171,11 @@
             q,
             p,
             // these are actually "stroke" q, p
-            strokeq: (q/(m*q+b))-(X/(m*X+b))+Y,
-            strokep: (p/(m*p+b))-(X/(m*X+b))+Y,
+            // i think that these are wrong
+            strokeq: Y,// y value at integral of p
+            strokep: yValueAtPofIntegral, // y value at integral of q
           }
-          Y = (p/(m*p+b))-(X/(m*X+b))+Y
+          Y = yValueAtPofIntegral;
           X = p;
           return ret;
         });
@@ -185,7 +188,7 @@
       function updatePoint(idx, diff) {
         points[idx] += diff;
 
-        const targetArea = resolution-1;
+        const targetArea = resolution-1; // the target area of our inverse
 
         let area = 0;
         for (let i = 0; i < points.length-1; i++) {
@@ -197,18 +200,17 @@
           const b = y0-(m*x0);
           const q = x0;
           const p = x1;
-          area += ((m*(Math.pow(p,2) - Math.pow(q,2)))/2) + (b*p) - (b*q)
+          // find the area under the inverse (the actual derivitive)
+          if (m === 0) { // becuase of the problem if this is the case then b will not be 0 so OK
+            area += (p-q)/b
+          } else {
+            area += (Math.log((m*p)+b)-Math.log((m*q)+b))/m
+          }
         }
 
-        const perPointDiff = (targetArea - area)/(resolution-1);
+        const perPointDiff = (targetArea-area)/(resolution-1);
+        console.log('area, diff', area, perPointDiff);
 
-        for (let i = 0; i < points.length; i++) {
-          // need to update each one to retain the area under the curve
-          points[i] += perPointDiff;
-        }
-
-        // TODO: only do verifacation like this when deving
-        area = 0;
         for (let i = 0; i < points.length-1; i++) {
           const x0 = i;
           const x1 = i+1;
@@ -218,10 +220,30 @@
           const b = y0-(m*x0);
           const q = x0;
           const p = x1;
-          area += ((m*(Math.pow(p,2) - Math.pow(q,2)))/2) + (b*p) - (b*q)
+
+          const recip = x => (1/(m*x+b))+perPointDiff;
+          points[i] = 1/recip(q);
+          if ((i+1) === (points.length-1)) {
+            const end = recip(p);
+            points[i+1] = 1/recip(p);
+          }
         }
-        console.assert(area < targetArea+0.1, 'Points in invalid state', area, targetArea);
-        console.assert(area > targetArea-0.1, 'Points in invalid state', area, targetArea);
+
+        // TODO: only do verifacation like this when deving
+        // area = 0;
+        // for (let i = 0; i < points.length-1; i++) {
+        //   const x0 = i;
+        //   const x1 = i+1;
+        //   const y0 = 1/points[i];
+        //   const y1 = 1/points[i+1];
+        //   const m = (y1-y0)/(x1-x0);
+        //   const b = y0-(m*x0);
+        //   const q = x0;
+        //   const p = x1;
+        //   area += ((m*(Math.pow(p,2) - Math.pow(q,2)))/2) + (b*p) - (b*q)
+        // }
+        // console.assert(area < targetArea+0.1, 'Points in invalid state', area, targetArea);
+        // console.assert(area > targetArea-0.1, 'Points in invalid state', area, targetArea);
 
         getVariables();
         drawCurve();
