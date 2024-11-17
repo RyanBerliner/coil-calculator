@@ -422,6 +422,18 @@
         return parseInt(weight);
       }
 
+      function leverageOfShockAtStroke(s) {
+        const variables = getVariables(wheelTravel / 25.4, stroke / 25.4); 
+        for (let i = 0; i < variables.length; i++) {
+          const {strokeq, strokep, m, Y, X, b} = variables[i];
+          if (s < strokep && s >= strokeq) {
+            return Math.pow(Math.E, (m*s)-(m*Y)+Math.log((m*X)+b));
+          }
+        }
+        // default to the "average" so it at least doesn't break
+        return wheelTravel / stroke;
+      }
+
       function calculateCharacteristics() {
         const data = new FormData(form);
         riderWeight = parseInt(data.get('rider-weight') || 0);
@@ -712,6 +724,7 @@
 
       let last = 0;
 
+
       function doPhysics(timestamp) {
         requestAnimationFrame(doPhysics);
         if (!last) {
@@ -725,7 +738,7 @@
         const forces = [];
         let springConstant = springWeight * 4.448; // N/in
         springConstant = springConstant / 25.4; // N/mm
-        let weight = normWeight * 4.448; // N
+        let weight = normWeight * leverageOfShockAtStroke(pos / 25.4) * 4.448; // N
 
         forces.push(simulating ? weight : 0);
         forces.push(-springConstant * pos);
