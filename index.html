@@ -455,7 +455,9 @@
 
         sag *= 25.4 // mm
         sag /= stroke / 100 // %
-        sag = Math.round(sag * 100) / 100; // round to 2 decimals (so users can see something is changing
+        // Do a math.min incase our leverage curve estimate is a little off and would
+        // lead to max sag at like 99.9 or 100.1 or something
+        sag = Math.min(Math.round(sag * 100) / 100, 100); // round to 2 decimals (so users can see something is changing
         document.getElementById('sag-output').innerHTML = sag;
 
         document.querySelectorAll('[data-sag]').forEach(el => {
