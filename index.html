@@ -128,6 +128,8 @@
     </div>
 
     <script>
+      let wheelTravel;
+      let stroke;
       const curveCanvas = document.querySelector('canvas#curve');
       const curveHeight = window.outerHeight / 3;
       const curveWidth = curveCanvas.parentElement.offsetWidth;
@@ -138,9 +140,9 @@
       console.assert(resolution >= 2, 'Must use a curve resolution of 2 or higher');
       const points = Array(resolution).fill(1);
 
-      function getVariables(travel, stroke) {
-        const baseLeverage = travel/stroke;
-        const piecewiseRange = travel / (resolution-1);
+      function getVariables() {
+        const baseLeverage = wheelTravel/stroke;
+        const piecewiseRange = wheelTravel / 25.4 / (resolution-1);
 
         const travelLineFuncs = [];
         for (let i = 0; i < points.length-1; i++) {
@@ -174,9 +176,8 @@
             q,
             p,
             // these are actually "stroke" q, p
-            // i think that these are wrong
-            strokeq: Y,// y value at integral of p
-            strokep: yValueAtPofIntegral, // y value at integral of q
+            strokeq: Y,
+            strokep: yValueAtPofIntegral,
           }
           Y = yValueAtPofIntegral;
           X = p;
@@ -375,8 +376,6 @@
 
       let riderWeight;
       let normWeight;
-      let wheelTravel;
-      let stroke;
       let sag;
       let springWeight;
       let simulating = false;
@@ -421,7 +420,7 @@
       }
 
       function leverageOfShockAtStroke(s) {
-        const variables = getVariables(wheelTravel / 25.4, stroke / 25.4); 
+        const variables = getVariables(); 
         for (let i = 0; i < variables.length; i++) {
           const {strokeq, strokep, m, Y, X, b} = variables[i];
           if (s < strokep && s >= strokeq) {
@@ -439,7 +438,7 @@
         stroke = parseInt(data.get('stroke') || 1);
         springWeight = parseInt(data.get('spring-weight') || 0);
 
-        const variables = getVariables(wheelTravel / 25.4, stroke / 25.4);
+        const variables = getVariables();
 
         // TODO: add in (part of) average weight of the bike itself?
         const rearTireBias = 0.65; // the rear wheel supports 65% of the riders weight
