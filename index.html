@@ -82,8 +82,47 @@
         flex-basis: 50%;
       }
 
-      canvas#curve {
-        outline: 2px solid red;
+      .curve-container {
+        padding-left: 40px;
+        padding-bottom: 30px;
+        position: relative;
+        margin: 0 1rem 3rem;
+      }
+      .curve-container > span {
+        text-align: right;
+        display: inline-block;
+        width: 30px;
+      }
+      .curve-container > span:nth-child(1) {
+        position: absolute;
+        top: 0;
+        transform: translateY(-50%);
+        left: 0;
+      }
+      .curve-container > span:nth-child(2) {
+        position: absolute;
+        top: calc(50% - 15px);
+        transform: translateY(-50%);
+        left: 0;
+      }
+      .curve-container > span:nth-child(3) {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+      .curve-container > span:nth-child(4) {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        transform: translateX(50%);
+      }
+
+      #curve {
+        border: 1px solid #eaeaea;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow:0 0.05em 0.15em #0000001a, 0 0.15em 0.9em #00000005;
+
       }
     </style>
   </head>
@@ -118,7 +157,13 @@
           </div>
         </form>
 
-        <canvas id="curve"></canvas>
+        <div class="curve-container">
+          <span id="double-leverage">2</span>
+          <span id="base-leverage">1</span>
+          <span>0</span>
+          <span id="wheel-travel-label">1</span>
+          <canvas id="curve"></canvas>
+        </div>
 
         <footer style="text-align:center;padding: 20px;">View code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a></footer>
       </div>
@@ -128,8 +173,8 @@
       let wheelTravel;
       let stroke;
       const curveCanvas = document.querySelector('canvas#curve');
-      const curveHeight = window.outerHeight / 3;
-      const curveWidth = curveCanvas.parentElement.offsetWidth;
+      const curveHeight = 200;
+      const curveWidth = curveCanvas.parentElement.offsetWidth-40;
 
       const resolution = 6;
       const maxLeverageMultiplier = 2;
@@ -320,11 +365,27 @@
       }
 
       function drawCurve() {
+        curveContext.clearRect(0, 0, curveWidth, curveHeight);
+        // gridlines
+        let num = 16;
+        for (let i = 0; i <= num; i++) {
+          curveContext.beginPath();
+          curveContext.lineWidth = 1;
+          let color = '#f0f0f0';
+          if (i % 4 == 0) {
+            color = '#c5c5c5';
+          }
+          curveContext.strokeStyle = color;
+          curveContext.moveTo(0, curveHeight/num*i);
+          curveContext.lineTo(curveWidth, curveHeight/num*i);
+          curveContext.stroke();
+        }
+
+        // the curve
         const curves = curveCubics();
         const segmentWidth = curveWidth/(resolution-1);
-        curveContext.clearRect(0, 0, curveWidth, curveHeight);
         curveContext.beginPath();
-        curveContext.lineWidth = 2;
+        curveContext.lineWidth = 3;
         curveContext.strokeStyle = '#000';
         curveContext.moveTo(0, getY(points[0]));
         let lastmod = 0;
@@ -370,6 +431,9 @@
       const springWeightInput = document.querySelector('input[name="spring-weight"]');
       const form = document.querySelector('form');
       const button = document.getElementById('simulate');
+      const baseLeverage = document.getElementById('base-leverage');
+      const doubleLeverage = document.getElementById('double-leverage');
+      const wheelTravelLabel = document.getElementById('wheel-travel-label');
 
       let riderWeight;
       let normWeight;
@@ -426,6 +490,10 @@
         wheelTravel = parseInt(data.get('travel') || 0);
         stroke = parseInt(data.get('stroke') || 1);
         springWeight = parseInt(data.get('spring-weight') || 0);
+
+        baseLeverage.innerHTML = (wheelTravel / stroke).toFixed(1);
+        doubleLeverage.innerHTML = (wheelTravel / stroke * 2).toFixed(1);
+        wheelTravelLabel.innerHTML = wheelTravel.toFixed(0);
 
         variables = getVariables();
 
