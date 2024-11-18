@@ -140,6 +140,7 @@
       console.assert(resolution >= 2, 'Must use a curve resolution of 2 or higher');
       const points = Array(resolution).fill(1);
 
+      let variables = getVariables();  // really need a better name for this
       function getVariables() {
         const baseLeverage = wheelTravel/stroke;
         const piecewiseRange = wheelTravel / 25.4 / (resolution-1);
@@ -230,7 +231,7 @@
           }
         }
 
-        getVariables();
+        variables = getVariables();
         drawCurve();
         calculateCharacteristics();
       }
@@ -345,7 +346,6 @@
         curveContext.stroke();
       }
 
-      getVariables();
       drawCurve();
 
       // canvas interaction
@@ -420,7 +420,6 @@
       }
 
       function leverageOfShockAtStroke(s) {
-        const variables = getVariables(); 
         for (let i = 0; i < variables.length; i++) {
           const {strokeq, strokep, m, Y, X, b} = variables[i];
           if (s < strokep && s >= strokeq) {
@@ -438,7 +437,7 @@
         stroke = parseInt(data.get('stroke') || 1);
         springWeight = parseInt(data.get('spring-weight') || 0);
 
-        const variables = getVariables();
+        variables = getVariables();
 
         // TODO: add in (part of) average weight of the bike itself?
         const rearTireBias = 0.65; // the rear wheel supports 65% of the riders weight
