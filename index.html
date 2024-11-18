@@ -109,10 +109,7 @@
             <input type="number" name="stroke" value="60">
           </label>
           <label>
-            <span>
-              <strong>Spring Weight (lbs/in)</strong><br/>
-              Reset to 30% sag using <a href="#" data-sag="30"></a>
-            </span>
+            <strong>Spring Weight (lbs/in)</strong>
             <input type="number" name="spring-weight" value="400">
           </label>
           <div>
@@ -412,13 +409,6 @@
         }
       });
 
-      function getSpringWeight(sagAmount) {
-        const targetSagDistance = stroke * sagAmount / 100;
-        let weight = normWeight / targetSagDistance; // lbs/mm
-        weight *= 25.4 // lbs/in
-        return parseInt(weight);
-      }
-
       function leverageOfShockAtStroke(s) {
         for (let i = 0; i < variables.length; i++) {
           const {strokeq, strokep, m, Y, X, b} = variables[i];
@@ -457,14 +447,8 @@
         sag /= stroke / 100 // %
         // Do a math.min incase our leverage curve estimate is a little off and would
         // lead to max sag at like 99.9 or 100.1 or something
-        sag = Math.min(Math.round(sag * 100) / 100, 100); // round to 2 decimals (so users can see something is changing
+        sag = Math.min(Math.round(sag * 100) / 100, 100).toFixed(2); // round to 2 decimals (so users can see something is changing
         document.getElementById('sag-output').innerHTML = sag;
-
-        document.querySelectorAll('[data-sag]').forEach(el => {
-          const weight = getSpringWeight(parseInt(el.getAttribute('data-sag')));
-          el.innerHTML = weight + ' lbs/in';
-          el.setAttribute('data-val', weight);
-        });
       }
 
       calculateCharacteristics();
