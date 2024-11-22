@@ -73,13 +73,24 @@
         display: flex;
         align-items: start;
         justify-content: center;
-        width: 900px;
+        max-width: 900px;
         margin: 40px auto;
       }
 
       .column {
         width: 50%;
         flex-basis: 50%;
+      }
+
+      @media(max-width:1000px) {
+        .row {
+          flex-direction:column;
+          align-items:center;
+        }
+        .column {
+          width: 100%;
+          flex-basis: 100%;
+        }
       }
 
       .curve-container {
@@ -416,22 +427,36 @@
 
       // canvas interaction
       let x = 0, y = 0, prevY = null, currentX = null; 
-      curveCanvas.addEventListener('mousemove', function(event) {
+      function moveCurveEvent(event) {
+        event.preventDefault();
         const { left, top } = curveCanvas.getBoundingClientRect();
-        y = event.clientY-top;
-        x = event.clientX-left;
+        y = event.targetTouches ? event.targetTouches[0].clientY : event.clientY;
+        y -= top;
+        x = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
+        x -= left;
         if (prevY == null) return;
         updatePoint(currentX, (prevY-y)/scale);
         prevY = y;
-      });
-      curveCanvas.addEventListener('mousedown', function(event) {
-        prevY = y;
+      }
+      function startCurveEvent(event) {
+        event.preventDefault();
+        const { left, top } = curveCanvas.getBoundingClientRect();
+        prevY = event.targetTouches ? event.targetTouches[0].clientY : event.clientY;
+        prevY -= top;
+        x = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
+        x -= left;
         const i = Math.round(x/(curveWidth/(resolution-1)));
         if (i >= 0 && i < points.length) currentX = i;
-      });
-      document.addEventListener('mouseup', function(event) {
+      }
+      function endCurveEvent(event) {
         prevY = null;
-      });
+      }
+      curveCanvas.addEventListener('mousemove', moveCurveEvent);
+      curveCanvas.addEventListener('touchmove', moveCurveEvent);
+      curveCanvas.addEventListener('mousedown', startCurveEvent, {capture: true});
+      curveCanvas.addEventListener('touchstart', startCurveEvent, {capture: true});
+      document.addEventListener('mouseup', endCurveEvent);
+      document.addEventListener('touchend', endCurveEvent);
 
     </script>
 
