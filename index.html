@@ -46,7 +46,8 @@
         box-shadow:0 0px 0 5px #f07909;
       }
       button span {font-size:1.5em;font-weight:700;}
-      form > * {
+      form > *,
+      form > details > label{
         width:100%;
         display:flex;
         margin-bottom:1rem;
@@ -93,12 +94,16 @@
         }
       }
 
+      details > summary {
+        margin-bottom: 1rem;
+      }
+
       .curve-container {
         padding-left: 40px;
         padding-right: 20px;
         padding-bottom: 30px;
         position: relative;
-        margin: 0 1rem 3rem;
+        margin: 1rem 0;
       }
       .curve-container > span:not(.x-axis) {
         position: absolute;
@@ -138,9 +143,9 @@
       .curve-heading {
         font-size: 1rem;
         text-align: center;
+        margin-top: 1.5em;
         margin-bottom: 1em;
       }
-
 
       #curve {
         border: 1px solid #eaeaea;
@@ -173,24 +178,31 @@
             <input type="number" name="stroke" value="60">
           </label>
           <label>
-            <strong>Spring Weight (lbs/in)</strong>
+            Spring Weight (lbs/in)
             <input type="number" name="spring-weight" value="400">
           </label>
+          <details>
+            <summary>Advanced Settings (optional)</summary>
+            <label>
+              <span>Rear Wheel Bias (default 65%)</span>
+              <input type="number" name="rear-bias" value="65">
+            </label>
+            <h2 class="curve-heading">Leverage Curve</h2>
+            <div class="curve-container">
+              <span id="double-leverage">2</span>
+              <span id="base-leverage">1</span>
+              <span>0</span>
+              <span id="wheel-travel-label">1</span>
+              <span class="x-axis">Wheel Travel</span>
+              <canvas id="curve"></canvas>
+            </div>
+          </details>
+
           <div>
-            <strong>Calculated Sag</strong>
+            <strong style="font-size:1.2rem;">Calculated Sag</strong>
             <span style="font-size:1.5rem;"><span id="sag-output"></span>% *</span>
           </div>
         </form>
-
-        <h2 class="curve-heading">Leverage Curve</h2>
-        <div class="curve-container">
-          <span id="double-leverage">2</span>
-          <span id="base-leverage">1</span>
-          <span>0</span>
-          <span id="wheel-travel-label">1</span>
-          <span class="x-axis">Wheel Travel</span>
-          <canvas id="curve"></canvas>
-        </div>
 
         <footer style="text-align:center;padding: 20px;">View code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a></footer>
       </div>
@@ -485,6 +497,7 @@
       const wheelTravelLabel = document.getElementById('wheel-travel-label');
 
       let riderWeight;
+      let rearTireBias;
       let normWeight;
       let sag;
       let springWeight;
@@ -535,6 +548,16 @@
 
       function calculateCharacteristics() {
         const data = new FormData(form);
+        rearTireBias = parseInt(data.get('rear-bias') || 65);
+        if (rearTireBias<=0) {
+          rearTireBias = 1;
+          form.querySelector('[name="rear-bias"]').value = 1;
+        }
+        if (rearTireBias>=99) {
+          rearTireBias = 99;
+          form.querySelector('[name="rear-bias"]').value = 99;
+        }
+        rearTireBias /= 100;
         riderWeight = parseInt(data.get('rider-weight') || 0);
         wheelTravel = parseInt(data.get('travel') || 0);
         stroke = parseInt(data.get('stroke') || 1);
@@ -547,7 +570,6 @@
         variables = getVariables();
 
         // TODO: add in (part of) average weight of the bike itself?
-        const rearTireBias = 0.65; // the rear wheel supports 65% of the riders weight
         normWeight = riderWeight * rearTireBias;
 
         // hooks law to solve for the spring rate
