@@ -140,13 +140,20 @@ There may be an easier way to go from 1 to 4... but I couldn't reason about that
 
 At the end of all this you now have 5 piecewise defined functions that give
 the leverage of on the shock at any given stroke... which inserted into hooks
-law at each interval produce:
+law at each interval produce the following line, which we must find its root:
 
-$$y = mx - my + ln(mX+b) - ln(\frac{kx}{wr})$$
+$$y = mx - mY + ln(mX+b) - ln(\frac{kx}{wr})$$
+
+- m, b, are the variables in each leverage curve intervals line (y = mx + b)
+- X, Y are coordinates at the end of the previous intervals integral
+- w is the weight of the rider
+- r is the rear wheel bias (0-1)
+- k is the spring weight
 
 As far as I know, this function is considered [transcendental](https://en.wikipedia.org/wiki/Transcendental_function)
-because isolating the sag (x) is not possible. To solve, you have to use
-analytical methods to zero in on the solution. I use
-[newtons method](https://en.wikipedia.org/wiki/Newton%27s_method) in this case.
+because isolating the sag (x) is not possible, which is why we are using root
+finding at all. To solve, you have to use analytical methods to zero in on the
+solution. I use [newtons method](https://en.wikipedia.org/wiki/Newton%27s_method)
+in this case.
 
 Evaluating this on each interval of our curve gives us our sag.
