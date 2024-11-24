@@ -142,7 +142,7 @@ At the end of all this you now have 5 piecewise defined functions that give
 the leverage of on the shock at any given stroke... which inserted into hooks
 law at each interval produce:
 
-TODO: insert formula 
+$$y = mx - my + ln(mX+b) - ln(\frac{kx}{wr})$$
 
 As far as I know, this function is considered [transcendental](https://en.wikipedia.org/wiki/Transcendental_function)
 because isolating the sag (x) is not possible. To solve, you have to use
@@ -150,7 +150,3 @@ analytical methods to zero in on the solution. I use
 [newtons method](https://en.wikipedia.org/wiki/Newton%27s_method) in this case.
 
 Evaluating this on each interval of our curve gives us our sag.
-
-
-TODO: upload images of notes for future reference
-
