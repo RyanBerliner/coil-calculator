@@ -33,9 +33,6 @@ the spring.
 Some platforms start with a high leverage ratio which reduces, others the
 opposite, and others make 'U' or other shapes.
 
-Here is an article I found that dives deeper into this.
-[TODO: fully read to verifiy its good](https://vorsprungsuspension.com/blogs/learn/understanding-leverage-curves)
-
 This means our once simple algebra equations now needs to incorporate this curve
 data. Said in another way, our equation needs to account for difference forces
 at different spring displacements.
