@@ -46,7 +46,8 @@
         box-shadow:0 0px 0 5px #f07909;
       }
       button span {font-size:1.5em;font-weight:700;}
-      form > * {
+      form > *,
+      form > details > label{
         width:100%;
         display:flex;
         margin-bottom:1rem;
@@ -68,59 +69,436 @@
         display:flex;
       }
       aside p {margin:0 0 0 10px;}
+
+      .row {
+        display: flex;
+        align-items: start;
+        justify-content: center;
+        max-width: 900px;
+        margin: 40px auto;
+      }
+
+      .column {
+        width: 50%;
+        flex-basis: 50%;
+      }
+
+      @media(max-width:1000px) {
+        .row {
+          flex-direction:column;
+          align-items:center;
+        }
+        .column {
+          width: 100%;
+          flex-basis: 100%;
+        }
+      }
+
+      details > summary {
+        margin-bottom: 1rem;
+      }
+
+      .curve-container {
+        padding-left: 40px;
+        padding-right: 20px;
+        padding-bottom: 30px;
+        position: relative;
+        margin: 1rem 0;
+      }
+      .curve-container > span:not(.x-axis) {
+        position: absolute;
+        text-align: right;
+        display: inline-block;
+        width: 30px;
+      }
+      .curve-container > span:nth-child(1) {
+        top: 0;
+        transform: translateY(-50%);
+        left: 0;
+      }
+      .curve-container > span:nth-child(2) {
+        top: calc(50% - 15px);
+        transform: translateY(-50%);
+        left: 0;
+      }
+      .curve-container > span:nth-child(3) {
+        bottom: 0;
+        left: 0;
+      }
+      .curve-container > span:nth-child(4) {
+        bottom: 0;
+        right: 20px;
+        transform: translateX(50%);
+      }
+      .x-axis {
+        position: absolute;
+        transform: translateX(-50%);
+        bottom: 0;
+        left: 50%;
+        font-size: 0.7em;
+        opacity: 0.5;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+      .curve-heading {
+        font-size: 1rem;
+        text-align: center;
+        margin-top: 1.5em;
+        margin-bottom: 1em;
+      }
+
+      #curve {
+        border: 1px solid #eaeaea;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow:0 0.05em 0.15em #0000001a, 0 0.15em 0.9em #00000005;
+
+      }
     </style>
   </head>
   <body>
-    <canvas></canvas>
-    <button id="simulate"><span>Press & Hold</span><br/>to visualize sag</button>
-    <form>
-      <label>
-        <span>Rider Weight (lbs)</span>
-        <input type="number" name="rider-weight" value="165">
-      </label>
-      <label>
-        <span>Rear wheel travel (mm)</span>
-        <input type="number" name="travel" value="160">
-      </label>
-      <label>
-        <span>Shock stroke (mm)</span>
-        <input type="number" name="stroke" value="60">
-      </label>
-      <label>
-        <span>
-          <strong>Spring Weight (lbs/in)</strong><br/>
-          Reset to 30% sag using <a href="#" data-sag="30"></a>
-        </span>
-        <input type="number" name="spring-weight" value="400">
-      </label>
-      <div>
-        <strong>Calculated Sag</strong>
-        <span style="font-size:1.5rem;"><span id="sag-output"></span>% *</span>
+
+    <div class="row">
+      <div class="column">
+        <canvas id="animation"></canvas>
+        <button id="simulate"><span>Press & Hold</span><br/>to visualize sag</button>
       </div>
-    </form>
+      <div class="column">
+        <form>
+          <label>
+            <span>Rider Weight (lbs)</span>
+            <input type="number" name="rider-weight" value="165">
+          </label>
+          <label>
+            <span>Rear wheel travel (mm)</span>
+            <input type="number" name="travel" value="160">
+          </label>
+          <label>
+            <span>Shock stroke (mm)</span>
+            <input type="number" name="stroke" value="60">
+          </label>
+          <label>
+            Spring Weight (lbs/in)
+            <input type="number" name="spring-weight" value="400">
+          </label>
+          <details>
+            <summary>Advanced Settings (optional)</summary>
+            <label>
+              <span>Rear Wheel Bias (default 65%)</span>
+              <input type="number" name="rear-bias" value="65">
+            </label>
+            <h2 class="curve-heading">Leverage Curve</h2>
+            <div class="curve-container">
+              <span id="double-leverage">2</span>
+              <span id="base-leverage">1</span>
+              <span>0</span>
+              <span id="wheel-travel-label">1</span>
+              <span class="x-axis">Wheel Travel</span>
+              <canvas id="curve"></canvas>
+            </div>
+          </details>
 
-    <aside style="padding:20px;">
-      <strong>*</strong>
-      <p>
-        The calculations taking place here currently assume a <em>linear</em>
-        suspension curve. Most frames have some level of "progressiveness" built into their design.
-        As a result the calculated sag displayed above will likely be <em>a little low</em>
-        when compared to reality. <a href="https://github.com/RyanBerliner/coil-calculator/issues/1">
-        This issue is noted here</a> and may be fixed in the future.
-      </p>
-    </aside>
+          <div>
+            <strong style="font-size:1.2rem;">Calculated Sag</strong>
+            <span style="font-size:1.5rem;"><span id="sag-output"></span>%</span>
+          </div>
+        </form>
 
-    <footer style="text-align:center;padding: 20px;">View code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a></footer>
+        <footer style="text-align:center;padding: 20px;">View code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a></footer>
+      </div>
+    </div>
+
+    <script>
+      let wheelTravel;
+      let stroke;
+      const curveCanvas = document.querySelector('canvas#curve');
+      const curveHeight = 200;
+      const curveWidth = curveCanvas.parentElement.parentElement.offsetWidth-40-20;
+
+      const resolution = 6;
+      const maxLeverageMultiplier = 2;
+      const scale = curveHeight / maxLeverageMultiplier;
+      console.assert(resolution >= 2, 'Must use a curve resolution of 2 or higher');
+      const points = Array(resolution).fill(1);
+
+      let variables = getVariables();  // really need a better name for this
+      function getVariables() {
+        const baseLeverage = wheelTravel/stroke;
+        const piecewiseRange = wheelTravel / 25.4 / (resolution-1);
+
+        const travelLineFuncs = [];
+        for (let i = 0; i < points.length-1; i++) {
+          const x0 = i*piecewiseRange;
+          const x1 = (i+1)*piecewiseRange;
+          const y0 = points[i]*baseLeverage;
+          const y1 = points[i+1]*baseLeverage;
+          const m = (y1-y0)/(x1-x0);
+          const b = y0-(m*x0);
+          travelLineFuncs.push({
+            m,
+            b,
+            q: x0,
+            p: x1, // consider setting to inf (or undefined) for last point?)
+          });
+        }
+
+        let X = 0;
+        let Y = 0;
+        const strokeLineFuncs = travelLineFuncs.map(({m, b, q, p}) => {
+          // the problem to solve is that if m === 0 this is undefined. need to find value as m approaches m
+          let yValueAtPofIntegral = ((Math.log(m*p+b)-Math.log(m*q+b))/m)+Y;
+          if (m === 0) {
+            yValueAtPofIntegral = ((p-q)/(m*p+b))+Y;
+          }
+          const ret = {
+            m,
+            b,
+            X,
+            Y,
+            q,
+            p,
+            // these are actually "stroke" q, p
+            strokeq: Y,
+            strokep: yValueAtPofIntegral,
+          }
+          Y = yValueAtPofIntegral;
+          X = p;
+          return ret;
+        });
+
+        return strokeLineFuncs;
+      }
+
+      function updatePoint(idx, diff) {
+        const previousPoints = points.slice();
+        points[idx] += diff;
+
+        const targetArea = resolution-1; // the target area of our inverse
+
+        let area = 0;
+        for (let i = 0; i < points.length-1; i++) {
+          const x0 = i;
+          const x1 = i+1;
+          const y0 = points[i];
+          const y1 = points[i+1];
+          const m = (y1-y0)/(x1-x0);
+          const b = y0-(m*x0);
+          const q = x0;
+          const p = x1;
+          // find the area under the inverse (the actual derivitive)
+          if (m === 0) { // becuase of the problem if this is the case then b will not be 0 so OK
+            area += (p-q)/b
+          } else {
+            area += (Math.log((m*p)+b)-Math.log((m*q)+b))/m
+          }
+        }
+
+        const perPointDiff = (targetArea-area)/(resolution-1);
+
+        for (let i = 0; i < points.length-1; i++) {
+          const x0 = i;
+          const x1 = i+1;
+          const y0 = points[i];
+          const y1 = points[i+1];
+          const m = (y1-y0)/(x1-x0);
+          const b = y0-(m*x0);
+          const q = x0;
+          const p = x1;
+
+          const recip = x => (1/(m*x+b))+perPointDiff;
+          points[i] = 1/recip(q);
+          if ((i+1) === (points.length-1)) {
+            const end = recip(p);
+            points[i+1] = 1/recip(p);
+          }
+        }
+
+        // Stay withing chart bounds
+        if (Math.min(...points) < 0 || Math.max(...points) > 2) {
+          previousPoints.forEach((p, i) => {
+            points[i] = p;
+          });
+        }
+
+        variables = getVariables();
+        drawCurve();
+        calculateCharacteristics();
+      }
+
+      function findRoot(variables, k, w, r) {
+        for (let i = 0; i < variables.length; i++) {
+          const {
+            m,
+            b,
+            X,
+            Y,
+            strokeq,
+            strokep,
+          } = variables[i];
+
+          function getVal(x) {
+            let value = (m*x) - (m*Y) + Math.log((m*X)+b) - Math.log((k*x) / (w*r));
+            return value;
+          }
+
+          function getDer(x) {
+            return m-1/x;
+          }
+
+          let inspecting = strokeq || 1/Number.MAX_SAFE_INTEGER;  // prevent /0 error when getting dir
+          let iteration = 0;
+          let lastValue = undefined;
+          const foundRoot = () => lastValue > -0.01 && lastValue < 0.01;
+          // this is newtons method https://en.wikipedia.org/wiki/Newton's_method
+          while (iteration < 1000 && !foundRoot()) {
+            iteration++;
+            lastValue = getVal(inspecting);
+            const dir = getDer(inspecting);
+            inspecting -= lastValue/dir;
+          }
+
+          if (foundRoot() && inspecting >= strokeq && inspecting < strokep) {
+            return inspecting;
+          }
+        }
+
+        return variables[variables.length-1].strokep;
+      }
+
+      // Animation stuff
+      const curveContext = curveCanvas.getContext('2d');
+
+      curveCanvas.height = curveHeight;
+      curveCanvas.width = curveWidth;
+
+      if (window.devicePixelRatio > 1) {
+        curveCanvas.width = curveWidth * window.devicePixelRatio;
+        curveCanvas.height = curveHeight * window.devicePixelRatio;
+        curveCanvas.style.width = curveWidth + 'px';
+        curveCanvas.style.height = curveHeight + 'px';
+        curveContext.scale(window.devicePixelRatio, window.devicePixelRatio);  
+      }
+
+      function curveCubics() {
+        // i think this is how i want to smooth the curve
+        // https://en.wikipedia.org/wiki/Cubic_Hermite_spline
+
+        // use finite difference to calculate the slopes at each point
+        let slopes = [];
+        for (let i = 0; i < points.length; i++) {
+          // NOTE: that our points are uniformly spaces right now to all our runs are just set to 1 for simplicity
+          let partials = [];
+          if (i > 0) {
+            partials.push((points[i]-points[i-1])/1);
+          }
+          if (i < points.length-1) {
+            partials.push((points[i+1]-points[i])/1);
+          }
+          slopes[i] = (1/partials.length)*(partials.reduce((x,y) => x+y, 0));
+        }
+        let funcs = [];
+        for (let i = 0; i < points.length-1; i++) {
+          // this is when we need to interpolate
+          const p0 = points[i], p1 = points[i+1], m0 = slopes[i], m1 = slopes[i+1];
+          funcs.push(function inter(t) {
+            return ((2*t**3 - 3*t**2 + 1)*p0) + ((t**3 - 2*t**2 + t)*m0) + ((-2*t**3 + 3*t**2)*p1) + ((t**3 - t**2)*m1);
+          })
+        }
+        return funcs;
+      }
+
+      function getY(y) {
+        return scale*(maxLeverageMultiplier) - (y*scale);
+      }
+
+      function drawCurve() {
+        curveContext.clearRect(0, 0, curveWidth, curveHeight);
+        // gridlines
+        let num = 16;
+        for (let i = 0; i <= num; i++) {
+          curveContext.beginPath();
+          curveContext.lineWidth = 1;
+          let color = '#f0f0f0';
+          if (i % 4 == 0) {
+            color = '#c5c5c5';
+          }
+          curveContext.strokeStyle = color;
+          curveContext.moveTo(0, curveHeight/num*i);
+          curveContext.lineTo(curveWidth, curveHeight/num*i);
+          curveContext.stroke();
+        }
+
+        // the curve
+        const curves = curveCubics();
+        const segmentWidth = curveWidth/(resolution-1);
+        curveContext.beginPath();
+        curveContext.lineWidth = 3.5;
+        curveContext.strokeStyle = '#000';
+        curveContext.moveTo(0, getY(points[0]));
+        let lastmod = 0;
+        for (let i = 1; i < curveWidth; i++) {
+          const index = Math.floor(i/segmentWidth);
+          const mod = i%segmentWidth;
+          // cannot use === 0 because of precision issues
+          if (mod < lastmod || i === curveWidth) { 
+            curveContext.lineTo(i, getY(points[index]));
+            lastmod = mod;
+            continue;
+          }
+          lastmod = mod;
+          curveContext.lineTo(i, getY(curves[index](mod/segmentWidth)));
+        }
+        curveContext.stroke();
+      }
+
+      drawCurve();
+
+      // canvas interaction
+      let x = 0, y = 0, prevY = null, currentX = null; 
+      function moveCurveEvent(event) {
+        event.preventDefault();
+        const { left, top } = curveCanvas.getBoundingClientRect();
+        y = event.targetTouches ? event.targetTouches[0].clientY : event.clientY;
+        y -= top;
+        x = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
+        x -= left;
+        if (prevY == null) return;
+        updatePoint(currentX, (prevY-y)/scale);
+        prevY = y;
+      }
+      function startCurveEvent(event) {
+        event.preventDefault();
+        const { left, top } = curveCanvas.getBoundingClientRect();
+        prevY = event.targetTouches ? event.targetTouches[0].clientY : event.clientY;
+        prevY -= top;
+        x = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
+        x -= left;
+        const i = Math.round(x/(curveWidth/(resolution-1)));
+        if (i >= 0 && i < points.length) currentX = i;
+      }
+      function endCurveEvent(event) {
+        prevY = null;
+      }
+      curveCanvas.addEventListener('mousemove', moveCurveEvent);
+      curveCanvas.addEventListener('touchmove', moveCurveEvent);
+      curveCanvas.addEventListener('mousedown', startCurveEvent, {capture: true});
+      curveCanvas.addEventListener('touchstart', startCurveEvent, {capture: true});
+      document.addEventListener('mouseup', endCurveEvent);
+      document.addEventListener('touchend', endCurveEvent);
+
+    </script>
 
     <script>
       const springWeightInput = document.querySelector('input[name="spring-weight"]');
       const form = document.querySelector('form');
       const button = document.getElementById('simulate');
+      const baseLeverage = document.getElementById('base-leverage');
+      const doubleLeverage = document.getElementById('double-leverage');
+      const wheelTravelLabel = document.getElementById('wheel-travel-label');
 
       let riderWeight;
+      let rearTireBias;
       let normWeight;
-      let wheelTravel;
-      let stroke;
       let sag;
       let springWeight;
       let simulating = false;
@@ -157,24 +535,42 @@
         }
       });
 
-      function getSpringWeight(sagAmount) {
-        const targetSagDistance = stroke * sagAmount / 100;
-        let weight = normWeight / targetSagDistance; // lbs/mm
-        weight *= 25.4 // lbs/in
-        return parseInt(weight);
+      function leverageOfShockAtStroke(s) {
+        for (let i = 0; i < variables.length; i++) {
+          const {strokeq, strokep, m, Y, X, b} = variables[i];
+          if (s < strokep && s >= strokeq) {
+            return Math.pow(Math.E, (m*s)-(m*Y)+Math.log((m*X)+b));
+          }
+        }
+        // default to the "average" so it at least doesn't break
+        return wheelTravel / stroke;
       }
 
       function calculateCharacteristics() {
         const data = new FormData(form);
+        rearTireBias = parseInt(data.get('rear-bias') || 65);
+        if (rearTireBias<=0) {
+          rearTireBias = 1;
+          form.querySelector('[name="rear-bias"]').value = 1;
+        }
+        if (rearTireBias>=99) {
+          rearTireBias = 99;
+          form.querySelector('[name="rear-bias"]').value = 99;
+        }
+        rearTireBias /= 100;
         riderWeight = parseInt(data.get('rider-weight') || 0);
         wheelTravel = parseInt(data.get('travel') || 0);
         stroke = parseInt(data.get('stroke') || 1);
         springWeight = parseInt(data.get('spring-weight') || 0);
 
-        const leverage = wheelTravel / stroke;
+        baseLeverage.innerHTML = (wheelTravel / stroke).toFixed(1);
+        doubleLeverage.innerHTML = (wheelTravel / stroke * 2).toFixed(1);
+        wheelTravelLabel.innerHTML = wheelTravel.toFixed(0);
+
+        variables = getVariables();
+
         // TODO: add in (part of) average weight of the bike itself?
-        const rearTireBias = 0.65; // the rear wheel supports 65% of the riders weight
-        normWeight = riderWeight  * leverage * rearTireBias;
+        normWeight = riderWeight * rearTireBias;
 
         // hooks law to solve for the spring rate
         // F = k*x
@@ -182,24 +578,23 @@
         // k   spring rate
         // x   deformation (sometimes called displacement)
 
-        sag = normWeight / springWeight; // in
+
+        // This is what we need to swap out
+        sag = findRoot(variables, springWeight, riderWeight, rearTireBias);
+
         sag *= 25.4 // mm
         sag /= stroke / 100 // %
-        sag = Math.round(sag * 100) / 100; // round to 2 decimals (so users can see something is changing
+        // Do a math.min incase our leverage curve estimate is a little off and would
+        // lead to max sag at like 99.9 or 100.1 or something
+        sag = Math.min(Math.round(sag * 100) / 100, 100).toFixed(2); // round to 2 decimals (so users can see something is changing
         document.getElementById('sag-output').innerHTML = sag;
-
-        document.querySelectorAll('[data-sag]').forEach(el => {
-          const weight = getSpringWeight(parseInt(el.getAttribute('data-sag')));
-          el.innerHTML = weight + ' lbs/in';
-          el.setAttribute('data-val', weight);
-        });
       }
 
       calculateCharacteristics();
 
       // the rest is the animation
 
-      const canvasNode = document.querySelector('canvas');
+      const canvasNode = document.querySelector('canvas#animation');
       const context = canvasNode.getContext('2d');
       let cHeight;
       let cWidth;
@@ -207,7 +602,7 @@
 
       function setCanvas() {
         cHeight = window.outerHeight / 2;
-        cWidth = window.innerWidth;
+        cWidth = canvasNode.parentElement.offsetWidth;
         canvasNode.height = cHeight;
         canvasNode.width = cWidth;
 
@@ -450,6 +845,7 @@
 
       let last = 0;
 
+
       function doPhysics(timestamp) {
         requestAnimationFrame(doPhysics);
         if (!last) {
@@ -463,7 +859,7 @@
         const forces = [];
         let springConstant = springWeight * 4.448; // N/in
         springConstant = springConstant / 25.4; // N/mm
-        let weight = normWeight * 4.448; // N
+        let weight = normWeight * leverageOfShockAtStroke(pos / 25.4) * 4.448; // N
 
         forces.push(simulating ? weight : 0);
         forces.push(-springConstant * pos);
