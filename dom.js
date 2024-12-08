@@ -334,7 +334,7 @@ function leverageOfShockAtStroke(s) {
 
 function calculateCharacteristics() {
   const data = new FormData(form);
-  rearTireBias = parseInt(data.get('rear-bias') || 65);
+  rearTireBias = parseInt(data.get('rear-bias') || 60);
   if (rearTireBias<=0) {
     rearTireBias = 1;
     form.querySelector('[name="rear-bias"]').value = 1;
