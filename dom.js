@@ -1,5 +1,42 @@
-let wheelTravel;
-let stroke;
+class ConfigurationForm {
+  constructor(form) { this._form = form;
+    this._changeCallbacks = [];
+    this._form.addEventListener('change', () => this._runChangeCallbacks());
+    this._form.addEventListener('submit', event => {
+      event.preventDefault();
+      this._runChangeCallbacks();
+    });
+  }
+
+  get stroke() { return parseInt(this.input('stroke').value) || 1; }
+  get travel() { return parseInt(this.input('travel').value) || 0; }
+  get riderWeight() { return parseInt(this.input('rider-weight').value) || 0; }
+  get springWeight() { return parseInt(this.input('spring-weight').value) || 0; }
+  get baseLeverage() { return this.travel/this.stroke; }
+  get rearTireBias() {
+    const value = parseInt(this.input('rear-bias').value) || 0;
+    if (value <= 0) return 1/100;
+    if (value >= 99) return 99/100;
+    return value/100;
+  }
+  get normWeight() { return this.riderWeight*this.rearTireBias; }
+
+  addChangeCallback(callback) {
+    this._changeCallbacks.push(callback);
+  }
+
+  input(name) {
+    return this._form.querySelector(`[name="${name}"]`);
+  }
+
+  _runChangeCallbacks() {
+    this._changeCallbacks.forEach(callback => callback(this));
+  }
+}
+
+const config = new ConfigurationForm(document.querySelector('form'));
+config.addChangeCallback(calculateCharacteristics);
+
 const curveCanvas = document.querySelector('canvas#curve');
 const curveHeight = 200;
 const curveWidth = curveCanvas.parentElement.parentElement.offsetWidth-40-20;
@@ -12,8 +49,8 @@ const points = Array(resolution).fill(1);
 
 let variables = getVariables();  // really need a better name for this
 function getVariables() {
-  const baseLeverage = wheelTravel/stroke;
-  const piecewiseRange = wheelTravel / 25.4 / (resolution-1);
+  const { baseLeverage, travel } = config;
+  const piecewiseRange = travel / 25.4 / (resolution-1);
 
   const travelLineFuncs = [];
   for (let i = 0; i < points.length-1; i++) {
@@ -275,26 +312,16 @@ curveCanvas.addEventListener('touchstart', startCurveEvent, {capture: true});
 document.addEventListener('mouseup', endCurveEvent);
 document.addEventListener('touchend', endCurveEvent);
 
-const springWeightInput = document.querySelector('input[name="spring-weight"]');
-const form = document.querySelector('form');
 const button = document.getElementById('simulate');
 const baseLeverage = document.getElementById('base-leverage');
 const doubleLeverage = document.getElementById('double-leverage');
 const wheelTravelLabel = document.getElementById('wheel-travel-label');
 
-let riderWeight;
-let rearTireBias;
-let normWeight;
 let sag;
-let springWeight;
 let simulating = false;
 let acc = 0;
 let vel = 0;
 let pos = 0;
-
-document.addEventListener('input', function(event) {
-  calculateCharacteristics();
-});
 
 button.addEventListener('mousedown', () => simulating = true);
 button.addEventListener('touchstart', (event) => {
@@ -307,20 +334,6 @@ button.addEventListener('touchend', () => {
   simulating = false;
 });
 
-form.addEventListener('submit', function(event) {
-  event.preventDefault();
-  calculateCharacteristics();
-});
-
-document.addEventListener('click', (e) => {
-  const val = e.target.getAttribute('data-val');
-  if (val) {
-    event.preventDefault();
-    springWeightInput.value = val;
-    calculateCharacteristics();
-  }
-});
-
 function leverageOfShockAtStroke(s) {
   for (let i = 0; i < variables.length; i++) {
     const {strokeq, strokep, m, Y, X, b} = variables[i];
@@ -329,41 +342,22 @@ function leverageOfShockAtStroke(s) {
     }
   }
   // default to the "average" so it at least doesn't break
-  return wheelTravel / stroke;
+  return config.baseLeverage;
 }
 
 function calculateCharacteristics() {
-  const data = new FormData(form);
-  rearTireBias = parseInt(data.get('rear-bias') || 60);
-  if (rearTireBias<=0) {
-    rearTireBias = 1;
-    form.querySelector('[name="rear-bias"]').value = 1;
-  }
-  if (rearTireBias>=99) {
-    rearTireBias = 99;
-    form.querySelector('[name="rear-bias"]').value = 99;
-  }
-  rearTireBias /= 100;
-  riderWeight = parseInt(data.get('rider-weight') || 0);
-  wheelTravel = parseInt(data.get('travel') || 0);
-  stroke = parseInt(data.get('stroke') || 1);
-  springWeight = parseInt(data.get('spring-weight') || 0);
-
-  baseLeverage.innerHTML = (wheelTravel / stroke).toFixed(1);
-  doubleLeverage.innerHTML = (wheelTravel / stroke * 2).toFixed(1);
-  wheelTravelLabel.innerHTML = wheelTravel.toFixed(0);
+  let { stroke, travel, baseLeverage, springWeight, riderWeight, rearTireBias } = config;
+  baseLeverage.innerHTML = baseLeverage.toFixed(1);
+  doubleLeverage.innerHTML = (baseLeverage * 2).toFixed(1);
+  wheelTravelLabel.innerHTML = travel.toFixed(0);
 
   variables = getVariables();
-
-  // TODO: add in (part of) average weight of the bike itself?
-  normWeight = riderWeight * rearTireBias;
 
   // hooks law to solve for the spring rate
   // F = k*x
   // F   force
   // k   spring rate
   // x   deformation (sometimes called displacement)
-
 
   // This is what we need to swap out
   sag = findRoot(variables, springWeight, riderWeight, rearTireBias);
@@ -639,6 +633,7 @@ function doPhysics(timestamp) {
     return;
   }
 
+  const { normWeight, springWeight, stroke } = config;
   const elapsed = (timestamp - last) / 1000; // sec
   last = timestamp;
 
