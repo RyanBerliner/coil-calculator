@@ -313,7 +313,7 @@ document.addEventListener('mouseup', endCurveEvent);
 document.addEventListener('touchend', endCurveEvent);
 
 const button = document.getElementById('simulate');
-const baseLeverage = document.getElementById('base-leverage');
+const baseLeverageLabel = document.getElementById('base-leverage');
 const doubleLeverage = document.getElementById('double-leverage');
 const wheelTravelLabel = document.getElementById('wheel-travel-label');
 
@@ -347,7 +347,7 @@ function leverageOfShockAtStroke(s) {
 
 function calculateCharacteristics() {
   let { stroke, travel, baseLeverage, springWeight, riderWeight, rearTireBias } = config;
-  baseLeverage.innerHTML = baseLeverage.toFixed(1);
+  baseLeverageLabel.innerHTML = baseLeverage.toFixed(1);
   doubleLeverage.innerHTML = (baseLeverage * 2).toFixed(1);
   wheelTravelLabel.innerHTML = travel.toFixed(0);
 
