@@ -1,283 +1,11 @@
 const config = new ConfigurationForm(document.querySelector('form'));
 config.addChangeCallback(calculateCharacteristics);
 
-const curveCanvas = document.querySelector('canvas#curve');
-const curveHeight = 200;
-const curveWidth = curveCanvas.parentElement.parentElement.offsetWidth-40-20;
-
-const resolution = config.points.length;
-const maxLeverageMultiplier = 2;
-const scale = curveHeight / maxLeverageMultiplier;
-console.assert(resolution >= 2, 'Must use a curve resolution of 2 or higher');
-
-let variables = getVariables();  // really need a better name for this
-function getVariables() {
-  const { baseLeverage, travel, points } = config;
-  const piecewiseRange = travel / 25.4 / (resolution-1);
-
-  const travelLineFuncs = [];
-  for (let i = 0; i < resolution-1; i++) {
-    const x0 = i*piecewiseRange;
-    const x1 = (i+1)*piecewiseRange;
-    const y0 = points[i]*baseLeverage;
-    const y1 = points[i+1]*baseLeverage;
-    const m = (y1-y0)/(x1-x0);
-    const b = y0-(m*x0);
-    travelLineFuncs.push({
-      m,
-      b,
-      q: x0,
-      p: x1, // consider setting to inf (or undefined) for last point?)
-    });
-  }
-
-  let X = 0;
-  let Y = 0;
-  const strokeLineFuncs = travelLineFuncs.map(({m, b, q, p}) => {
-    // the problem to solve is that if m === 0 this is undefined. need to find value as m approaches m
-    let yValueAtPofIntegral = ((Math.log(m*p+b)-Math.log(m*q+b))/m)+Y;
-    if (m === 0) {
-      yValueAtPofIntegral = ((p-q)/(m*p+b))+Y;
-    }
-    const ret = {
-      m,
-      b,
-      X,
-      Y,
-      q,
-      p,
-      // these are actually "stroke" q, p
-      strokeq: Y,
-      strokep: yValueAtPofIntegral,
-    }
-    Y = yValueAtPofIntegral;
-    X = p;
-    return ret;
-  });
-
-  return strokeLineFuncs;
-}
-
-function updatePoint(idx, diff) {
-  const newPoints = config.points.slice();
-  newPoints[idx] += diff;
-
-  const targetArea = resolution-1; // the target area of our inverse
-
-  let area = 0;
-  for (let i = 0; i < resolution-1; i++) {
-    const x0 = i;
-    const x1 = i+1;
-    const y0 = newPoints[i];
-    const y1 = newPoints[i+1];
-    const m = (y1-y0)/(x1-x0);
-    const b = y0-(m*x0);
-    const q = x0;
-    const p = x1;
-    // find the area under the inverse (the actual derivitive)
-    if (m === 0) { // becuase of the problem if this is the case then b will not be 0 so OK
-      area += (p-q)/b
-    } else {
-      area += (Math.log((m*p)+b)-Math.log((m*q)+b))/m
-    }
-  }
-
-  const perPointDiff = (targetArea-area)/(resolution-1);
-
-  for (let i = 0; i < resolution-1; i++) {
-    const x0 = i;
-    const x1 = i+1;
-    const y0 = newPoints[i];
-    const y1 = newPoints[i+1];
-    const m = (y1-y0)/(x1-x0);
-    const b = y0-(m*x0);
-    const q = x0;
-    const p = x1;
-
-    const recip = x => (1/(m*x+b))+perPointDiff;
-    newPoints[i] = 1/recip(q);
-    if ((i+1) === (newPoints.length-1)) {
-      const end = recip(p);
-      newPoints[i+1] = 1/recip(p);
-    }
-  }
-
-  // Stay withing chart bounds
-  if (Math.min(...newPoints) < 0 || Math.max(...newPoints) > 2) {
-    config.points.forEach((p, i) => {
-      newPoints[i] = p;
-    });
-  }
-
-  config.points = newPoints;
-
-  variables = getVariables();
-  drawCurve();
-  calculateCharacteristics();
-}
-
-function findRoot(variables, k, w, r) {
-  for (let i = 0; i < variables.length; i++) {
-    const {
-      m,
-      b,
-      X,
-      Y,
-      strokeq,
-      strokep,
-    } = variables[i];
-
-    function getVal(x) {
-      let value = (m*x) - (m*Y) + Math.log((m*X)+b) - Math.log((k*x) / (w*r));
-      return value;
-    }
-
-    function getDer(x) {
-      return m-1/x;
-    }
-
-    let inspecting = strokeq || 1/Number.MAX_SAFE_INTEGER;  // prevent /0 error when getting dir
-    let iteration = 0;
-    let lastValue = undefined;
-    const foundRoot = () => lastValue > -0.01 && lastValue < 0.01;
-    // this is newtons method https://en.wikipedia.org/wiki/Newton's_method
-    while (iteration < 1000 && !foundRoot()) {
-      iteration++;
-      lastValue = getVal(inspecting);
-      const dir = getDer(inspecting);
-      inspecting -= lastValue/dir;
-    }
-
-    if (foundRoot() && inspecting >= strokeq && inspecting < strokep) {
-      return inspecting;
-    }
-  }
-
-  return variables[variables.length-1].strokep;
-}
-
-// Animation stuff
-const curveContext = curveCanvas.getContext('2d');
-
-curveCanvas.height = curveHeight;
-curveCanvas.width = curveWidth;
-
-if (window.devicePixelRatio > 1) {
-  curveCanvas.width = curveWidth * window.devicePixelRatio;
-  curveCanvas.height = curveHeight * window.devicePixelRatio;
-  curveCanvas.style.width = curveWidth + 'px';
-  curveCanvas.style.height = curveHeight + 'px';
-  curveContext.scale(window.devicePixelRatio, window.devicePixelRatio);  
-}
-
-function curveCubics() {
-  // i think this is how i want to smooth the curve
-  // https://en.wikipedia.org/wiki/Cubic_Hermite_spline
-
-  // use finite difference to calculate the slopes at each point
-  let slopes = [];
-  const { points } = config;
-  for (let i = 0; i < points.length; i++) {
-    // NOTE: that our points are uniformly spaces right now to all our runs are just set to 1 for simplicity
-    let partials = [];
-    if (i > 0) {
-      partials.push((points[i]-points[i-1])/1);
-    }
-    if (i < points.length-1) {
-      partials.push((points[i+1]-points[i])/1);
-    }
-    slopes[i] = (1/partials.length)*(partials.reduce((x,y) => x+y, 0));
-  }
-  let funcs = [];
-  for (let i = 0; i < points.length-1; i++) {
-    // this is when we need to interpolate
-    const p0 = points[i], p1 = points[i+1], m0 = slopes[i], m1 = slopes[i+1];
-    funcs.push(function inter(t) {
-      return ((2*t**3 - 3*t**2 + 1)*p0) + ((t**3 - 2*t**2 + t)*m0) + ((-2*t**3 + 3*t**2)*p1) + ((t**3 - t**2)*m1);
-    })
-  }
-  return funcs;
-}
-
-function getY(y) {
-  return scale*(maxLeverageMultiplier) - (y*scale);
-}
-
-function drawCurve() {
-  curveContext.clearRect(0, 0, curveWidth, curveHeight);
-  // gridlines
-  let num = 16;
-  for (let i = 0; i <= num; i++) {
-    curveContext.beginPath();
-    curveContext.lineWidth = 1;
-    let color = '#f0f0f0';
-    if (i % 4 == 0) {
-      color = '#c5c5c5';
-    }
-    curveContext.strokeStyle = color;
-    curveContext.moveTo(0, curveHeight/num*i);
-    curveContext.lineTo(curveWidth, curveHeight/num*i);
-    curveContext.stroke();
-  }
-
-  // the curve
-  const curves = curveCubics();
-  const segmentWidth = curveWidth/(resolution-1);
-  curveContext.beginPath();
-  curveContext.lineWidth = 3.5;
-  curveContext.strokeStyle = '#000';
-  const {points} = config;
-  curveContext.moveTo(0, getY(points[0]));
-  let lastmod = 0;
-  for (let i = 1; i < curveWidth; i++) {
-    const index = Math.floor(i/segmentWidth);
-    const mod = i%segmentWidth;
-    // cannot use === 0 because of precision issues
-    if (mod < lastmod || i === curveWidth) { 
-      curveContext.lineTo(i, getY(points[index]));
-      lastmod = mod;
-      continue;
-    }
-    lastmod = mod;
-    curveContext.lineTo(i, getY(curves[index](mod/segmentWidth)));
-  }
-  curveContext.stroke();
-}
-
-drawCurve();
-
-// canvas interaction
-let x = 0, y = 0, prevY = null, currentX = null; 
-function moveCurveEvent(event) {
-  event.preventDefault();
-  const { left, top } = curveCanvas.getBoundingClientRect();
-  y = event.targetTouches ? event.targetTouches[0].clientY : event.clientY;
-  y -= top;
-  x = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
-  x -= left;
-  if (prevY == null) return;
-  updatePoint(currentX, (prevY-y)/scale);
-  prevY = y;
-}
-function startCurveEvent(event) {
-  event.preventDefault();
-  const { left, top } = curveCanvas.getBoundingClientRect();
-  prevY = event.targetTouches ? event.targetTouches[0].clientY : event.clientY;
-  prevY -= top;
-  x = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
-  x -= left;
-  const i = Math.round(x/(curveWidth/(resolution-1)));
-  if (i >= 0 && i < resolution) currentX = i;
-}
-function endCurveEvent(event) {
-  prevY = null;
-}
-curveCanvas.addEventListener('mousemove', moveCurveEvent);
-curveCanvas.addEventListener('touchmove', moveCurveEvent);
-curveCanvas.addEventListener('mousedown', startCurveEvent, {capture: true});
-curveCanvas.addEventListener('touchstart', startCurveEvent, {capture: true});
-document.addEventListener('mouseup', endCurveEvent);
-document.addEventListener('touchend', endCurveEvent);
+const curve = new LeverageCurveWidget(
+  document.querySelector('.curve-container'),
+  config,
+);
+config.addChangeCallback(() => curve.draw());
 
 const button = document.getElementById('simulate');
 const baseLeverageLabel = document.getElementById('base-leverage');
@@ -302,6 +30,7 @@ button.addEventListener('touchend', () => {
 });
 
 function leverageOfShockAtStroke(s) {
+  const { variables } = curve;
   for (let i = 0; i < variables.length; i++) {
     const {strokeq, strokep, m, Y, X, b} = variables[i];
     if (s < strokep && s >= strokeq) {
@@ -318,7 +47,7 @@ function calculateCharacteristics() {
   doubleLeverage.innerHTML = (baseLeverage * 2).toFixed(1);
   wheelTravelLabel.innerHTML = travel.toFixed(0);
 
-  variables = getVariables();
+  const { variables } = curve;
 
   // hooks law to solve for the spring rate
   // F = k*x
@@ -327,7 +56,7 @@ function calculateCharacteristics() {
   // x   deformation (sometimes called displacement)
 
   // This is what we need to swap out
-  sag = findRoot(variables, springWeight, riderWeight, rearTireBias);
+  sag = curve.findRoot(springWeight, riderWeight, rearTireBias);
 
   sag *= 25.4 // mm
   sag /= stroke / 100 // %
