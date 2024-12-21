@@ -5,19 +5,18 @@ const curveCanvas = document.querySelector('canvas#curve');
 const curveHeight = 200;
 const curveWidth = curveCanvas.parentElement.parentElement.offsetWidth-40-20;
 
-const resolution = 6;
+const resolution = config.points.length;
 const maxLeverageMultiplier = 2;
 const scale = curveHeight / maxLeverageMultiplier;
 console.assert(resolution >= 2, 'Must use a curve resolution of 2 or higher');
-const points = Array(resolution).fill(1);
 
 let variables = getVariables();  // really need a better name for this
 function getVariables() {
-  const { baseLeverage, travel } = config;
+  const { baseLeverage, travel, points } = config;
   const piecewiseRange = travel / 25.4 / (resolution-1);
 
   const travelLineFuncs = [];
-  for (let i = 0; i < points.length-1; i++) {
+  for (let i = 0; i < resolution-1; i++) {
     const x0 = i*piecewiseRange;
     const x1 = (i+1)*piecewiseRange;
     const y0 = points[i]*baseLeverage;
@@ -60,17 +59,17 @@ function getVariables() {
 }
 
 function updatePoint(idx, diff) {
-  const previousPoints = points.slice();
-  points[idx] += diff;
+  const newPoints = config.points.slice();
+  newPoints[idx] += diff;
 
   const targetArea = resolution-1; // the target area of our inverse
 
   let area = 0;
-  for (let i = 0; i < points.length-1; i++) {
+  for (let i = 0; i < resolution-1; i++) {
     const x0 = i;
     const x1 = i+1;
-    const y0 = points[i];
-    const y1 = points[i+1];
+    const y0 = newPoints[i];
+    const y1 = newPoints[i+1];
     const m = (y1-y0)/(x1-x0);
     const b = y0-(m*x0);
     const q = x0;
@@ -85,30 +84,32 @@ function updatePoint(idx, diff) {
 
   const perPointDiff = (targetArea-area)/(resolution-1);
 
-  for (let i = 0; i < points.length-1; i++) {
+  for (let i = 0; i < resolution-1; i++) {
     const x0 = i;
     const x1 = i+1;
-    const y0 = points[i];
-    const y1 = points[i+1];
+    const y0 = newPoints[i];
+    const y1 = newPoints[i+1];
     const m = (y1-y0)/(x1-x0);
     const b = y0-(m*x0);
     const q = x0;
     const p = x1;
 
     const recip = x => (1/(m*x+b))+perPointDiff;
-    points[i] = 1/recip(q);
-    if ((i+1) === (points.length-1)) {
+    newPoints[i] = 1/recip(q);
+    if ((i+1) === (newPoints.length-1)) {
       const end = recip(p);
-      points[i+1] = 1/recip(p);
+      newPoints[i+1] = 1/recip(p);
     }
   }
 
   // Stay withing chart bounds
-  if (Math.min(...points) < 0 || Math.max(...points) > 2) {
-    previousPoints.forEach((p, i) => {
-      points[i] = p;
+  if (Math.min(...newPoints) < 0 || Math.max(...newPoints) > 2) {
+    config.points.forEach((p, i) => {
+      newPoints[i] = p;
     });
   }
+
+  config.points = newPoints;
 
   variables = getVariables();
   drawCurve();
@@ -175,6 +176,7 @@ function curveCubics() {
 
   // use finite difference to calculate the slopes at each point
   let slopes = [];
+  const { points } = config;
   for (let i = 0; i < points.length; i++) {
     // NOTE: that our points are uniformly spaces right now to all our runs are just set to 1 for simplicity
     let partials = [];
@@ -224,6 +226,7 @@ function drawCurve() {
   curveContext.beginPath();
   curveContext.lineWidth = 3.5;
   curveContext.strokeStyle = '#000';
+  const {points} = config;
   curveContext.moveTo(0, getY(points[0]));
   let lastmod = 0;
   for (let i = 1; i < curveWidth; i++) {
@@ -264,7 +267,7 @@ function startCurveEvent(event) {
   x = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
   x -= left;
   const i = Math.round(x/(curveWidth/(resolution-1)));
-  if (i >= 0 && i < points.length) currentX = i;
+  if (i >= 0 && i < resolution) currentX = i;
 }
 function endCurveEvent(event) {
   prevY = null;

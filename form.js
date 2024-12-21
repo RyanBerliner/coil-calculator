@@ -1,5 +1,6 @@
 class ConfigurationForm {
-  constructor(form) { this._form = form;
+  constructor(form) {
+    this._form = form;
     this._changeCallbacks = [];
     this._form.addEventListener('change', () => this._runChangeCallbacks());
     this._form.addEventListener('submit', event => {
@@ -20,6 +21,14 @@ class ConfigurationForm {
     return value/100;
   }
   get normWeight() { return this.riderWeight*this.rearTireBias; }
+  get points() {
+    return this._pointsInputs.map(el => parseFloat(el.value));
+  }
+
+  set points(arrPoints) {
+    const inputs = this._pointsInputs;
+    arrPoints.forEach((val, idx) => inputs[idx].value = val);
+  }
 
   addChangeCallback(callback) {
     this._changeCallbacks.push(callback);
@@ -27,6 +36,12 @@ class ConfigurationForm {
 
   input(name) {
     return this._form.querySelector(`[name="${name}"]`);
+  }
+
+  get _pointsInputs() {
+    return Array.from(
+      this._form.querySelector('[id="leverage-points"]').querySelectorAll('input')
+    );
   }
 
   _runChangeCallbacks() {
