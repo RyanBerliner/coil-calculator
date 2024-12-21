@@ -1,4 +1,4 @@
-class LeverageCurveWidget {
+class LeverageCurve {
   HEIGHT = 200;
   MAX_LEVERAGE_MULTIPLIER = 2;
 
@@ -132,7 +132,15 @@ class LeverageCurveWidget {
   }
 
   draw() {
-    const points = this._config.points;
+    const { baseLeverage, points, travel } = this._config;
+    const baseLeverageLabel = this._node.querySelector('[id="base-leverage"]');
+    const doubleLeverage = this._node.querySelector('[id="double-leverage"]');
+    const wheelTravelLabel = this._node.querySelector('[id="wheel-travel-label"]');
+
+    baseLeverageLabel.innerHTML = baseLeverage.toFixed(1);
+    doubleLeverage.innerHTML = (baseLeverage * 2).toFixed(1);
+    wheelTravelLabel.innerHTML = travel.toFixed(0);
+
     this._context.clearRect(0, 0, this._width, this.HEIGHT);
     // gridlines
     let num = 16;

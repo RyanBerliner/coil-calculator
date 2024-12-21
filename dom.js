@@ -1,16 +1,13 @@
 const config = new ConfigurationForm(document.querySelector('form'));
 config.addChangeCallback(calculateCharacteristics);
 
-const curve = new LeverageCurveWidget(
+const curve = new LeverageCurve(
   document.querySelector('.curve-container'),
   config,
 );
 config.addChangeCallback(() => curve.draw());
 
 const button = document.getElementById('simulate');
-const baseLeverageLabel = document.getElementById('base-leverage');
-const doubleLeverage = document.getElementById('double-leverage');
-const wheelTravelLabel = document.getElementById('wheel-travel-label');
 
 let sag;
 let simulating = false;
@@ -42,10 +39,7 @@ function leverageOfShockAtStroke(s) {
 }
 
 function calculateCharacteristics() {
-  let { stroke, travel, baseLeverage, springWeight, riderWeight, rearTireBias } = config;
-  baseLeverageLabel.innerHTML = baseLeverage.toFixed(1);
-  doubleLeverage.innerHTML = (baseLeverage * 2).toFixed(1);
-  wheelTravelLabel.innerHTML = travel.toFixed(0);
+  let { stroke, springWeight, riderWeight, rearTireBias } = config;
 
   const { variables } = curve;
 
