@@ -33,4 +33,3 @@ class ConfigurationForm {
     this._changeCallbacks.forEach(callback => callback(this));
   }
 }
-

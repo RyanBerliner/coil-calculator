@@ -89,6 +89,8 @@ aside p {margin:0 0 0 10px;}
   }
 }
 
+details {display: block;}
+
 details > summary {
   margin-bottom: 1rem;
 }
