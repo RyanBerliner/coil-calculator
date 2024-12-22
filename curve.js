@@ -1,6 +1,6 @@
 class LeverageCurve {
   HEIGHT = 200;
-  MAX_LEVERAGE_MULTIPLIER = 2;
+  MAX_LEVERAGE_MULTIPLIER = 0.1;  // ex: 0.2 is +/-20% 
 
   constructor(node, config) {
     this._config = config;
@@ -134,17 +134,19 @@ class LeverageCurve {
   draw() {
     const { baseLeverage, points, travel } = this._config;
     const baseLeverageLabel = this._node.querySelector('[id="base-leverage"]');
-    const doubleLeverage = this._node.querySelector('[id="double-leverage"]');
+    const upperLeverage = this._node.querySelector('[id="upper-leverage"]');
+    const lowerLeverage = this._node.querySelector('[id="lower-leverage"]');
     const wheelTravelLabel = this._node.querySelector('[id="wheel-travel-label"]');
 
     baseLeverageLabel.innerHTML = baseLeverage.toFixed(1);
-    doubleLeverage.innerHTML = (baseLeverage * 2).toFixed(1);
+    upperLeverage.innerHTML = (baseLeverage + (baseLeverage * this.MAX_LEVERAGE_MULTIPLIER)).toFixed(1);
+    lowerLeverage.innerHTML = (baseLeverage - (baseLeverage * this.MAX_LEVERAGE_MULTIPLIER)).toFixed(1);
     wheelTravelLabel.innerHTML = travel.toFixed(0);
 
     this._context.clearRect(0, 0, this._width, this.HEIGHT);
     // gridlines
     let num = 16;
-    for (let i = 0; i <= num; i++) {
+    for (let i = 1; i < num; i++) {
       this._context.beginPath();
       this._context.lineWidth = 1;
       let color = '#f0f0f0';
@@ -180,12 +182,19 @@ class LeverageCurve {
     this._context.stroke();
   }
 
-  get _scale() {
-    return this.HEIGHT/this.MAX_LEVERAGE_MULTIPLIER;
-  }
-
   _getY(y) {
-    return this._scale * (this.MAX_LEVERAGE_MULTIPLIER) - (y*this._scale);
+    // this should return the Y coordinate in the canvas given a "Y" values
+    // straight form the "points"
+    //
+    // 0 is the top (1 * max multiplier)
+    // 1/2*(canvas height) is the middle 
+    // (canvas height) is the bottom (0)
+    const { baseLeverage } = this._config;
+    const oldLower = 1 - (1*this.MAX_LEVERAGE_MULTIPLIER);
+    const oldUpper = 1 + (1*this.MAX_LEVERAGE_MULTIPLIER);
+    const newUpper = 0;
+    const newLower = this.HEIGHT;
+    return (y - oldLower)/(this.MAX_LEVERAGE_MULTIPLIER*2)*(-this.HEIGHT)+this.HEIGHT;
   }
 
   _updatePoint(idx, diff) {
@@ -233,7 +242,7 @@ class LeverageCurve {
     }
 
     // Stay withing chart bounds
-    if (Math.min(...newPoints) < 0 || Math.max(...newPoints) > 2) {
+    if (Math.min(...newPoints) < 1-this.MAX_LEVERAGE_MULTIPLIER || Math.max(...newPoints) > 1+this.MAX_LEVERAGE_MULTIPLIER) {
       this._config.points.forEach((p, i) => {
         newPoints[i] = p;
       });
@@ -280,7 +289,10 @@ class LeverageCurve {
     this.interactionData.x = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
     this.interactionData.x -= left;
     if (this.interactionData.prevY == null) return;
-    this._updatePoint(this.interactionData.currentX, (this.interactionData.prevY-this.interactionData.y)/this._scale);
+    const { baseLeverage } = this._config;
+    const range = baseLeverage * this.MAX_LEVERAGE_MULTIPLIER;
+    const scale = this.HEIGHT / range;
+    this._updatePoint(this.interactionData.currentX, (this.interactionData.prevY-this.interactionData.y)/scale);
     this.interactionData.prevY = this.interactionData.y;
   }
 
