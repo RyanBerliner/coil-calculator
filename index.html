@@ -15,36 +15,39 @@
       </div>
       <div class="column">
         <form>
-          <label>
-            Rider Weight (lbs)
-            <input type="number" name="rider-weight" value="165">
-          </label>
-          <label>
-            Rear wheel travel (mm)
-            <input type="number" name="travel" value="160">
-          </label>
-          <label>
-            Shock stroke (mm)
-            <input type="number" name="stroke" value="60">
-          </label>
-          <label>
-            Spring Weight (lbs/in)
-            <input type="number" name="spring-weight" value="400">
-          </label>
-          <div style="display:none;" id="leverage-points">
-            <input type="hidden" value="1" />
-            <input type="hidden" value="1" />
-            <input type="hidden" value="1" />
-            <input type="hidden" value="1" />
-            <input type="hidden" value="1" />
-            <input type="hidden" value="1" />
-          </div>
-          <details open>
-            <summary>Advanced Settings (optional)</summary>
+          <fieldset>
+            <legend>Rider Information</legend>
+            <label>
+              Rider Weight (lbs)
+              <input type="number" name="rider-weight" value="165">
+            </label>
             <label>
               Rear Wheel Bias (default 60%)
               <input type="number" name="rear-bias" value="60">
             </label>
+          </fieldset>
+          <fieldset>
+            <legend>Suspension Specifications</legend>
+            <label>
+              Rear wheel travel (mm)
+              <input type="number" name="travel" value="160">
+            </label>
+            <label>
+              Shock stroke (mm)
+              <input type="number" name="stroke" value="60">
+            </label>
+            <label>
+              Spring Weight (lbs/in)
+              <input type="number" name="spring-weight" value="400">
+            </label>
+            <div style="display:none;" id="leverage-points">
+              <input type="hidden" value="1" />
+              <input type="hidden" value="1" />
+              <input type="hidden" value="1" />
+              <input type="hidden" value="1" />
+              <input type="hidden" value="1" />
+              <input type="hidden" value="1" />
+            </div>
             <h2 class="curve-heading">Leverage Curve</h2>
             <div class="curve-container">
               <span id="upper-leverage">1.5</span>
@@ -53,7 +56,7 @@
               <span class="x-axis">Wheel Travel</span>
               <canvas id="curve"></canvas>
             </div>
-          </details>
+          </fieldset>
           <div>
             <strong style="font-size:1.2rem;">Calculated Sag</strong>
             <span style="font-size:1.5rem;"><span id="sag-output"></span>%</span>
