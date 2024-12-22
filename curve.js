@@ -14,7 +14,7 @@ class LeverageCurve {
     this._context = this._canvas.getContext('2d');
 
     // TODO: clean this up, should be dynamic on resize
-    this._width = this._canvas.parentElement.parentElement.offsetWidth-40-20;
+    this._width = this._canvas.parentElement.parentElement.offsetWidth-40;
     this._canvas.height = this.HEIGHT;
     this._canvas.width = this._width;
     if (window.devicePixelRatio > 1) {
@@ -22,7 +22,7 @@ class LeverageCurve {
       this._canvas.height = this.HEIGHT * window.devicePixelRatio;
       this._canvas.style.width = this._width + 'px';
       this._canvas.style.height = this.HEIGHT + 'px';
-      curveContext.scale(window.devicePixelRatio, window.devicePixelRatio);  
+      this._context.scale(window.devicePixelRatio, window.devicePixelRatio);  
     }
 
     // interaction stuff
@@ -136,12 +136,10 @@ class LeverageCurve {
     const baseLeverageLabel = this._node.querySelector('[id="base-leverage"]');
     const upperLeverage = this._node.querySelector('[id="upper-leverage"]');
     const lowerLeverage = this._node.querySelector('[id="lower-leverage"]');
-    const wheelTravelLabel = this._node.querySelector('[id="wheel-travel-label"]');
 
     baseLeverageLabel.innerHTML = baseLeverage.toFixed(1);
     upperLeverage.innerHTML = (baseLeverage + (baseLeverage * this.MAX_LEVERAGE_MULTIPLIER)).toFixed(1);
     lowerLeverage.innerHTML = (baseLeverage - (baseLeverage * this.MAX_LEVERAGE_MULTIPLIER)).toFixed(1);
-    wheelTravelLabel.innerHTML = travel.toFixed(0);
 
     this._context.clearRect(0, 0, this._width, this.HEIGHT);
     // gridlines

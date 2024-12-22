@@ -96,42 +96,43 @@ details > summary {
 }
 
 .curve-container {
-  padding-left: 40px;
-  padding-right: 20px;
   padding-bottom: 30px;
   position: relative;
   margin: 1rem 0;
 }
-.curve-container > span:not(.x-axis) {
+
+.curve-container > span {
   position: absolute;
+  pointer-events: none;
+}
+
+.curve-container,
+.curve-heading {
+  padding-left: 40px;
+}
+
+.curve-container > span:not(.x-axis) {
   text-align: right;
   display: inline-block;
   width: 30px;
 }
-.curve-container > span:nth-child(1) {
-  top: 0;
+
+#upper-leverage,
+#base-leverage,
+#lower-leverage {
+  line-height: 1;
   transform: translateY(-50%);
   left: 0;
 }
-.curve-container > span:nth-child(2) {
-  top: calc(50% - 15px);
-  transform: translateY(-50%);
-  left: 0;
-}
-.curve-container > span:nth-child(3) {
-  bottom: 0;
-  left: 0;
-}
-.curve-container > span:nth-child(4) {
-  bottom: 0;
-  right: 20px;
-  transform: translateX(50%);
-}
+
+#upper-leverage { top: 0; }
+#base-leverage { top: calc(50% - 15px); }
+#lower-leverage { bottom: 15px; }
+
 .x-axis {
-  position: absolute;
   transform: translateX(-50%);
   bottom: 0;
-  left: 50%;
+  left: calc(50% + 20px);
   font-size: 0.7em;
   opacity: 0.5;
   text-transform: uppercase;
@@ -149,5 +150,4 @@ details > summary {
   border-radius: 12px;
   overflow: hidden;
   box-shadow:0 0.05em 0.15em #0000001a, 0 0.15em 0.9em #00000005;
-
 }
