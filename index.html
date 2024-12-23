@@ -9,11 +9,13 @@
   </head>
   <body>
       <canvas id="animation"></canvas>
-      <div class="calculated-sag">
-        <button id="simulate"><span>Press & Hold</span><br/>to visualize sag</button>
-        <div>
-          <span>Calculated Sag</span>
-          <span><span id="sag-output"></span>%</span>
+      <div class="sticky">
+        <div class="calculated-sag">
+          <button id="simulate"><span>Press & Hold</span><br/>to visualize sag</button>
+          <div>
+            <span>Calculated Sag</span>
+            <span><span id="sag-output"></span>%</span>
+          </div>
         </div>
       </div>
       <form>
@@ -29,7 +31,7 @@
           </label>
         </fieldset>
         <fieldset>
-          <legend>Shock Specifications</legend>
+          <legend>Shock & Bike Specs</legend>
           <label>
             Rear wheel travel (mm)
             <input type="number" name="travel" value="160">
