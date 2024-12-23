@@ -4,9 +4,15 @@ html {
   font-family: sans-serif;
   font-size: 16px;
   line-height: 1.4;
+  margin: 0;
+  padding: 0;
 }
 
-html, body { margin: 0; padding: 0; }
+body {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
 
 form {
   margin: 3rem auto;
@@ -58,7 +64,6 @@ button {
   font-size: 1rem;
   padding: 0.2em 0.4em;
   display: block;
-  margin: auto;
   padding: 0.5em 1em;
   border: none;
   border-radius: 0.5em;
@@ -73,34 +78,38 @@ button {
 
 button:active {
   top: 2px;
-  background: #efefef;
   box-shadow: 0 0px 0 5px #f07909;
 }
 
 button span { font-size: 1.5em; font-weight: 700; }
 
-.row {
+.calculated-sag {
   display: flex;
-  align-items: start;
-  justify-content: center;
-  max-width: 900px;
-  margin: 40px auto;
+  justify-content: space-between;
+  align-items: center;
+  color: #f07909;
+  background-color: #f17a0a17;
+  padding: 1.5rem 1.5rem;
+  border-radius: 20px;
 }
 
-.column {
-  width: 50%;
-  flex-basis: 50%;
+.calculated-sag div {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: end;
+  color: #d46633;
 }
 
-@media(max-width:1000px) {
-  .row {
-    flex-direction: column;
-    align-items: center;
-  }
-  .column {
-    width: 100%;
-    flex-basis: 100%;
-  }
+.calculated-sag div span:last-child {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+@media(max-width: 450px) {
+  #animation, #simulate { display: none; }
+  .calculated-sag { margin-top: 1rem; justify-content: center; }
+  .calculated-sag div { align-items: center; }
 }
 
 .curve-container {
