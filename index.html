@@ -52,7 +52,16 @@
             <input type="hidden" value="1" />
             <input type="hidden" value="1" />
           </div>
-          <h2 class="curve-heading">Leverage Curve</h2>
+          <div class="curve-heading">
+            <h2 id="curve-heading">Leverage Curve</h2>
+            <select aria-labelledby="curve-heading">
+              <option value="mp">Most Progressive</option>
+              <option value="p" selected>Progressive</option>
+              <option value="c">Custom</option>
+              <option value="d">Digressive</option>
+              <option value="md">Most Digressive</option>
+            </select>
+          </div>
           <div class="curve-container">
             <span id="upper-leverage">1.5</span>
             <span id="base-leverage">1</span>

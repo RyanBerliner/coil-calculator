@@ -247,6 +247,8 @@ class LeverageCurve {
     }
 
     this._config.points = newPoints;
+    // TODO: accessing "private" form here not ideal
+    this._config._form.querySelector('select').value = 'c';
   }
 
   _curveCubics() {
