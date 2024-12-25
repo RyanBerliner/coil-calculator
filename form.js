@@ -1,12 +1,22 @@
 class ConfigurationForm {
+  CURVE_DEFAULTS = {
+    'mp': [1.1910723337537936, 1.0773217086778086, 0.9972675538606662, 0.958355556392723, 0.9362556697090503, 0.9250055500940926],
+    'p': [1.0844669992350506, 1.0390499921419998, 1.0045834639152817, 0.9799678062000062, 0.9647754036058769, 0.9527764333429207],
+    'd': [0.9318387626233346, 0.9710060185042217, 0.9980189840451251, 1.0189293258402035, 1.0318214303326663, 1.0383629141910782],
+    'md': [0.8173567710047909, 0.9273342628257761, 1.001647761701074, 1.058240839433114, 1.0881483627896738, 1.1053960687852464],
+  }
+
   constructor(form) {
     this._form = form;
     this._changeCallbacks = [];
-    this._form.addEventListener('change', () => this._runChangeCallbacks());
+    this._form.addEventListener('change', event => this._runChangeCallbacks(event));
     this._form.addEventListener('submit', event => {
       event.preventDefault();
-      this._runChangeCallbacks();
+      this._runChangeCallbacks(event);
     });
+
+    const initPoints = this.CURVE_DEFAULTS[this._form.querySelector('select').value];
+    if (initPoints) this.points = initPoints;
   }
 
   get stroke() { return parseInt(this.input('stroke').value) || 1; }
@@ -46,7 +56,12 @@ class ConfigurationForm {
     );
   }
 
-  _runChangeCallbacks() {
-    this._changeCallbacks.forEach(callback => callback(this));
+  _runChangeCallbacks(event) {
+    if (event?.target?.nodeName === 'SELECT') {
+      const points = this.CURVE_DEFAULTS[event.target.value];
+      if (points) this.points = points;
+    } else {
+      this._changeCallbacks.forEach(callback => callback(this));
+    }
   }
 }
