@@ -132,7 +132,7 @@ class LeverageCurve {
   }
 
   draw() {
-    const { baseLeverage, points, travel } = this._config;
+    const { baseLeverage, points, travel, callbackResults: {sagPercentage} } = this._config;
     const baseLeverageLabel = this._node.querySelector('[id="base-leverage"]');
     const upperLeverage = this._node.querySelector('[id="upper-leverage"]');
     const lowerLeverage = this._node.querySelector('[id="lower-leverage"]');
@@ -177,6 +177,24 @@ class LeverageCurve {
       lastmod = mod;
       this._context.lineTo(i, this._getY(curves[index](mod/segmentWidth)));
     }
+    this._context.stroke();
+
+    if (!sagPercentage) {
+      return;
+    }
+
+    const pointX = sagPercentage/100 * this._width;
+    const curvesIndex = Math.floor(pointX/segmentWidth);
+    const mod = pointX%segmentWidth;
+    const pointY = this._getY(curves[curvesIndex](mod/segmentWidth))
+
+    const radius = 6;
+    this._context.beginPath(); 
+    this._context.arc(pointX, pointY, radius, 0, 2 * Math.PI); 
+    this._context.fillStyle = 'white'
+    this._context.fill();
+    this._context.lineWidth = 3;
+    this._context.strokeStyle = 'black';
     this._context.stroke();
   }
 

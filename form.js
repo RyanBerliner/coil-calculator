@@ -7,6 +7,7 @@ class ConfigurationForm {
   }
 
   constructor(form) {
+    this.callbackResults = {};
     this._form = form;
     this._changeCallbacks = [];
     this._form.addEventListener('change', event => this._runChangeCallbacks(event));
@@ -42,8 +43,28 @@ class ConfigurationForm {
     this._runChangeCallbacks();
   }
 
-  addChangeCallback(callback) {
-    this._changeCallbacks.push(callback);
+  addChangeCallback(callback, opts) {
+    opts = opts ? opts : {};
+
+    if (!opts.priority) {
+      opts.priority = 0;
+    }
+
+    this._changeCallbacks.push([callback, opts]);
+
+    this._changeCallbacks.sort((a, b) => {
+      return a[1].priority - b[1].priority;
+    });
+
+    if (opts?.runInitial) {
+      const result = callback();
+
+      if (opts.dataKey) {
+        this.callbackResults[opts.dataKey] = result;
+      }
+
+      this._runChangeCallbacks();
+    }
   }
 
   input(name) {
@@ -61,7 +82,12 @@ class ConfigurationForm {
       const points = this.CURVE_DEFAULTS[event.target.value];
       if (points) this.points = points;
     } else {
-      this._changeCallbacks.forEach(callback => callback(this));
+      this._changeCallbacks.forEach(([callback, opts]) => {
+        const result = callback(this);
+        if (opts?.dataKey) {
+          this.callbackResults[opts.dataKey] = result;
+        }
+      });
     }
   }
 }
