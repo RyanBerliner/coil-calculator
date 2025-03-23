@@ -183,6 +183,8 @@ class LeverageCurve {
       return;
     }
 
+    // TODO: this is wrong, because sagPercentage is a percentage of stroke,
+    //       and the curves x axis is not stroke, but wheel travel
     const pointX = sagPercentage/100 * this._width;
     const curvesIndex = Math.floor(pointX/segmentWidth);
     const mod = pointX%segmentWidth;
