@@ -131,6 +131,29 @@ class LeverageCurve {
     return variables[variables.length-1].strokep;
   }
 
+  travelOfShockAtStroke(percentage) {
+    let {baseLeverage, stroke, travel, callbackResults: {sagPercentage}} = this._config;
+    stroke /= 25.4;
+    const variables = this.variables;
+
+    const s = percentage / 100 * stroke;
+    console.log("this is the stroke value", s);
+
+    for (let i = 0; i < variables.length; i++) {
+      const {strokeq, strokep, m, Y, X, b} = variables[i];
+      console.log(strokep, strokeq);
+      if (s < strokep && s >= strokeq) {
+        // This is the dt/ds... we need the t... so take the integral of this
+        // (or find the equation in my notes from before i took the derivitive
+        // the dt/ds vs s equation (below) is found on notesheet 2.2
+        return Math.pow(Math.E, (m*s)-(m*Y)+Math.log((m*X)+b));
+      }
+    }
+    // default to the "average" so it at least doesn't break
+    // return baseLeverage;
+  }
+
+
   draw() {
     const { baseLeverage, points, travel, callbackResults: {sagPercentage} } = this._config;
     const baseLeverageLabel = this._node.querySelector('[id="base-leverage"]');
@@ -182,6 +205,8 @@ class LeverageCurve {
     if (!sagPercentage) {
       return;
     }
+
+    console.log("the new calc", this.travelOfShockAtStroke(sagPercentage));
 
     // TODO: this is wrong, because sagPercentage is a percentage of stroke,
     //       and the curves x axis is not stroke, but wheel travel
