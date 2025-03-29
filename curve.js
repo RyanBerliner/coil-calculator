@@ -132,37 +132,35 @@ class LeverageCurve {
   }
 
   travelOfShockAtStroke(percentage) {
-    let {baseLeverage, stroke, travel, callbackResults: {sagPercentage}} = this._config;
-    stroke /= 25.4;
-    travel /= 25.4;
+    const stroke = this._config.stroke / 25.4;
+    const travel = this._config.travel / 25.4;
     const variables = this.variables;
-
     const strokePoint = percentage / 100 * stroke;
-
     let accTravel = 0;
-    findloop: for (let i = 0; i < variables.length; i++) {
-      const {strokeq, strokep, m, Y, X, b} = variables[i];
-      const derivitive = (s) => Math.pow(Math.E, (m*s)-(m*Y)+Math.log((m*X)+b));
-      // IDEA: should be able to use the actual integral, and if m = 0 we can
-      // fallback to calculating the area of a rectangle
-      const start = derivitive(strokeq);
-      let end = derivitive(strokep);
-      console.log('start, end', start, end);
 
-      console.log('searching bounds', strokeq, strokep, 'for', strokePoint);
+    accLoop:
+    for (let i = 0; i < variables.length; i++) {
+      const {strokeq, strokep, m, Y, X, b} = variables[i];
+      const start = strokeq;
+      let end = strokep;
+
       if (strokePoint < strokep && strokePoint >= strokeq) {
-        end = derivitive(strokePoint);
-        accTravel += ((start+end)/2)*(strokePoint-strokeq);
-        console.log("new travel", accTravel);
-        break findloop;
+        end = strokePoint;
       }
 
-      accTravel += ((start+end)/2)*(strokep-strokeq);
-      console.log("new travel", accTravel);
+      // TODO: This is an estimation of the area under the derivitive by
+      //       averaging the endpoints, and multiplying by the range (ie
+      //       fitting a rectangle roughly. If we want this to be dead accurate
+      //       then we should take the integral of the derivitive and eval it on
+      //       the same range
+      //
+      //       The derivitive here is dt/ds vs s
+      const derivitive = (s) => Math.pow(Math.E, (m*s)-(m*Y)+Math.log((m*X)+b));
+      accTravel += ((derivitive(start)+derivitive(end))/2)*(end-start);
+      if (end == strokePoint) break accLoop;
     }
 
-    console.log(accTravel, travel);
-    return accTravel / travel * 100;
+    return Math.min(100, accTravel / travel * 100);
   }
 
 
@@ -218,24 +216,30 @@ class LeverageCurve {
       return;
     }
 
-    console.log("the stroke percentage", sagPercentage);
-    console.log("the travel percentage", this.travelOfShockAtStroke(sagPercentage));
     const travelSagPercentage = this.travelOfShockAtStroke(sagPercentage);
+    const pointX = Math.min(
+      travelSagPercentage/100 * this._width,
+      this._width - 1,
+    );
 
-    // TODO: this is wrong, because sagPercentage is a percentage of stroke,
-    //       and the curves x axis is not stroke, but wheel travel
-    const pointX = travelSagPercentage/100 * this._width;
+    this._context.beginPath();
+    this._context.moveTo(pointX, 0);
+    this._context.lineTo(pointX, this.HEIGHT);
+    this._context.lineWidth = 2;
+    this._context.strokeStyle = 'rgba(255,0,0,0.27)';
+    this._context.stroke();
+
     const curvesIndex = Math.floor(pointX/segmentWidth);
     const mod = pointX%segmentWidth;
     const pointY = this._getY(curves[curvesIndex](mod/segmentWidth))
 
-    const radius = 6;
+    const radius = 5;
     this._context.beginPath(); 
     this._context.arc(pointX, pointY, radius, 0, 2 * Math.PI); 
-    this._context.fillStyle = 'white'
+    this._context.fillStyle = 'red'
     this._context.fill();
-    this._context.lineWidth = 3;
-    this._context.strokeStyle = 'black';
+    this._context.lineWidth = 2;
+    this._context.strokeStyle = 'white';
     this._context.stroke();
   }
 
