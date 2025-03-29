@@ -4,9 +4,11 @@ class ConfigurationForm {
     'p': [1.0844669992350506, 1.0390499921419998, 1.0045834639152817, 0.9799678062000062, 0.9647754036058769, 0.9527764333429207],
     'd': [0.9318387626233346, 0.9710060185042217, 0.9980189840451251, 1.0189293258402035, 1.0318214303326663, 1.0383629141910782],
     'md': [0.8173567710047909, 0.9273342628257761, 1.001647761701074, 1.058240839433114, 1.0881483627896738, 1.1053960687852464],
+    'flat': [1, 1, 1, 1, 1, 1],
   }
 
   constructor(form) {
+    this.callbackResults = {};
     this._form = form;
     this._changeCallbacks = [];
     this._form.addEventListener('change', event => this._runChangeCallbacks(event));
@@ -42,8 +44,28 @@ class ConfigurationForm {
     this._runChangeCallbacks();
   }
 
-  addChangeCallback(callback) {
-    this._changeCallbacks.push(callback);
+  addChangeCallback(callback, opts) {
+    opts = opts ? opts : {};
+
+    if (!opts.priority) {
+      opts.priority = 0;
+    }
+
+    this._changeCallbacks.push([callback, opts]);
+
+    this._changeCallbacks.sort((a, b) => {
+      return a[1].priority - b[1].priority;
+    });
+
+    if (opts?.runInitial) {
+      const result = callback();
+
+      if (opts.dataKey) {
+        this.callbackResults[opts.dataKey] = result;
+      }
+
+      this._runChangeCallbacks();
+    }
   }
 
   input(name) {
@@ -61,7 +83,12 @@ class ConfigurationForm {
       const points = this.CURVE_DEFAULTS[event.target.value];
       if (points) this.points = points;
     } else {
-      this._changeCallbacks.forEach(callback => callback(this));
+      this._changeCallbacks.forEach(([callback, opts]) => {
+        const result = callback(this);
+        if (opts?.dataKey) {
+          this.callbackResults[opts.dataKey] = result;
+        }
+      });
     }
   }
 }

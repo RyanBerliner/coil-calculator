@@ -131,8 +131,41 @@ class LeverageCurve {
     return variables[variables.length-1].strokep;
   }
 
+  travelOfShockAtStroke(percentage) {
+    const stroke = this._config.stroke / 25.4;
+    const travel = this._config.travel / 25.4;
+    const variables = this.variables;
+    const strokePoint = percentage / 100 * stroke;
+    let accTravel = 0;
+
+    accLoop:
+    for (let i = 0; i < variables.length; i++) {
+      const {strokeq, strokep, m, Y, X, b} = variables[i];
+      const start = strokeq;
+      let end = strokep;
+
+      if (strokePoint < strokep && strokePoint >= strokeq) {
+        end = strokePoint;
+      }
+
+      // TODO: This is an estimation of the area under the derivitive by
+      //       averaging the endpoints, and multiplying by the range (ie
+      //       fitting a rectangle roughly. If we want this to be dead accurate
+      //       then we should take the integral of the derivitive and eval it on
+      //       the same range
+      //
+      //       The derivitive here is dt/ds vs s
+      const derivitive = (s) => Math.pow(Math.E, (m*s)-(m*Y)+Math.log((m*X)+b));
+      accTravel += ((derivitive(start)+derivitive(end))/2)*(end-start);
+      if (end == strokePoint) break accLoop;
+    }
+
+    return Math.min(100, accTravel / travel * 100);
+  }
+
+
   draw() {
-    const { baseLeverage, points, travel } = this._config;
+    const { baseLeverage, points, travel, callbackResults: {sagPercentage} } = this._config;
     const baseLeverageLabel = this._node.querySelector('[id="base-leverage"]');
     const upperLeverage = this._node.querySelector('[id="upper-leverage"]');
     const lowerLeverage = this._node.querySelector('[id="lower-leverage"]');
@@ -177,6 +210,36 @@ class LeverageCurve {
       lastmod = mod;
       this._context.lineTo(i, this._getY(curves[index](mod/segmentWidth)));
     }
+    this._context.stroke();
+
+    if (!sagPercentage) {
+      return;
+    }
+
+    const travelSagPercentage = this.travelOfShockAtStroke(sagPercentage);
+    const pointX = Math.min(
+      travelSagPercentage/100 * this._width,
+      this._width - 1,
+    );
+
+    this._context.beginPath();
+    this._context.moveTo(pointX, 0);
+    this._context.lineTo(pointX, this.HEIGHT);
+    this._context.lineWidth = 2;
+    this._context.strokeStyle = 'rgba(255,0,0,0.27)';
+    this._context.stroke();
+
+    const curvesIndex = Math.floor(pointX/segmentWidth);
+    const mod = pointX%segmentWidth;
+    const pointY = this._getY(curves[curvesIndex](mod/segmentWidth))
+
+    const radius = 5;
+    this._context.beginPath(); 
+    this._context.arc(pointX, pointY, radius, 0, 2 * Math.PI); 
+    this._context.fillStyle = 'red'
+    this._context.fill();
+    this._context.lineWidth = 2;
+    this._context.strokeStyle = 'white';
     this._context.stroke();
   }
 

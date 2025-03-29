@@ -1,11 +1,9 @@
 const config = new ConfigurationForm(document.querySelector('form'));
-config.addChangeCallback(calculateCharacteristics);
 
 const curve = new LeverageCurve(
   document.querySelector('.curve-container'),
   config,
 );
-config.addChangeCallback(() => curve.draw());
 
 const button = document.getElementById('simulate');
 
@@ -38,7 +36,7 @@ function leverageOfShockAtStroke(s) {
   return config.baseLeverage;
 }
 
-function calculateCharacteristics() {
+function calculateSag() {
   let { stroke, springWeight, riderWeight, rearTireBias } = config;
 
   const { variables } = curve;
@@ -58,9 +56,11 @@ function calculateCharacteristics() {
   // lead to max sag at like 99.9 or 100.1 or something
   sag = Math.min(Math.round(sag * 100) / 100, 100).toFixed(2); // round to 2 decimals (so users can see something is changing
   document.getElementById('sag-output').innerHTML = sag;
+  return sag;
 }
 
-calculateCharacteristics();
+config.addChangeCallback(() => curve.draw(), {priority: 999});
+config.addChangeCallback(calculateSag, {dataKey: 'sagPercentage', runInitial: true});
 
 // the rest is the animation
 
