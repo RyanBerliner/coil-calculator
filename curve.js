@@ -137,18 +137,21 @@ class LeverageCurve {
     const variables = this.variables;
 
     const s = percentage / 100 * stroke;
-    console.log("this is the stroke value", s);
 
     for (let i = 0; i < variables.length; i++) {
       const {strokeq, strokep, m, Y, X, b} = variables[i];
-      console.log(strokep, strokeq);
+      console.log('searching bounds', strokeq, strokep, 'for', s);
       if (s < strokep && s >= strokeq) {
         // This is the dt/ds... we need the t... so take the integral of this
         // (or find the equation in my notes from before i took the derivitive
         // the dt/ds vs s equation (below) is found on notesheet 2.2
-        return Math.pow(Math.E, (m*s)-(m*Y)+Math.log((m*X)+b));
+        const dirivitive = Math.pow(Math.E, (m*s)-(m*Y)+Math.log((m*X)+b));
+        console.log('the dirivitive is', dirivitive);
+        return (1/m) * (Math.log(s-Y) - Math.log((m*s)+b)) + Y;
       }
     }
+
+    // return percentage;
     // default to the "average" so it at least doesn't break
     // return baseLeverage;
   }
@@ -206,7 +209,8 @@ class LeverageCurve {
       return;
     }
 
-    console.log("the new calc", this.travelOfShockAtStroke(sagPercentage));
+    console.log("the stroke percentage", sagPercentage);
+    console.log("the travel percentage", this.travelOfShockAtStroke(sagPercentage));
 
     // TODO: this is wrong, because sagPercentage is a percentage of stroke,
     //       and the curves x axis is not stroke, but wheel travel
