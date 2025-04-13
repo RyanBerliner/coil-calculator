@@ -8,6 +8,8 @@
     <link rel="preload" href="dom.js" as="script" />
   </head>
   <body>
+    <header></header>
+    <aside>
       <canvas id="animation"></canvas>
       <div class="sticky">
         <div class="calculated-sag">
@@ -72,10 +74,76 @@
           </div>
         </fieldset>
       </form>
-      <footer style="text-align:center;padding: 20px;">
-        Learn <a href="https://ryanberliner.com/best-mtb-coil-calculator">about this tool</a>, or
-        view code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a>
-      </footer>
+    </aside>
+    <main>
+      <div class="table">
+        <div class="cw-label">Coil Weight (lbs)</div>
+        <div class="cw">
+          <div><span>400</span></div>
+          <div><span>420</span></div>
+          <div><span>440</span></div>
+          <div><span>460</span></div>
+          <div><span>480</span></div>
+          <div><span>480</span></div>
+        </div>
+        <div class="rw-label"><span>Rider Weight (lbs)</span></div>
+        <div class="rw">
+          <span>400</span>
+          <span>420</span>
+          <span>440</span>
+          <span>460</span>
+          <span>480</span>
+        </div>
+        <div class="table-data">
+          <table>
+            <tr>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+            </tr>
+            <tr>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+            </tr>
+            <tr>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+            </tr>
+            <tr>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+            </tr>
+            <tr>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+              <td>27%</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </main>
+    <footer style="text-align:center;padding: 20px;">
+      Learn <a href="https://ryanberliner.com/best-mtb-coil-calculator">about this tool</a>, or
+      view code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a>
+    </footer>
     <script src="form.js" defer></script>
     <script src="curve.js" defer></script>
     <script src="dom.js" defer></script>
