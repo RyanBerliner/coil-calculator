@@ -240,7 +240,7 @@ button span { font-size: 1.5em; font-weight: 700; }
 
 .cw span:after {
   color: black;
-  content: "400";
+  content: attr(data-weight);
   left: 12px; /* arbitrary */
   padding-left: 50%;
   position: absolute;
