@@ -214,6 +214,10 @@ button span { font-size: 1.5em; font-weight: 700; }
 .rw { grid-area: rw; }
 .table-data { grid-area: data; }
 
+.cw-label {
+  background: red;
+}
+
 .cw {
   align-items: center;
   display: flex;
@@ -250,8 +254,7 @@ button span { font-size: 1.5em; font-weight: 700; }
 }
 
 .cw span:before {
-  background: yellow;
-  border: 1px solid red;
+  border-top: 1px solid black;
   content: "";
   height: 100%;
   left: 0;
@@ -260,16 +263,27 @@ button span { font-size: 1.5em; font-weight: 700; }
   width: 600px;
 }
 
+.rw-label {
+  position: relative;
+  background: red;
+}
+
 .rw-label span {
-  display: block;
-  opacity: 0;
+  left: 50%;
   position: absolute;
-  transform-origin: 0 0;
-  transform: rotate(-90deg);
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
 }
 
 .rw {
-  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-top: 1px solid black;
+}
+
+.rw span {
+  border-bottom: 1px solid black;
 }
 
 .table table {
@@ -280,4 +294,10 @@ button span { font-size: 1.5em; font-weight: 700; }
 
 .table td {
   border: 1px solid black; 
+}
+
+.rw span,
+.table td {
+  padding: 0;
+  line-height: 1;
 }
