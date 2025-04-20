@@ -71,7 +71,7 @@ let cWidth;
 let baseTransform;
 
 function setCanvas() {
-  cHeight = window.outerHeight / 2;
+  cHeight = canvasNode.parentElement.offsetHeight;
   cWidth = canvasNode.parentElement.offsetWidth;
   canvasNode.height = cHeight;
   canvasNode.width = cWidth;
