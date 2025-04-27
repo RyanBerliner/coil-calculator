@@ -208,6 +208,25 @@ button span { font-size: 1.5em; font-weight: 700; }
   overflow: hidden;
 }
 
+.table-sticky .sticky-header {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 5;
+  overflow: hidden;
+  background: white;
+  display: none;
+}
+
+.table-sticky .sticky-header.show {
+  display: block;
+}
+
+.table-sticky .sticky-header .cw {
+  border-bottom: 1px solid black;
+}
+
 .cw-label { grid-area: cw-label; }
 .cw { grid-area: cw; }
 .rw-label { grid-area: rw-label; }
@@ -232,6 +251,8 @@ button span { font-size: 1.5em; font-weight: 700; }
 .cw {
   align-items: center;
   display: flex;
+  position: relative;
+  background: white;
 }
 
 .cw div {
@@ -305,9 +326,8 @@ button span { font-size: 1.5em; font-weight: 700; }
   border-collapse: collapse;
   text-align: center;
   width: 100%;
-  position: relative;
-  z-index: 1;
   background: white;
+  position: relative;
 }
 
 .table td {
