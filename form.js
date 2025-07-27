@@ -12,6 +12,7 @@ class ConfigurationForm {
     this._form = form;
     this._changeCallbacks = [];
     this._form.addEventListener('change', event => this._runChangeCallbacks(event));
+    this._form.addEventListener('input', event => this._runChangeCallbacks(event));
     this._form.addEventListener('submit', event => {
       event.preventDefault();
       this._runChangeCallbacks(event);
