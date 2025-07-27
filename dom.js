@@ -13,15 +13,17 @@ let acc = 0;
 let vel = 0;
 let pos = 0;
 
-button.addEventListener('mousedown', () => simulating = true);
+setTimeout(() => simulating = true, 500);
+
+button.addEventListener('mousedown', () => simulating = false);
 button.addEventListener('touchstart', (event) => {
   event.preventDefault();
-  simulating = true
+  simulating = false
 });
-button.addEventListener('mouseup', () => simulating = false);
+button.addEventListener('mouseup', () => simulating = true);
 button.addEventListener('touchend', () => {
   event.preventDefault();
-  simulating = false;
+  simulating = true;
 });
 
 function leverageOfShockAtStroke(s) {
@@ -71,10 +73,10 @@ let cWidth;
 let baseTransform;
 
 function setCanvas() {
-  cHeight = window.outerHeight / 2;
+  cHeight = window.innerWidth > 800 ? 300 : 250;
   cWidth = canvasNode.parentElement.offsetWidth;
-  canvasNode.height = cHeight;
   canvasNode.width = cWidth;
+  canvasNode.height = cHeight;
 
   if (window.devicePixelRatio > 1) {
     canvasNode.width = cWidth * window.devicePixelRatio;
@@ -121,7 +123,7 @@ function drawShock(stroke, compression, showSag) {
 
   // we want to draw this in the center of the canvas and make as big as possible
   const shockHeight = originalCoilHeight + preloadHeight / 2;
-  const scaleAmount = cHeight / (shockHeight + 200);  // extra num for padding top and bottom
+  const scaleAmount = cHeight / (shockHeight + 100);  // extra num for padding top and bottom
   context.translate(cWidth / 2, cHeight / 2 + shockHeight / 2 * scaleAmount);
   context.scale(scaleAmount, scaleAmount);
   let middleTransform = context.getTransform();

@@ -8,74 +8,71 @@
     <link rel="preload" href="dom.js" as="script" />
   </head>
   <body>
+    <aside>
       <canvas id="animation"></canvas>
-      <div class="sticky">
-        <div class="calculated-sag">
-          <button id="simulate"><span>Press & Hold</span><br/>to visualize sag</button>
-          <div>
-            <span>Calculated Sag</span>
-            <span><span id="sag-output"></span>%</span>
-          </div>
+      <button id="simulate">
+        <span>Calculated Sag</span>
+        <span><span id="sag-output"></span>%</span>
+      </button>
+    </aside>
+    <form>
+      <fieldset>
+        <legend>Rider Information</legend>
+        <label>
+          Rider Weight (lbs)
+          <input type="number" name="rider-weight" value="165" min="0">
+        </label>
+        <label>
+          Rear Wheel Bias (default 60%)
+          <input type="number" name="rear-bias" value="60" min="0" max="100">
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Shock & Bike Specs</legend>
+        <label>
+          Rear wheel travel (mm)
+          <input type="number" name="travel" value="160" min="0">
+        </label>
+        <label>
+          Shock stroke (mm)
+          <input type="number" name="stroke" value="60" min="0">
+        </label>
+        <label>
+          Spring Weight (lbs/in)
+          <input type="number" name="spring-weight" value="400" min="0">
+        </label>
+        <div style="display:none;" id="leverage-points">
+          <input type="hidden" value="1" />
+          <input type="hidden" value="1" />
+          <input type="hidden" value="1" />
+          <input type="hidden" value="1" />
+          <input type="hidden" value="1" />
+          <input type="hidden" value="1" />
         </div>
-      </div>
-      <form>
-        <fieldset>
-          <legend>Rider Information</legend>
-          <label>
-            Rider Weight (lbs)
-            <input type="number" name="rider-weight" value="165">
-          </label>
-          <label>
-            Rear Wheel Bias (default 60%)
-            <input type="number" name="rear-bias" value="60">
-          </label>
-        </fieldset>
-        <fieldset>
-          <legend>Shock & Bike Specs</legend>
-          <label>
-            Rear wheel travel (mm)
-            <input type="number" name="travel" value="160">
-          </label>
-          <label>
-            Shock stroke (mm)
-            <input type="number" name="stroke" value="60">
-          </label>
-          <label>
-            Spring Weight (lbs/in)
-            <input type="number" name="spring-weight" value="400">
-          </label>
-          <div style="display:none;" id="leverage-points">
-            <input type="hidden" value="1" />
-            <input type="hidden" value="1" />
-            <input type="hidden" value="1" />
-            <input type="hidden" value="1" />
-            <input type="hidden" value="1" />
-            <input type="hidden" value="1" />
-          </div>
-          <div class="curve-heading">
-            <h2 id="curve-heading">Leverage Curve</h2>
-            <select aria-labelledby="curve-heading">
-              <option value="mp">Most Progressive</option>
-              <option value="p" selected>Progressive</option>
-              <option value="flat">Flat</option>
-              <option value="d">Digressive</option>
-              <option value="md">Most Digressive</option>
-              <option value="c">Custom</option>
-            </select>
-          </div>
-          <div class="curve-container">
-            <span id="upper-leverage">1.5</span>
-            <span id="base-leverage">1</span>
-            <span id="lower-leverage">0.5</span>
-            <span class="x-axis">Wheel Travel</span>
-            <canvas id="curve"></canvas>
-          </div>
-        </fieldset>
-      </form>
-      <footer style="text-align:center;padding: 20px;">
-        Learn <a href="https://ryanberliner.com/best-mtb-coil-calculator">about this tool</a>, or
-        view code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a>
-      </footer>
+        <div class="curve-heading">
+          <h2 id="curve-heading">Leverage Curve</h2>
+          <select aria-labelledby="curve-heading">
+            <option value="mp">Most Progressive</option>
+            <option value="p" selected>Progressive</option>
+            <option value="flat">Flat</option>
+            <option value="d">Digressive</option>
+            <option value="md">Most Digressive</option>
+            <option value="c">Custom</option>
+          </select>
+        </div>
+        <div class="curve-container">
+          <span id="upper-leverage">1.5</span>
+          <span id="base-leverage">1</span>
+          <span id="lower-leverage">0.5</span>
+          <span class="x-axis">Wheel Travel</span>
+          <canvas id="curve"></canvas>
+        </div>
+      </fieldset>
+    </form>
+    <footer style="text-align:center;padding: 20px;">
+      Learn <a href="https://ryanberliner.com/best-mtb-coil-calculator">about this tool</a>, or
+      view code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a>
+    </footer>
     <script src="form.js" defer></script>
     <script src="curve.js" defer></script>
     <script src="dom.js" defer></script>
