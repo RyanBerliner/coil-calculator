@@ -316,11 +316,14 @@ function drawShock(stroke, compression, showSag) {
 }
 
 let last = 0;
-
+let raf = null;
 
 function doPhysics(timestamp) {
-  requestAnimationFrame(doPhysics);
-  if (!last) {
+  raf = requestAnimationFrame(doPhysics);
+  // the > 100 is a safeguard in case our page visibility (focus/blur) doesnt
+  // work in all cases. this ensures that if the timedelta is larger than we
+  // anticipate, it'll reset
+  if (!last || (timestamp - last > 100)) {
     last = timestamp;
     return;
   }
@@ -357,4 +360,15 @@ function doPhysics(timestamp) {
   drawShock(stroke, pos, simulating);
 }
 
-requestAnimationFrame(doPhysics);
+function toggleAnimation() {
+  if (document.visibilityState) {
+    last = 0;
+    raf = requestAnimationFrame(doPhysics);
+  } else {
+    cancelAnimationFrame(raf);
+  }
+}
+
+toggleAnimation();
+
+window.addEventListener('visibilitychange', toggleAnimation);
