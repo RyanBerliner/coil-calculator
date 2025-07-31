@@ -1,0 +1,4 @@
+make,model,year_start,year_end,size_start,size_end,wheel_travel,stroke,eyelet,url,curve_0,curve_1,curve_2,curve_3,curve_4,curve_5
+Transition,Patrol,2021,2026,SM,MD,160,60,205,https://web.archive.org/web/20250731015312/https://www.transitionbikes.com/Bikes_Patrol.cfm,1.1520467887599806,1.0874984186863494,1.0262891258804205,0.9730638183449484,0.9260645230923175,0.8819734212147433
+Transition,Patrol,2021,2026,LG,XL,160,60,205,https://web.archive.org/web/20250731015312/https://www.transitionbikes.com/Bikes_Patrol.cfm,1.1550383387653893,1.0857256758030416,1.0249975326835568,0.9721754705644511,0.9255068005662133,0.8870497088587596
+
