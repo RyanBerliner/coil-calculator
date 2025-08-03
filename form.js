@@ -41,6 +41,8 @@ class ConfigurationForm {
   set points(arrPoints) {
     const inputs = this._pointsInputs;
     arrPoints.forEach((val, idx) => inputs[idx].value = val);
+    // console.log(JSON.stringify(arrPoints.map(p => p*this.baseLeverage)));
+    // console.log('COPY', JSON.stringify(arrPoints));
     // TODO: probably need to manually call the change inputs?
     this._runChangeCallbacks();
   }
