@@ -2,7 +2,7 @@
 
 A calculator to determine the amount of stroke displacement (sag) on the
 rear suspension of a mountain bike a particuler rider will produce with a
-particule coil spring.
+particular coil spring.
 
 ## The Math
 
