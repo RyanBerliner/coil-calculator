@@ -5,9 +5,9 @@ Transforms and inlines bike data from the bikes.csv file into the html file.
 Also move the rest of src to docs... but those are as is with no transformation
 """
 
-import os
 import csv
 import json
+import os
 import re
 import shutil
 

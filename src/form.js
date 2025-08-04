@@ -95,8 +95,3 @@ class ConfigurationForm {
     }
   }
 }
-
-(async function() {
-  const bikes = fetch('./bikes.json');
-  console.log(bikes);
-})();
