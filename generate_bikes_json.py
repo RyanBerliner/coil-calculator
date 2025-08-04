@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Takes the bikes.csv file and converts it to a JSON file to be read directly by
-the calculator with no alterations nessescary
+Transforms and inlines bike data from the bikes.csv file into the html file.
+Also move the rest of src to docs... but those are as is with no transformation
 """
 
+import os
 import csv
 import json
+import re
+import shutil
 
 input_filename = 'bikes.csv'
 header = None
@@ -30,7 +33,6 @@ field_transformation = {
     'size_end': lambda x: x,
 }
 
-output_filename = 'docs/bikes.json'
 output_object = {'bikes': []}
 
 for bike in bikes:
@@ -49,5 +51,21 @@ for bike in bikes:
     bike_data['curve'] = curve_data
     output_object['bikes'].append(bike_data)
 
-with open(output_filename, 'w') as bikes_json:
-    bikes_json.write(json.dumps(output_object))
+html_file = open('src/index.html', 'r')
+html_file_contents = html_file.read()
+html_file.close()
+
+bikes_variable = f'const bikesData = {json.dumps(output_object)};'
+
+compiled_html_file_contents = \
+        html_file_contents.replace('// BIKE_DATA', bikes_variable)
+
+compiled_html_file = open('docs/index.html', 'w')
+compiled_html_file.write(compiled_html_file_contents)
+
+# move the rest of the files in src to docs, assume no other html files
+other_files_pattern = re.compile('.+[^.html]$')
+
+for file in os.listdir('src'):
+    if other_files_pattern.match(file):
+        shutil.copy(f'src/{file}', 'docs/')
