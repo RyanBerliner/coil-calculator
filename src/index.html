@@ -17,7 +17,11 @@
     </aside>
     <form>
       <fieldset>
-        <legend>Rider Information</legend>
+        <div>
+          <legend>Rider Information</legend>
+          <hr aria-hidden="true" />
+        </div>
+
         <label>
           Rider Weight (lbs)
           <input type="number" name="rider-weight" value="165" min="0">
@@ -27,8 +31,19 @@
           <input type="number" name="rear-bias" value="60" min="0" max="100">
         </label>
       </fieldset>
+
       <fieldset>
-        <legend>Shock & Bike Specs</legend>
+        <div>
+          <legend>Bike Specs</legend>
+          <hr aria-hidden="true" />
+          <div class="search">
+            <input type="search" placeholder="Search for a bike..." /> 
+            <div id="search-results" style="display: none;">
+            </div>
+          </div>
+        </div>
+
+
         <label>
           Rear wheel travel (mm)
           <input type="number" name="travel" value="160" min="0">
