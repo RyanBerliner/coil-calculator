@@ -64,6 +64,30 @@ function calculateSag() {
 config.addChangeCallback(() => curve.draw(), {priority: 999});
 config.addChangeCallback(calculateSag, {dataKey: 'sagPercentage', runInitial: true});
 
+// the bike search
+
+const searchInput = document.querySelector('input[type="search"]');
+const searchResults = document.getElementById('search-results');
+
+function updateResults() {
+  searchResults.style.display = 'block';
+  searchResults.innerHTML = '';
+  const val = searchInput.value;
+  const reg = new RegExp(val, 'i');
+  bikesData.bikes.filter(b => b.model.match(reg)).forEach(b => {
+    const div = document.createElement('div');
+    div.innerText = `${b.year_start} ${b.make} ${b.model} ${b.size_start}`;
+    searchResults.appendChild(div);
+  });
+}
+
+searchInput.addEventListener('input', updateResults);
+searchInput.addEventListener('focus', updateResults);
+
+searchInput.addEventListener('blur', function() {
+  searchResults.style.display = 'none';
+});
+
 // the rest is the animation
 
 const canvasNode = document.querySelector('canvas#animation');
