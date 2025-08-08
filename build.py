@@ -2,7 +2,15 @@
 
 """
 Transforms and inlines bike data from the bikes.csv file into the html file.
-Also move the rest of src to docs... but those are as is with no transformation
+
+The bike data is transformed into an data structures for quick searching out of
+the box without any client side indexing required. This is done by making an
+inverted index on the terms (anything we want searchable about a bike... make,
+model, year, etc) and then a radix tree of the terms themselves to do partial
+term matching.
+
+Also move the rest of src files to docs... but those are as is with no
+transformation done to them.
 """
 
 import csv
@@ -33,9 +41,15 @@ field_transformation = {
     'size_end': lambda x: x,
 }
 
-output_object = {'bikes': []}
+output_object = {
+    # bikes can be an array with constant time lookup because the "ids" we
+    # store in our search structures are just the indexes of the bikes
+    'bikes': [],
+    'terms': {},
+    'terms_trie': {},
+}
 
-for bike in bikes:
+for i, bike in enumerate(bikes):
     all_data = list(zip(header, bike))
     bike_data = {}
     curve_data = []
@@ -50,6 +64,35 @@ for bike in bikes:
 
     bike_data['curve'] = curve_data
     output_object['bikes'].append(bike_data)
+
+    searchable_terms = [str(f).lower() for f in [
+        bike_data['make'],
+        bike_data['model'],
+        # TODO: interpolate between years and sizes by filling in the blanks
+        bike_data['year_start'],
+        bike_data['year_end'],
+        bike_data['size_start'],
+        bike_data['size_end'],
+    ]]
+
+    # seems dumb to join then split, but some of these fields may be multiple
+    # terms themselves and this is just an easy way to do it
+    for term in ' '.join(searchable_terms).split(' '):
+        if output_object['terms'].get(term, None) is None:
+            output_object['terms'][term] = []
+
+        # dedupe, could use a set by then we'd have to convert back to list i
+        # think at some point... this is fine
+        if len(output_object['terms'][term]) and \
+                output_object['terms'][term][-1] == i:
+            continue
+
+        output_object['terms'][term].append(i)
+
+    # TODO: add terms trie
+    # IDEA: if we wanted to add some common mispellings we could add support
+    #       for this just in our terms trie, without bothering to create more
+    #       indexes in the inverted index
 
 html_file = open('src/index.html', 'r')
 html_file_contents = html_file.read()
