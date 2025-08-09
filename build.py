@@ -19,6 +19,44 @@ import os
 import re
 import shutil
 
+
+class TrieNode:
+    def __init__(self, character):
+        self.character = character
+        self.object_ids = []
+        self.children_nodes = []
+
+    def add(self, string, object_id):
+        if len(string) == 0:
+            if object_id not in self.object_ids:
+                self.object_ids.append(object_id)
+
+            return
+
+        added = False
+
+        for node in self.children_nodes:
+            if node.character == string[0]:
+                node.add(string[1:], object_id)
+                added = True
+
+        if not added:
+            node = TrieNode(string[0])
+            node.add(string[1:], object_id)
+            self.children_nodes.append(node)
+
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode(None)
+
+    def add(self, term, object_id):
+        self.root.add(term, object_id)
+
+    def __dict__(self):
+        return {'testing': 'trie'}
+
+
 input_filename = 'bikes.csv'
 header = None
 bikes = []
@@ -46,8 +84,10 @@ output_object = {
     # store in our search structures are just the indexes of the bikes
     'bikes': [],
     'terms': {},
-    'terms_trie': {},
+    'terms_trie': None,
 }
+
+terms_trie = Trie()
 
 for i, bike in enumerate(bikes):
     all_data = list(zip(header, bike))
@@ -89,10 +129,13 @@ for i, bike in enumerate(bikes):
 
         output_object['terms'][term].append(i)
 
-    # TODO: add terms trie
-    # IDEA: if we wanted to add some common mispellings we could add support
-    #       for this just in our terms trie, without bothering to create more
-    #       indexes in the inverted index
+        # IDEA: if we wanted to add some common mispellings we could add
+        #       support for this just in our terms trie, without bothering to
+        #       create more indexes in the inverted index
+        terms_trie.add(term, i)
+
+
+output_object['terms_trie'] = terms_trie.__dict__()
 
 html_file = open('src/index.html', 'r')
 html_file_contents = html_file.read()
