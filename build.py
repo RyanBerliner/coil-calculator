@@ -45,6 +45,15 @@ class TrieNode:
             node.add(string[1:], object_id)
             self.children_nodes.append(node)
 
+    def __dict__(self):
+        return {
+            'object_ids': self.object_ids,
+            'children': {
+                child.character: child.__dict__()
+                for child in self.children_nodes
+            }
+        }
+
 
 class Trie:
     def __init__(self):
@@ -54,7 +63,7 @@ class Trie:
         self.root.add(term, object_id)
 
     def __dict__(self):
-        return {'testing': 'trie'}
+        return self.root.__dict__()
 
 
 input_filename = 'bikes.csv'
