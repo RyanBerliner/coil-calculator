@@ -131,7 +131,8 @@ for i, bike in enumerate(bikes):
             output_object['terms'][term] = []
 
         # dedupe, could use a set by then we'd have to convert back to list i
-        # think at some point... this is fine
+        # at some point and ordering would no longer be preserved... this is
+        # the lesser evil
         if len(output_object['terms'][term]) and \
                 output_object['terms'][term][-1] == i:
             continue
