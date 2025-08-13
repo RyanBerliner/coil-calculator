@@ -69,12 +69,44 @@ config.addChangeCallback(calculateSag, {dataKey: 'sagPercentage', runInitial: tr
 const searchInput = document.querySelector('input[type="search"]');
 const searchResults = document.getElementById('search-results');
 
+function gatherBikesIds(term, trie) {
+  if (!trie) return [];
+
+  if (term.length === 0) {
+    return [
+      ...trie.object_ids,
+      ...Object.values(trie.children).map(t => gatherBikesIds('', t)).flat()
+    ];
+  }
+
+  return [
+    ...trie.object_ids,
+    ...gatherBikesIds(term.slice(1), trie.children[term[0]])
+  ];
+}
+
 function updateResults() {
   searchResults.style.display = 'block';
   searchResults.innerHTML = '';
   const val = searchInput.value;
-  const reg = new RegExp(val, 'i');
-  bikesData.bikes.filter(b => b.model.match(reg)).forEach(b => {
+
+  const terms = [
+    ...new Set(
+      val.split(' ').map(t => t.trim()).filter(t => !!t)
+    )
+  ];
+
+  if (terms.length === 0) {
+    return;
+  }
+
+  const bikeIndexes = terms
+    .map(t => gatherBikesIds(t, bikesData.terms_trie))
+    .map(bids => new Set(bids))
+    .reduce((acc, curr) => acc.intersection(curr));
+
+  bikeIndexes.forEach(i => {
+    const b = bikesData.bikes[i];
     const div = document.createElement('div');
     div.innerText = `${b.year_start} ${b.make} ${b.model} ${b.size_start}`;
     searchResults.appendChild(div);
