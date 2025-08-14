@@ -47,6 +47,16 @@ class ConfigurationForm {
     this._runChangeCallbacks();
   }
 
+  set stroke(s) {
+    this.input('stroke').value = s;
+    this._runChangeCallbacks();
+  }
+
+  set travel(t) {
+    this.input('travel').value = t;
+    this._runChangeCallbacks();
+  }
+
   addChangeCallback(callback, opts) {
     opts = opts ? opts : {};
 

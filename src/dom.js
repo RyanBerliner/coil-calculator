@@ -79,10 +79,7 @@ function gatherBikesIds(term, trie) {
     ];
   }
 
-  return [
-    ...trie.object_ids,
-    ...gatherBikesIds(term.slice(1), trie.children[term[0]])
-  ];
+  return gatherBikesIds(term.slice(1), trie.children[term[0]]);
 }
 
 function updateResults() {
@@ -108,6 +105,7 @@ function updateResults() {
   bikeIndexes.forEach(i => {
     const b = bikesData.bikes[i];
     const div = document.createElement('div');
+    div.setAttribute('data-bike', i);
     div.innerText = `${b.year_start} ${b.make} ${b.model} ${b.size_start}`;
     searchResults.appendChild(div);
   });
@@ -116,7 +114,17 @@ function updateResults() {
 searchInput.addEventListener('input', updateResults);
 searchInput.addEventListener('focus', updateResults);
 
-searchInput.addEventListener('blur', function() {
+searchResults.addEventListener('click', function(event) {
+  const el = event.target.closest('[data-bike]');
+
+  if (!el) {
+    return;
+  }
+
+  const bike = bikesData.bikes[parseInt(el.getAttribute('data-bike'))];
+  config.points = bike.curve;
+  config.stroke = bike.stroke;
+  config.travel = bike.wheel_travel;
   searchResults.style.display = 'none';
 });
 
