@@ -89,7 +89,7 @@ function updateResults() {
 
   const terms = [
     ...new Set(
-      val.split(' ').map(t => t.trim()).filter(t => !!t)
+      val.split(' ').map(t => t.trim().toLowerCase()).filter(t => !!t)
     )
   ];
 
@@ -122,11 +122,39 @@ function updateResults() {
 
   bikeIndexes.forEach(i => {
     const b = bikesData.bikes[i];
-    const div = document.createElement('div');
-    div.setAttribute('data-bike', i);
-    div.setAttribute('tabindex', 0);
-    div.innerText = `${b.year_start} ${b.make} ${b.model} ${b.size_start}`;
-    searchResults.appendChild(div);
+    const wrapper = document.createElement('div');
+    wrapper.setAttribute('data-bike', i);
+    wrapper.setAttribute('tabindex', 0);
+    const p = document.createElement('p');
+    p.innerText = `${b.make} ${b.model}`;
+
+    const small = document.createElement('small');
+
+    ['year', 'size'].forEach(name => {
+      const label = document.createElement('span');
+      label.setAttribute('class', 'metakey');
+      label.innerText = name;
+
+      const value = document.createElement('span');
+      const [start, end] = [b[`${name}_start`], b[`${name}_end`]];
+
+      if (start === end) {
+        value.innerText = start;
+      } else {
+        value.innerText = `${start}-${end}`;
+      }
+
+      const meta = document.createElement('span');
+      meta.setAttribute('class', 'meta');
+      meta.appendChild(label);
+      meta.appendChild(value);
+      small.appendChild(meta);
+    });
+
+    wrapper.appendChild(p);
+    wrapper.appendChild(small);
+
+    searchResults.appendChild(wrapper);
   });
 
   if (trimmed) {
@@ -158,6 +186,7 @@ function selectBike(el) {
   config.points = bike.curve;
   config.stroke = bike.stroke;
   config.travel = bike.wheel_travel;
+  searchInput.value = `${bike.make} ${bike.model}`;
   hideResults();
 }
 
