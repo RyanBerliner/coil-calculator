@@ -114,9 +114,25 @@ select { line-height: 1.15; }
   padding: 0.1rem 0.5rem;
 }
 
-#search-results > div:hover {
+#search-results > div[data-bike]:hover,
+#search-results > div[data-bike]:focus {
   background: #efefef;
+  cursor: pointer;
 }
+
+#search-results > div.empty {
+  text-align: center;
+  font-style: italic;
+  opacity: 0.5;
+}
+
+#search-results > div.info {
+  text-align: center;
+  opacity: 0.5;
+  font-size: 0.8em;
+  margin-top: 0.7em;
+}
+
 
 input[type="search"] {
   max-width: none;
