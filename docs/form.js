@@ -47,6 +47,16 @@ class ConfigurationForm {
     this._runChangeCallbacks();
   }
 
+  set stroke(s) {
+    this.input('stroke').value = s;
+    this._runChangeCallbacks();
+  }
+
+  set travel(t) {
+    this.input('travel').value = t;
+    this._runChangeCallbacks();
+  }
+
   addChangeCallback(callback, opts) {
     opts = opts ? opts : {};
 
@@ -82,16 +92,20 @@ class ConfigurationForm {
   }
 
   _runChangeCallbacks(event) {
-    if (event?.target?.nodeName === 'SELECT') {
+    const target = event?.target;
+    if (target?.getAttribute('type') === 'search') return;
+
+    if (target?.nodeName === 'SELECT') {
       const points = this.CURVE_DEFAULTS[event.target.value];
       if (points) this.points = points;
-    } else {
-      this._changeCallbacks.forEach(([callback, opts]) => {
-        const result = callback(this);
-        if (opts?.dataKey) {
-          this.callbackResults[opts.dataKey] = result;
-        }
-      });
+      return;
     }
+
+    this._changeCallbacks.forEach(([callback, opts]) => {
+      const result = callback(this);
+      if (opts?.dataKey) {
+        this.callbackResults[opts.dataKey] = result;
+      }
+    });
   }
 }

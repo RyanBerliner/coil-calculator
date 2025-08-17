@@ -49,24 +49,34 @@ fieldset {
   width: 100%;
   margin: 0 0 1rem;
   padding: 0;
-  border: 1px solid #d0d0d0;
-  border-left: none;
-  border-bottom: none;
-  border-right: none;
+  border: none;
+}
+
+fieldset > div:first-child {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+fieldset > div:first-child hr {
+  all: unset;
+  border-top: 1px solid #d0d0d0;
+  margin: 0;
+  flex-grow: 1;
 }
 
 legend {
   font-weight: 700;
   font-size: 1.1rem;
-  padding: 0 0.75rem 0 0;
-  margin: 0 0 1rem;
+  padding: 0;
+  margin: 0;
 }
 
 input,
 select {
   appearance: none;
   font-size: 1rem;
-  padding: 0.2em 0.4em;
   background-color: white;
   border: 1px solid #d5d5d5;
   border-top-color: rgb(213, 213, 213);
@@ -82,6 +92,80 @@ select {
 
 input { max-width: 6em; }
 select { line-height: 1.15; }
+
+.search {
+  position: relative;
+  flex-grow: 1;
+  max-width: 250px;
+}
+
+#search-results {
+  position: absolute;
+  z-index: 1;
+  background: white;
+  width: 100%;
+  top: 2.3rem;
+  border-radius: 0.6rem;
+  box-shadow: 0 0.05em 0.15em #0000001a, 0 0.15em 0.9em #00000005;
+  padding: 0.4rem 0;
+}
+
+#search-results > div {
+  padding: 0.3rem 0.5rem;
+}
+
+#search-results > div[data-bike]:hover,
+#search-results > div[data-bike]:focus {
+  background: #efefef;
+  cursor: pointer;
+}
+
+#search-results > div[data-bike] p {
+  font-weight: 700;
+  margin: 0;
+}
+
+#search-results > div[data-bike] small span {
+  display: inline-block;
+}
+
+
+#search-results > div[data-bike] .meta {
+  margin-right: 1em;
+}
+
+#search-results > div[data-bike] .metakey {
+  text-transform: capitalize;
+  margin-right: 0.3em;
+  opacity: 0.7;
+}
+
+#search-results > div.empty {
+  text-align: center;
+  font-style: italic;
+  opacity: 0.5;
+}
+
+#search-results > div.info {
+  text-align: center;
+  opacity: 0.5;
+  font-size: 0.8em;
+  margin-top: 0.7em;
+}
+
+
+input[type="search"] {
+  max-width: none;
+  width: 100%;
+  padding: 0.25em 0.75em;
+  border-radius: 20px;
+}
+
+input[type="search"]:not(:focus) {
+  background: #efefef;
+  box-shadow: none;
+  border-color: #efefef;
+}
 
 button {
   appearance: none;
