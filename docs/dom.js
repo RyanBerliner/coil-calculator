@@ -64,6 +64,184 @@ function calculateSag() {
 config.addChangeCallback(() => curve.draw(), {priority: 999});
 config.addChangeCallback(calculateSag, {dataKey: 'sagPercentage', runInitial: true});
 
+// the bike search
+
+const searchInput = document.querySelector('input[type="search"]');
+const searchResults = document.getElementById('search-results');
+
+function gatherBikesIds(term, trie) {
+  if (!trie) return [];
+
+  if (term.length === 0) {
+    return [
+      ...trie.object_ids,
+      ...Object.values(trie.children).map(t => gatherBikesIds('', t)).flat()
+    ];
+  }
+
+  return gatherBikesIds(term.slice(1), trie.children[term[0]]);
+}
+
+function updateResults() {
+  searchResults.style.display = 'block';
+  searchResults.innerHTML = '';
+  const val = searchInput.value;
+
+  const terms = [
+    ...new Set(
+      val.split(' ').map(t => t.trim().toLowerCase()).filter(t => !!t)
+    )
+  ];
+
+  if (terms.length === 0) {
+    const div = document.createElement('div');
+    div.innerText = 'Type to search';
+    div.setAttribute('class', 'empty');
+    searchResults.appendChild(div);
+    return;
+  }
+
+  let bikeIndexes = terms
+    .map(t => gatherBikesIds(t, bikesData.terms_trie))
+    .map(bids => new Set(bids))
+    .reduce((acc, curr) => acc.intersection(curr));
+
+  if (bikeIndexes.size === 0) {
+    const div = document.createElement('div');
+    div.innerText = 'Bike not found';
+    div.setAttribute('class', 'empty');
+    searchResults.appendChild(div);
+    return;
+  }
+
+  let trimmed = false;
+  if (bikeIndexes.size > 5) {
+    trimmed = true;
+    bikeIndexes = Array.from(bikeIndexes).slice(0, 5);
+  }
+
+  bikeIndexes.forEach(i => {
+    const b = bikesData.bikes[i];
+    const wrapper = document.createElement('div');
+    wrapper.setAttribute('data-bike', i);
+    wrapper.setAttribute('tabindex', 0);
+    const p = document.createElement('p');
+    p.innerText = `${b.make} ${b.model}`;
+
+    const small = document.createElement('small');
+
+    ['year', 'size'].forEach(name => {
+      const label = document.createElement('span');
+      label.setAttribute('class', 'metakey');
+      label.innerText = name;
+
+      const value = document.createElement('span');
+      const [start, end] = [b[`${name}_start`], b[`${name}_end`]];
+
+      if (start === end) {
+        value.innerText = start;
+      } else {
+        value.innerText = `${start}-${end}`;
+      }
+
+      const meta = document.createElement('span');
+      meta.setAttribute('class', 'meta');
+      meta.appendChild(label);
+      meta.appendChild(value);
+      small.appendChild(meta);
+    });
+
+    wrapper.appendChild(p);
+    wrapper.appendChild(small);
+
+    searchResults.appendChild(wrapper);
+  });
+
+  if (trimmed) {
+    const div = document.createElement('div');
+    div.setAttribute('class', 'info');
+    div.innerText = 'Keep typing to refine results';
+    searchResults.appendChild(div);
+  }
+}
+
+searchInput.addEventListener('input', updateResults);
+searchInput.addEventListener('focus', updateResults);
+
+function hideResults() {
+  searchResults.style.display = 'none';
+}
+
+function hideIfNotSearch() {
+  if (!event.target.closest('.search')) {
+    hideResults();
+  }
+}
+
+document.addEventListener('click', hideIfNotSearch);
+document.addEventListener('focusin', hideIfNotSearch);
+
+function selectBike(el) {
+  const bike = bikesData.bikes[parseInt(el.getAttribute('data-bike'))];
+  config.points = bike.curve;
+  config.stroke = bike.stroke;
+  config.travel = bike.wheel_travel;
+  searchInput.value = `${bike.make} ${bike.model}`;
+  hideResults();
+}
+
+searchResults.addEventListener('click', function(event) {
+  const el = event.target.closest('[data-bike]');
+
+  if (!el) {
+    return;
+  }
+
+  selectBike(el);
+});
+
+// select the active bike
+document.addEventListener('keydown', function(event) {
+  const el = document.activeElement;
+  if (!el.getAttribute('data-bike')) {
+    return;
+  }
+
+  const c = event.keyCode;
+
+  if (c === 13 || c === 32) {
+    event.preventDefault();
+    event.stopPropagation();
+    selectBike(el);
+  };
+});
+
+// up and down arrows
+document.addEventListener('keydown', function(event) {
+  const el = document.activeElement;
+
+  if (!el.closest('.search')) {
+    return;
+  }
+
+  const c = event.keyCode;
+  const up = 38;
+  const down = 40;
+
+  if (c !== up && c !== down) {
+    return;
+  }
+
+  const bikes = Array.from(searchResults.querySelectorAll('[data-bike]'));
+  const newIndex = (bikes.indexOf(el) + (c === up ? -1 : 1)) % bikes.length;
+
+  if (newIndex < 0) {
+    bikes[bikes.length - 1].focus();
+  } else {
+    bikes[newIndex].focus();
+  }
+});
+
 // the rest is the animation
 
 const canvasNode = document.querySelector('canvas#animation');
