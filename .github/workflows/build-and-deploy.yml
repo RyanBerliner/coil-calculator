@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Build
         id: buildscript
-        run: bash build.py
+        run: python3 build.py
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
