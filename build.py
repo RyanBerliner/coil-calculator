@@ -9,7 +9,7 @@ inverted index on the terms (anything we want searchable about a bike... make,
 model, year, etc) and then a radix tree of the terms themselves to do partial
 term matching.
 
-Also move the rest of src files to docs... but those are as is with no
+Also move the rest of src files to dist... but those are as is with no
 transformation done to them.
 """
 
@@ -156,12 +156,12 @@ bikes_variable = f'const bikesData = {json.dumps(output_object)};'
 compiled_html_file_contents = \
         html_file_contents.replace('// BIKE_DATA', bikes_variable)
 
-compiled_html_file = open('docs/index.html', 'w')
+compiled_html_file = open('dist/index.html', 'w')
 compiled_html_file.write(compiled_html_file_contents)
 
-# move the rest of the files in src to docs, assume no other html files
+# move the rest of the files in src to dist, assume no other html files
 other_files_pattern = re.compile('.+[^.html]$')
 
 for file in os.listdir('src'):
     if other_files_pattern.match(file):
-        shutil.copy(f'src/{file}', 'docs/')
+        shutil.copy(f'src/{file}', 'dist/')
