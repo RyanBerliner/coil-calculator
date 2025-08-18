@@ -24,7 +24,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Build
         id: buildscript
-        run: python3 build.py
+        run: |
+          python3 build.py
+          rm dist/.keep
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
