@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Build
         id: buildscript
-        run: ./build.sh
+        run: bash build.sh
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
