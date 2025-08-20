@@ -66,6 +66,19 @@ class Trie:
         return self.root.__dict__()
 
 
+# Importantly, these are in ascending order. This matters because we
+# interpolate between size ranges when constructing inverted index
+size_maps = [
+    ('XXS', 'Extra Extra Small'),
+    ('XS', 'Extra Small'),
+    ('SM', 'Small'),
+    ('MD', 'Medium'),
+    ('LG', 'Large'),
+    ('XL', 'Extra Large'),
+    ('XXL', 'Extra Extra Large'),
+]
+
+
 input_filename = 'bikes.csv'
 header = None
 bikes = []
@@ -117,12 +130,42 @@ for i, bike in enumerate(bikes):
     searchable_terms = [str(f).lower() for f in [
         bike_data['make'],
         bike_data['model'],
-        # TODO: interpolate between years and sizes by filling in the blanks
         bike_data['year_start'],
         bike_data['year_end'],
-        bike_data['size_start'],
-        bike_data['size_end'],
+        # we'll add sizes separately cause we have to provide alternate
+        # spellings and interpolate anyway
     ]]
+
+    # interpolate between years if they are different
+    if bike_data['year_start'] != bike_data['year_end']:
+        start, end = int(bike_data['year_start']), int(bike_data['year_end'])
+
+        for year in range(start + 1, end):
+            searchable_terms.append(str(year))
+
+    # expand size abreviation to alternative name, interpolate between them
+
+    # BUG: for bikes with size ranges like XS-LG someone could search
+    #      "extra large" and this would match since we break on space and that
+    #      matches both "extra" and "large". This is really a generic bug with
+    #      how I'm matching all terms, but its particularly appearent here
+
+    bounds = [
+        size_i for size_i in range(len(size_maps)) if size_maps[size_i][0] in
+        [bike_data['size_start'], bike_data['size_end']]
+    ]
+
+    if len(bounds) == 1:
+        searchable_terms.append(size_maps[bounds[0]][0].lower())
+        searchable_terms.append(size_maps[bounds[0]][1].lower())
+    elif len(bounds) > 1:
+        for b in range(bounds[0], bounds[1] + 1):
+            searchable_terms.append(size_maps[b][0].lower())
+            searchable_terms.append(size_maps[b][1].lower())
+    else:
+        raise Exception('Unable to find size in sizes map ' +
+                        f'start={bike_data["size_start"]} ' +
+                        f'end={bike_data["size_end"]}')
 
     # seems dumb to join then split, but some of these fields may be multiple
     # terms themselves and this is just an easy way to do it
