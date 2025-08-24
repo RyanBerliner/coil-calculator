@@ -232,6 +232,9 @@ document.addEventListener('keydown', function(event) {
     return;
   }
 
+  event.preventDefault();
+  event.stopPropagation();
+
   const bikes = Array.from(searchResults.querySelectorAll('[data-bike]'));
   const newIndex = (bikes.indexOf(el) + (c === up ? -1 : 1)) % bikes.length;
 
