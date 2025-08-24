@@ -96,7 +96,7 @@ function updateResults() {
   if (terms.length === 0) {
     const div = document.createElement('div');
     div.innerText = 'Type to search';
-    div.setAttribute('class', 'empty');
+    div.setAttribute('class', 'prompt');
     searchResults.appendChild(div);
     return;
   }
@@ -110,6 +110,11 @@ function updateResults() {
     const div = document.createElement('div');
     div.innerText = 'Bike not found';
     div.setAttribute('class', 'empty');
+    const a = document.createElement('a');
+    a.setAttribute('href', 'https://github.com/RyanBerliner/coil-calculator?tab=readme-ov-file#adding-a-bike');
+    a.setAttribute('target', '_blank');
+    a.innerText = 'Want to submit a new bike?';
+    div.appendChild(a);
     searchResults.appendChild(div);
     return;
   }

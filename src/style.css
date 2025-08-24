@@ -140,10 +140,19 @@ select { line-height: 1.15; }
   opacity: 0.7;
 }
 
-#search-results > div.empty {
+#search-results > div.empty,
+#search-results > div.prompt {
   text-align: center;
+}
+
+#search-results > div.prompt {
   font-style: italic;
   opacity: 0.5;
+}
+
+#search-results > div.empty a {
+  display: block;
+  font-size: 0.8em;
 }
 
 #search-results > div.info {

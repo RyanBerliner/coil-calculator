@@ -7,7 +7,7 @@ particular coil spring.
 ## Adding a Bike
 
 If you would like to add a bike to the search feature, please submit an issue
-here on GitHub. In your issues, please provide the follwing information:
+here on GitHub. In your submission, please provide the following information:
 
 - Make
 - Model
