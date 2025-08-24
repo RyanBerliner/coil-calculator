@@ -4,6 +4,24 @@ A calculator to determine the amount of stroke displacement (sag) on the
 rear suspension of a mountain bike a particuler rider will produce with a
 particular coil spring.
 
+## Adding a Bike
+
+If you would like to add a bike to the search feature, please submit an issue
+here on GitHub. In your issues, please provide the follwing information:
+
+- Make
+- Model
+- Year (could range multiple years)
+- Size (could range multiple sizes)
+- Wheel Travel
+- Shock Stroke
+- A URL with leverage curve information (ideally a chart)
+- (if different) A URL acting as a source for all your information
+
+Please limit a single issue to 1 make and model, opening a separate issue if
+you'd wish to add another bike. If all the information required is submitted I
+can add it to the website.
+
 ## The Math
 
 The math to produce sag calculations is dead simple in the base case.
