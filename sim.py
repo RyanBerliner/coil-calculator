@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+
+"""
+(WIP)
+A geometric constraint solver to find leverage curves from pictures of bikes.
+"""
+
+import math
+
+
+# NOTE: random thoughts
+#       - need to be able to constrain joints on just x, y, and on some axis
+#         (think about yetis with slider thing)
+#       - need to be able to constrain linkage angles with each other
+#         (rigid arm with joint in the middle)
+
+
+class Joint:
+    def __init__(self, x, y, name):
+        self.name = name
+        self.x = x
+        self.y = y
+        self.constrained_coord = False
+
+    def constrain_coord(self):
+        self.constrained_coord = True
+
+    def __str__(self):
+        if not self.constrained_coord:
+            return f'({self.x}, {self.y})'
+
+        return f'(${self.x}, ${self.y})'
+
+    @staticmethod
+    def dist(j1, j2):
+        return abs(math.sqrt(pow(j1.x + j2.x, 2) + pow(j1.y + j2.y, 2)))
+
+
+class Linkage:
+    def __init__(self, j1, j2, name):
+        self.name = name
+        self.j1 = j1
+        self.j2 = j2
+        self.constrained_length = None
+
+    @property
+    def current_length(self):
+        return Joint.dist(self.j1, self.j2)
+
+    def constrain_length(self, to=None):
+        self.constrained_length = to
+
+        if to is None:
+            self.constrained_length = self.current_length
+
+    def __str__(self):
+        length = f'{self.current_length}|??'
+
+        if self.constrained_length is not None:
+            length = f'{self.current_length}|{self.constrained_length}'
+
+        return f'{self.name} {self.j1}---({length})---{self.j2}'
+
+
+
+class Platform:
+    """
+    A platform is a system of constrained joints and linkages
+    """
+
+    def __init__(self):
+        self.linkages = {}
+
+    def add_linkage(self, j1, j2, name):
+        assert self.linkages.get(name, None) is None, 'duplicate linkage'
+        linkage = Linkage(j1, j2, name)
+        self.linkages[name] = linkage
+        return linkage
+
+    def solve(self):
+        for link in self.linkages.values():
+            assert link.constrained_length is not None, \
+                f'{link.name} must have constrained length'
+
+        # TODO: solve lol
+        print('SOLVING...')
+
+    def __str__(self):
+        ret = ''
+
+        for link in self.linkages.values():
+            ret += str(link)
+            ret += '\n'
+
+        return ret
+
+
+if __name__ == '__main__':
+    """
+
+    Consider the *most basic* suspension platform where there is a giant shock
+    attached directly to the axle up to the seatstay. There are just 2 linkages
+    and 3 points of interest
+
+        *
+       /
+      / 
+     /  
+    *---*
+
+    / = shock (am considering this a linkage)
+    - = swing arm
+
+    We want to understand how the axle position changes in relation to the shock
+    length changing (ie shock compressing)
+
+    """
+
+    j1 = Joint(0, 0, 'axle')
+
+    j2 = Joint(10, 0, 'pivot')
+    j2.constrain_coord()
+
+    j3 = Joint(10, 10, 'shock_mount')
+    j3.constrain_coord()
+
+    platform = Platform()
+
+    swing_arm = platform.add_linkage(j1, j2, name='swing_arm')
+    swing_arm.constrain_length()
+
+    shock = platform.add_linkage(j1, j3, name='shock')
+    shock.constrain_length()
+
+    print(platform)
+
+    # at this point it should arrive at the same solution at it stands currently
+    platform.solve()
+    print(platform)
+
+    # lets change the shock length and see the axle move
+    shock.constrain_length(10)
+    platform.solve()
+    print(platform)
