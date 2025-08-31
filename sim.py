@@ -33,7 +33,7 @@ class Joint:
 
     @staticmethod
     def dist(j1, j2):
-        return abs(math.sqrt(pow(j1.x + j2.x, 2) + pow(j1.y + j2.y, 2)))
+        return math.sqrt(math.pow(j2.x - j1.x, 2) + math.pow(j2.y - j1.y, 2))
 
 
 class Linkage:
@@ -82,12 +82,12 @@ class Linkage:
         x = adjustment * math.cos(angle)
 
         if not self.j1.constrained_coord:
-            self.j1.x += x
-            self.j1.y += y
+            self.j1.x -= x
+            self.j1.y -= y
 
         if not self.j2.constrained_coord:
-            self.j2.x -= x
-            self.j2.y -= y
+            self.j2.x += x
+            self.j2.y += y
 
     def __str__(self):
         length = f'{self.current_length}|??'
@@ -120,8 +120,8 @@ class Platform:
 
         error = self.error
         count = 0
-        while error > 0.0001 and count < 100:
-            print('error', self.error)
+        while error > 0.00001:
+            assert count < 1000, 'unable to solve platform'
 
             for link in self.linkages.values():
                 link.adjust()
@@ -180,11 +180,11 @@ if __name__ == '__main__':
     shock = platform.add_linkage(j1, j3, name='shock')
     shock.constrain_length()
 
-    # print(platform)
+    print(platform)
 
     # at this point it should arrive at the same solution at it stands currently
-    # platform.solve()
-    # print(platform)
+    platform.solve()
+    print(platform)
 
     # lets change the shock length and see the axle move
     shock.constrain_length(10)
