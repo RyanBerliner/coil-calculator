@@ -53,6 +53,42 @@ class Linkage:
         if to is None:
             self.constrained_length = self.current_length
 
+    @property
+    def error(self):
+        return self.constrained_length - self.current_length
+
+    def adjust(self):
+        constrained_joints = len(list(filter(
+            bool,
+            [
+                self.j1.constrained_coord,
+                self.j2.constrained_coord
+            ]
+        )))
+
+        # nothing you can adjust
+        if constrained_joints == 2:
+            return
+
+        error = self.error
+
+        if error == 0:
+            return
+
+        # TODO: will hand to handle vertical line
+        angle = math.atan((self.j2.y - self.j1.y) / (self.j2.x - self.j1.x))
+        adjustment = error / (2 if constrained_joints == 0 else 1)
+        y = adjustment * math.sin(angle)
+        x = adjustment * math.cos(angle)
+
+        if not self.j1.constrained_coord:
+            self.j1.x += x
+            self.j1.y += y
+
+        if not self.j2.constrained_coord:
+            self.j2.x -= x
+            self.j2.y -= y
+
     def __str__(self):
         length = f'{self.current_length}|??'
 
@@ -82,8 +118,20 @@ class Platform:
             assert link.constrained_length is not None, \
                 f'{link.name} must have constrained length'
 
-        # TODO: solve lol
-        print('SOLVING...')
+        error = self.error
+        count = 0
+        while error > 0.0001 and count < 100:
+            print('error', self.error)
+
+            for link in self.linkages.values():
+                link.adjust()
+            
+            error = self.error
+            count += 1
+
+    @property
+    def error(self):
+        return abs(sum([link.error for link in self.linkages.values()]))
 
     def __str__(self):
         ret = ''
@@ -132,11 +180,11 @@ if __name__ == '__main__':
     shock = platform.add_linkage(j1, j3, name='shock')
     shock.constrain_length()
 
-    print(platform)
+    # print(platform)
 
     # at this point it should arrive at the same solution at it stands currently
-    platform.solve()
-    print(platform)
+    # platform.solve()
+    # print(platform)
 
     # lets change the shock length and see the axle move
     shock.constrain_length(10)
