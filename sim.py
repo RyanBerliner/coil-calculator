@@ -75,8 +75,13 @@ class Linkage:
         if error == 0:
             return
 
+        # Find the angle that the linkage is as. Lets pull the joints in or
+        # expand then out alongside the same angle by a fraction of that
+        # adjustment
+        
         # TODO: will hand to handle vertical line
-        angle = math.atan((self.j2.y - self.j1.y) / (self.j2.x - self.j1.x))
+        slope = (self.j2.y - self.j1.y) / (self.j2.x - self.j1.x)
+        angle = math.atan(slope)
         adjustment = error / (2 if constrained_joints == 0 else 1)
         y = adjustment * math.sin(angle)
         x = adjustment * math.cos(angle)
@@ -131,7 +136,7 @@ class Platform:
 
     @property
     def error(self):
-        return abs(sum([link.error for link in self.linkages.values()]))
+        return sum([abs(link.error) for link in self.linkages.values()])
 
     def __str__(self):
         ret = ''
@@ -146,10 +151,7 @@ class Platform:
 class PlatformTest(unittest.TestCase):
     def test_basic_platform(self):
         """
-
-        Consider the *most basic* suspension platform where there is a giant shock
-        attached directly to the axle up to the seatstay. There are just 2 linkages
-        and 3 points of interest
+        Most basic suspension platform possible (single pivot shock on axle)
 
             *
            /
@@ -203,22 +205,8 @@ class PlatformTest(unittest.TestCase):
 
     def test_basic_platform_q2(self):
         """
-
-        The same basic design but in the second quadrant
-
-        *
-         \
-          \ 
-           \ 
-        *---*
-
-        \ = shock (am considering this a linkage)
-        - = swing arm
-        axle = origin
-
-        We want to understand how the axle position changes in relation to the shock
-        length changing (ie shock compressing)
-
+        The same basic platform design but in the second quadrant with the axle
+        at the origin again
         """
 
         j1 = Joint(0, 0, 'axle')
@@ -237,7 +225,6 @@ class PlatformTest(unittest.TestCase):
         shock = platform.add_linkage(j1, j3, name='shock')
         shock.constrain_length()
 
-        # at this point it should arrive at the same solution at it stands currently
         platform.solve()
         self.assertEqual(j1.x, 0)
         self.assertEqual(j1.y, 0)
@@ -246,7 +233,6 @@ class PlatformTest(unittest.TestCase):
         self.assertEqual(j3.x, -10)
         self.assertEqual(j3.y, -10)
 
-        # lets change the shock length and see the axle move
         shock.constrain_length(10)
         platform.solve()
         self.assertAlmostEqual(j1.x, -1.33975095)
