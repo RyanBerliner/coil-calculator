@@ -6,7 +6,7 @@ A geometric constraint solver to find leverage curves from pictures of bikes.
 """
 
 import math
-
+import unittest
 
 # NOTE: random thoughts
 #       - need to be able to constrain joints on just x, y, and on some axis
@@ -143,50 +143,119 @@ class Platform:
         return ret
 
 
-if __name__ == '__main__':
-    """
+class PlatformTest(unittest.TestCase):
+    def test_basic_platform(self):
+        """
 
-    Consider the *most basic* suspension platform where there is a giant shock
-    attached directly to the axle up to the seatstay. There are just 2 linkages
-    and 3 points of interest
+        Consider the *most basic* suspension platform where there is a giant shock
+        attached directly to the axle up to the seatstay. There are just 2 linkages
+        and 3 points of interest
+
+            *
+           /
+          / 
+         /  
+        *---*
+
+        / = shock (am considering this a linkage)
+        - = swing arm
+        axle = origin
+
+        We want to understand how the axle position changes in relation to the shock
+        length changing (ie shock compressing)
+
+        """
+
+        j1 = Joint(0, 0, 'axle')
+
+        j2 = Joint(10, 0, 'pivot')
+        j2.constrain_coord()
+
+        j3 = Joint(10, 10, 'shock_mount')
+        j3.constrain_coord()
+
+        platform = Platform()
+
+        swing_arm = platform.add_linkage(j1, j2, name='swing_arm')
+        swing_arm.constrain_length()
+
+        shock = platform.add_linkage(j1, j3, name='shock')
+        shock.constrain_length()
+
+        # at this point it should arrive at the same solution at it stands currently
+        platform.solve()
+        self.assertEqual(j1.x, 0)
+        self.assertEqual(j1.y, 0)
+        self.assertEqual(j2.x, 10)
+        self.assertEqual(j2.y, 0)
+        self.assertEqual(j3.x, 10)
+        self.assertEqual(j3.y, 10)
+
+        # lets change the shock length and see the axle move
+        shock.constrain_length(10)
+        platform.solve()
+        self.assertAlmostEqual(j1.x, 1.33975095)
+        self.assertAlmostEqual(j1.y, 4.99999135)
+        self.assertEqual(j2.x, 10)
+        self.assertEqual(j2.y, 0)
+        self.assertEqual(j3.x, 10)
+        self.assertEqual(j3.y, 10)
+
+    def test_basic_platform_q2(self):
+        """
+
+        The same basic design but in the second quadrant
 
         *
-       /
-      / 
-     /  
-    *---*
+         \
+          \ 
+           \ 
+        *---*
 
-    / = shock (am considering this a linkage)
-    - = swing arm
+        \ = shock (am considering this a linkage)
+        - = swing arm
+        axle = origin
 
-    We want to understand how the axle position changes in relation to the shock
-    length changing (ie shock compressing)
+        We want to understand how the axle position changes in relation to the shock
+        length changing (ie shock compressing)
 
-    """
+        """
 
-    j1 = Joint(0, 0, 'axle')
+        j1 = Joint(0, 0, 'axle')
 
-    j2 = Joint(10, 0, 'pivot')
-    j2.constrain_coord()
+        j2 = Joint(-10, 0, 'pivot')
+        j2.constrain_coord()
 
-    j3 = Joint(10, 10, 'shock_mount')
-    j3.constrain_coord()
+        j3 = Joint(-10, -10, 'shock_mount')
+        j3.constrain_coord()
 
-    platform = Platform()
+        platform = Platform()
 
-    swing_arm = platform.add_linkage(j1, j2, name='swing_arm')
-    swing_arm.constrain_length()
+        swing_arm = platform.add_linkage(j1, j2, name='swing_arm')
+        swing_arm.constrain_length()
 
-    shock = platform.add_linkage(j1, j3, name='shock')
-    shock.constrain_length()
+        shock = platform.add_linkage(j1, j3, name='shock')
+        shock.constrain_length()
 
-    print(platform)
+        # at this point it should arrive at the same solution at it stands currently
+        platform.solve()
+        self.assertEqual(j1.x, 0)
+        self.assertEqual(j1.y, 0)
+        self.assertEqual(j2.x, -10)
+        self.assertEqual(j2.y, 0)
+        self.assertEqual(j3.x, -10)
+        self.assertEqual(j3.y, -10)
 
-    # at this point it should arrive at the same solution at it stands currently
-    platform.solve()
-    print(platform)
+        # lets change the shock length and see the axle move
+        shock.constrain_length(10)
+        platform.solve()
+        self.assertAlmostEqual(j1.x, -1.33975095)
+        self.assertAlmostEqual(j1.y, -4.99999135)
+        self.assertEqual(j2.x, -10)
+        self.assertEqual(j2.y, 0)
+        self.assertEqual(j3.x, -10)
+        self.assertEqual(j3.y, -10)
 
-    # lets change the shock length and see the axle move
-    shock.constrain_length(10)
-    platform.solve()
-    print(platform)
+
+if __name__ == '__main__':
+    unittest.main()
