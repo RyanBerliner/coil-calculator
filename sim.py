@@ -226,6 +226,45 @@ class PlatformTest(unittest.TestCase):
         j2 = Joint(-10, 0, 'pivot')
         j2.constrain_coord()
 
+        j3 = Joint(-10, 10, 'shock_mount')
+        j3.constrain_coord()
+
+        platform = Platform()
+
+        swing_arm = platform.add_linkage(j1, j2, name='swing_arm')
+        swing_arm.constrain_length()
+
+        shock = platform.add_linkage(j1, j3, name='shock')
+        shock.constrain_length()
+
+        platform.solve()
+        self.assertEqual(j1.x, 0)
+        self.assertEqual(j1.y, 0)
+        self.assertEqual(j2.x, -10)
+        self.assertEqual(j2.y, 0)
+        self.assertEqual(j3.x, -10)
+        self.assertEqual(j3.y, 10)
+
+        shock.constrain_length(10)
+        platform.solve()
+        self.assertAlmostEqual(j1.x, -1.33975095)
+        self.assertAlmostEqual(j1.y, 4.99999135)
+        self.assertEqual(j2.x, -10)
+        self.assertEqual(j2.y, 0)
+        self.assertEqual(j3.x, -10)
+        self.assertEqual(j3.y, 10)
+
+    def test_basic_platform_q3(self):
+        """
+        The same basic platform design but in the third quadrant with the axle
+        at the origin again
+        """
+
+        j1 = Joint(0, 0, 'axle')
+
+        j2 = Joint(-10, 0, 'pivot')
+        j2.constrain_coord()
+
         j3 = Joint(-10, -10, 'shock_mount')
         j3.constrain_coord()
 
@@ -252,6 +291,45 @@ class PlatformTest(unittest.TestCase):
         self.assertEqual(j2.x, -10)
         self.assertEqual(j2.y, 0)
         self.assertEqual(j3.x, -10)
+        self.assertEqual(j3.y, -10)
+
+    def test_basic_platform_q4(self):
+        """
+        The same basic platform design but in the fourth quadrant with the axle
+        at the origin again
+        """
+
+        j1 = Joint(0, 0, 'axle')
+
+        j2 = Joint(10, 0, 'pivot')
+        j2.constrain_coord()
+
+        j3 = Joint(10, -10, 'shock_mount')
+        j3.constrain_coord()
+
+        platform = Platform()
+
+        swing_arm = platform.add_linkage(j1, j2, name='swing_arm')
+        swing_arm.constrain_length()
+
+        shock = platform.add_linkage(j1, j3, name='shock')
+        shock.constrain_length()
+
+        platform.solve()
+        self.assertEqual(j1.x, 0)
+        self.assertEqual(j1.y, 0)
+        self.assertEqual(j2.x, 10)
+        self.assertEqual(j2.y, 0)
+        self.assertEqual(j3.x, 10)
+        self.assertEqual(j3.y, -10)
+
+        shock.constrain_length(10)
+        platform.solve()
+        self.assertAlmostEqual(j1.x, 1.33975095)
+        self.assertAlmostEqual(j1.y, -4.99999135)
+        self.assertEqual(j2.x, 10)
+        self.assertEqual(j2.y, 0)
+        self.assertEqual(j3.x, 10)
         self.assertEqual(j3.y, -10)
 
 
