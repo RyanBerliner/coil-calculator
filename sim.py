@@ -8,11 +8,10 @@ A geometric constraint solver to find leverage curves from pictures of bikes.
 import math
 import unittest
 
+
 # NOTE: random thoughts
 #       - need to be able to constrain joints on just x, y, and on some axis
 #         (think about yetis with slider thing)
-#       - need to be able to constrain linkage angles with each other
-#         (rigid arm with joint in the middle)
 
 
 class Joint:
@@ -78,11 +77,18 @@ class Linkage:
         # Find the angle that the linkage is as. Lets pull the joints in or
         # expand then out alongside the same angle by that adjustment
 
-        # TODO: will hand to handle vertical line
-        angle = math.atan((self.j2.y - self.j1.y) / (self.j2.x - self.j1.x))
+        rise = self.j2.y - self.j1.y
+        run = self.j2.x - self.j1.x
+        angle = math.atan(rise / run) if run != 0 else None
         adjustment = error / (2 if constrained_joints == 0 else 1)
-        dy = abs(adjustment * math.sin(angle)) * (1 if error < 0 else -1)
-        dx = abs(adjustment * math.cos(angle)) * (1 if error < 0 else -1)
+
+        dy = abs(adjustment * math.sin(angle)) * (1 if error < 0 else -1) \
+            if angle is not None \
+            else adjustment * (1 if error < 0 else -1)
+
+        dx = abs(adjustment * math.cos(angle)) * (1 if error < 0 else -1) \
+            if angle is not None \
+            else 0
 
         if self.j1.x < self.j2.x:
             if not self.j1.constrained_coord:
@@ -368,6 +374,99 @@ class PlatformTest(unittest.TestCase):
         self.assertEqual(j2.y, 0)
         self.assertEqual(j3.x, 10)
         self.assertEqual(j3.y, -10)
+
+    def test_vertical_linkage(self):
+        """
+        When the linkage we want to grow or shrink is vertical our slope is
+        inf, so we need to make sure this is handled properly
+        """
+
+        j1 = Joint(0, 10, 'top')
+        j1.constrain_coord()
+
+        j2 = Joint(0, 0, 'bottom')
+
+        platform = Platform()
+
+        link = platform.add_linkage(j1, j2, name='link')
+        link.constrain_length(15)
+        platform.solve()
+
+        self.assertEqual(j1.x, 0)
+        self.assertEqual(j1.y, 10)
+        self.assertEqual(j2.x, 0)
+        self.assertAlmostEqual(j2.y, -5)
+
+    def test_horizontal_linkage(self):
+        # no special case here, just pairs well with vertical test
+        j1 = Joint(0, 0, 'left')
+        j1.constrain_coord()
+
+        j2 = Joint(10, 0, 'right')
+
+        platform = Platform()
+
+        link = platform.add_linkage(j1, j2, name='link')
+        link.constrain_length(15)
+        platform.solve()
+
+        self.assertEqual(j1.x, 0)
+        self.assertEqual(j1.y, 0)
+        self.assertAlmostEqual(j2.x, 15)
+        self.assertEqual(j2.y, 0)
+
+    def test_transition_patrol_like_platform(self):
+        a = Joint(0, 0, 'a')
+        b = Joint(5, 5, 'b')
+        c = Joint(7, 4, 'c')
+        c.constrain_coord()
+        d = Joint(9, 5, 'd')
+        e = Joint(7, 1, 'e')
+        e.constrain_coord()
+        f = Joint(9, 1, 'f')
+        f.constrain_coord()
+
+        platform = Platform()
+
+        chainstay = platform.add_linkage(a, e, name='chainstay')
+        chainstay_length = chainstay.current_length
+        chainstay.constrain_length()
+
+        seatstay = platform.add_linkage(a, b, name='seatstay')
+        seatstay_length = seatstay.current_length
+        seatstay.constrain_length()
+
+        ttop = platform.add_linkage(b, d, name='ttop')
+        ttop.constrain_length()
+        tleft = platform.add_linkage(b, c, name='leftttop')
+        tleft.constrain_length()
+        tright = platform.add_linkage(c, d, name='rightttop')
+        tright.constrain_length()
+
+        shock = platform.add_linkage(d, f, name='shock')
+
+        starting_shock = shock.current_length
+        starting_axle_x, starting_axle_y = a.x, a.y
+        self.assertEqual(starting_shock, 4)
+        self.assertEqual(starting_axle_x, 0)
+        self.assertEqual(starting_axle_y, 0)
+
+        shock.constrain_length(2)
+        platform.solve()
+
+        self.assertAlmostEqual(shock.current_length, 2)
+
+        self.assertAlmostEqual(
+            chainstay.current_length,
+            chainstay_length,
+            places=5
+        )
+
+        self.assertAlmostEqual(
+            seatstay.current_length,
+            seatstay_length,
+            places=5
+        )
 
 
 if __name__ == '__main__':
