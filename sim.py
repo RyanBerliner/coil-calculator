@@ -215,6 +215,16 @@ class PlatformTest(unittest.TestCase):
         self.assertEqual(j3.x, 10)
         self.assertEqual(j3.y, 10)
 
+        # make sure it can grow too
+        shock.constrain_length(15)
+        platform.solve()
+        self.assertAlmostEqual(j1.x, 0.07842415)
+        self.assertAlmostEqual(j1.y, -1.24999256)
+        self.assertEqual(j2.x, 10)
+        self.assertEqual(j2.y, 0)
+        self.assertEqual(j3.x, 10)
+        self.assertEqual(j3.y, 10)
+
     def test_basic_platform_q2(self):
         """
         The same basic platform design but in the second quadrant with the axle
@@ -249,6 +259,15 @@ class PlatformTest(unittest.TestCase):
         platform.solve()
         self.assertAlmostEqual(j1.x, -1.33975095)
         self.assertAlmostEqual(j1.y, 4.99999135)
+        self.assertEqual(j2.x, -10)
+        self.assertEqual(j2.y, 0)
+        self.assertEqual(j3.x, -10)
+        self.assertEqual(j3.y, 10)
+
+        shock.constrain_length(15)
+        platform.solve()
+        self.assertAlmostEqual(j1.x, -0.07842415)
+        self.assertAlmostEqual(j1.y, -1.24999256)
         self.assertEqual(j2.x, -10)
         self.assertEqual(j2.y, 0)
         self.assertEqual(j3.x, -10)
@@ -293,6 +312,15 @@ class PlatformTest(unittest.TestCase):
         self.assertEqual(j3.x, -10)
         self.assertEqual(j3.y, -10)
 
+        shock.constrain_length(15)
+        platform.solve()
+        self.assertAlmostEqual(j1.x, -0.07842415)
+        self.assertAlmostEqual(j1.y, 1.24999256)
+        self.assertEqual(j2.x, -10)
+        self.assertEqual(j2.y, 0)
+        self.assertEqual(j3.x, -10)
+        self.assertEqual(j3.y, -10)
+
     def test_basic_platform_q4(self):
         """
         The same basic platform design but in the fourth quadrant with the axle
@@ -327,6 +355,15 @@ class PlatformTest(unittest.TestCase):
         platform.solve()
         self.assertAlmostEqual(j1.x, 1.33975095)
         self.assertAlmostEqual(j1.y, -4.99999135)
+        self.assertEqual(j2.x, 10)
+        self.assertEqual(j2.y, 0)
+        self.assertEqual(j3.x, 10)
+        self.assertEqual(j3.y, -10)
+
+        shock.constrain_length(15)
+        platform.solve()
+        self.assertAlmostEqual(j1.x, 0.07842415)
+        self.assertAlmostEqual(j1.y, 1.24999256)
         self.assertEqual(j2.x, 10)
         self.assertEqual(j2.y, 0)
         self.assertEqual(j3.x, 10)
