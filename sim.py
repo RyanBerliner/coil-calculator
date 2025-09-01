@@ -78,7 +78,7 @@ class Linkage:
         # Find the angle that the linkage is as. Lets pull the joints in or
         # expand then out alongside the same angle by a fraction of that
         # adjustment
-        
+
         # TODO: will hand to handle vertical line
         slope = (self.j2.y - self.j1.y) / (self.j2.x - self.j1.x)
         angle = math.atan(slope)
@@ -101,7 +101,6 @@ class Linkage:
             length = f'{self.current_length}|{self.constrained_length}'
 
         return f'{self.name} {self.j1}---({length})---{self.j2}'
-
 
 
 class Platform:
@@ -130,7 +129,7 @@ class Platform:
 
             for link in self.linkages.values():
                 link.adjust()
-            
+
             error = self.error
             count += 1
 
@@ -155,16 +154,16 @@ class PlatformTest(unittest.TestCase):
 
             *
            /
-          / 
-         /  
+          /
+         /
         *---*
 
         / = shock (am considering this a linkage)
         - = swing arm
         axle = origin
 
-        We want to understand how the axle position changes in relation to the shock
-        length changing (ie shock compressing)
+        We want to understand how the axle position changes in relation to the
+        shock length changing (ie shock compressing)
 
         """
 
@@ -184,7 +183,8 @@ class PlatformTest(unittest.TestCase):
         shock = platform.add_linkage(j1, j3, name='shock')
         shock.constrain_length()
 
-        # at this point it should arrive at the same solution at it stands currently
+        # at this point it should arrive at the same solution at it stands
+        # currently
         platform.solve()
         self.assertEqual(j1.x, 0)
         self.assertEqual(j1.y, 0)
