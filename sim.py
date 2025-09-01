@@ -27,9 +27,9 @@ class Joint:
 
     def __str__(self):
         if not self.constrained_coord:
-            return f'({self.x}, {self.y})'
+            return f'({self.name}, {self.x}, {self.y})'
 
-        return f'(${self.x}, ${self.y})'
+        return f'({self.name}, ${self.x}, ${self.y})'
 
     @staticmethod
     def dist(j1, j2):
@@ -76,23 +76,35 @@ class Linkage:
             return
 
         # Find the angle that the linkage is as. Lets pull the joints in or
-        # expand then out alongside the same angle by a fraction of that
-        # adjustment
+        # expand then out alongside the same angle by that adjustment
 
         # TODO: will hand to handle vertical line
-        slope = (self.j2.y - self.j1.y) / (self.j2.x - self.j1.x)
-        angle = math.atan(slope)
+        angle = math.atan((self.j2.y - self.j1.y) / (self.j2.x - self.j1.x))
         adjustment = error / (2 if constrained_joints == 0 else 1)
-        y = adjustment * math.sin(angle)
-        x = adjustment * math.cos(angle)
+        dy = abs(adjustment * math.sin(angle)) * (1 if error < 0 else -1)
+        dx = abs(adjustment * math.cos(angle)) * (1 if error < 0 else -1)
 
-        if not self.j1.constrained_coord:
-            self.j1.x -= x
-            self.j1.y -= y
+        if self.j1.x < self.j2.x:
+            if not self.j1.constrained_coord:
+                self.j1.x += dx
+            if not self.j2.constrained_coord:
+                self.j2.x -= dx
+        else:
+            if not self.j1.constrained_coord:
+                self.j1.x -= dx
+            if not self.j2.constrained_coord:
+                self.j2.x += dx
 
-        if not self.j2.constrained_coord:
-            self.j2.x += x
-            self.j2.y += y
+        if self.j1.y < self.j2.y:
+            if not self.j1.constrained_coord:
+                self.j1.y += dy
+            if not self.j2.constrained_coord:
+                self.j2.y -= dy
+        else:
+            if not self.j1.constrained_coord:
+                self.j1.y -= dy
+            if not self.j2.constrained_coord:
+                self.j2.y += dy
 
     def __str__(self):
         length = f'{self.current_length}|??'
