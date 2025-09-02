@@ -438,9 +438,9 @@ class PlatformTest(unittest.TestCase):
 
         ttop = platform.add_linkage(b, d, name='ttop')
         ttop.constrain_length()
-        tleft = platform.add_linkage(b, c, name='leftttop')
+        tleft = platform.add_linkage(b, c, name='tleft')
         tleft.constrain_length()
-        tright = platform.add_linkage(c, d, name='rightttop')
+        tright = platform.add_linkage(c, d, name='tright')
         tright.constrain_length()
 
         shock = platform.add_linkage(d, f, name='shock')
@@ -469,5 +469,60 @@ class PlatformTest(unittest.TestCase):
         )
 
 
+def draw():
+    import matplotlib.pyplot as plt
+    import matplotlib.animation as animation
+
+    fig, ax = plt.subplots()
+
+    a = Joint(0, 0, 'a')
+    b = Joint(5, 5, 'b')
+    c = Joint(7, 4, 'c')
+    c.constrain_coord()
+    d = Joint(9, 5, 'd')
+    e = Joint(7, 1, 'e')
+    e.constrain_coord()
+    f = Joint(9, 1, 'f')
+    f.constrain_coord()
+
+    platform = Platform()
+
+    chainstay = platform.add_linkage(a, e, name='chainstay')
+    chainstay_length = chainstay.current_length
+    chainstay.constrain_length()
+
+    seatstay = platform.add_linkage(a, b, name='seatstay')
+    seatstay_length = seatstay.current_length
+    seatstay.constrain_length()
+
+    ttop = platform.add_linkage(b, d, name='ttop')
+    ttop.constrain_length()
+    tleft = platform.add_linkage(b, c, name='tleft')
+    tleft.constrain_length()
+    tright = platform.add_linkage(c, d, name='tright')
+    tright.constrain_length()
+
+    shock = platform.add_linkage(d, f, name='shock')
+    starting_shock = shock.current_length
+
+    def get_data(frame):
+        shock_length = starting_shock * ((100 - frame)/100)
+        shock.constrain_length(shock_length)
+        platform.solve()
+        joints = [a, b, c, d, e, f]
+        return [j.x for j in joints], [j.y for j in joints]
+
+    plot = ax.plot(*get_data(0), 'o')[0]
+    ax.set_xlim([-1, 10])
+    ax.set_ylim([-1, 7])
+
+    def update(frame):
+        plot.set_data(*get_data(frame))
+
+    ani = animation.FuncAnimation(fig=fig, func=update, frames=30, interval=30)
+    plt.show()
+
+
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+    draw()
