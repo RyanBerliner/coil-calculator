@@ -519,7 +519,7 @@ def draw():
     def update(frame):
         plot.set_data(*get_data(frame))
 
-    ani = animation.FuncAnimation(fig=fig, func=update, frames=30, interval=30)
+    ani = animation.FuncAnimation(fig=fig, func=update, frames=60, interval=30)
     plt.show()
 
 
