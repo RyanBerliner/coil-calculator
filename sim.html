@@ -1,0 +1,33 @@
+<style>
+img {height: auto; width: 80ch;}
+</style>
+
+<div>
+  <img src="" />
+  <input type="file" />
+</div>
+
+<script>
+  const img = document.querySelector('img');
+  const input = document.querySelector('input');
+
+  input.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    img.src = URL.createObjectURL(file);
+  });
+
+  let x, y;
+
+  img.addEventListener('mousemove', function(e) {
+    x = e.clientX;
+    y = e.clientY;
+  });
+
+  const joints = [];
+
+  img.addEventListener('click', function(_e) {
+    const name = prompt('joint name');
+    joints.push({name, x, y});
+    console.log(JSON.stringify(joints));
+  });
+</script>

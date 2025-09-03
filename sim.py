@@ -143,7 +143,7 @@ class Platform:
         error = self.error
         count = 0
         while error > 0.00001:
-            assert count < 1000, 'unable to solve platform'
+            assert count < 100_000, 'unable to solve platform'
 
             for link in self.linkages.values():
                 link.adjust()
@@ -470,56 +470,77 @@ class PlatformTest(unittest.TestCase):
 
 
 def draw():
+    # a dump from sim.html of a transition patrol
+    patrol_dump = [{"name":"axle","x":143,"y":292},{"name":"chainstay left","x":167,"y":296},{"name":"chainstay right","x":297,"y":270},{"name":"seatstay top","x":282,"y":204},{"name":"triangle bottom","x":315,"y":210},{"name":"shock top","x":333,"y":193},{"name":"shock bottom","x":336,"y":265}]
+    # the 1000 is just a random big number to make it bottom left coord from top left
+    joints = {j['name']: Joint(j['x'], 1000 - j['y'], j['name']) for j in patrol_dump}
+    joints['chainstay right'].constrain_coord()
+    joints['triangle bottom'].constrain_coord()
+    joints['shock bottom'].constrain_coord()
+
+    platform = Platform()
+
+    chainstay = platform.add_linkage(joints['chainstay left'], joints['chainstay right'], name='chainstay')
+    chainstay.constrain_length()
+
+    seatstay = platform.add_linkage(joints['axle'], joints['seatstay top'], name='seatstay')
+    seatstay.constrain_length()
+
+    # now make a triangle to make the full seatstay rigid
+    seatstay_bottom = platform.add_linkage(joints['axle'], joints['chainstay left'], name='seatstay bottom')
+    seatstay_bottom.constrain_length()
+    seatstay_brace = platform.add_linkage(joints['seatstay top'], joints['chainstay left'], name='seatstay brace')
+    seatstay_brace.constrain_length()
+
+    ttop = platform.add_linkage(joints['shock top'], joints['seatstay top'], name='ttop')
+    ttop.constrain_length()
+
+    tleft = platform.add_linkage(joints['triangle bottom'], joints['seatstay top'], name='tleft')
+    tleft.constrain_length()
+
+    tright = platform.add_linkage(joints['triangle bottom'], joints['shock top'], name='tright')
+    tright.constrain_length()
+
+    shock = platform.add_linkage(joints['shock top'], joints['shock bottom'], name='shock')
+    starting_shock = shock.current_length;
+
     import matplotlib.pyplot as plt
     import matplotlib.animation as animation
 
     fig, ax = plt.subplots()
 
-    a = Joint(0, 0, 'a')
-    b = Joint(5, 5, 'b')
-    c = Joint(7, 4, 'c')
-    c.constrain_coord()
-    d = Joint(9, 5, 'd')
-    e = Joint(7, 1, 'e')
-    e.constrain_coord()
-    f = Joint(9, 1, 'f')
-    f.constrain_coord()
-
-    platform = Platform()
-
-    chainstay = platform.add_linkage(a, e, name='chainstay')
-    chainstay_length = chainstay.current_length
-    chainstay.constrain_length()
-
-    seatstay = platform.add_linkage(a, b, name='seatstay')
-    seatstay_length = seatstay.current_length
-    seatstay.constrain_length()
-
-    ttop = platform.add_linkage(b, d, name='ttop')
-    ttop.constrain_length()
-    tleft = platform.add_linkage(b, c, name='tleft')
-    tleft.constrain_length()
-    tright = platform.add_linkage(c, d, name='tright')
-    tright.constrain_length()
-
-    shock = platform.add_linkage(d, f, name='shock')
-    starting_shock = shock.current_length
+    # this is an estimate duration, cause computation of each frame takes time
+    animation_duration = 2_000
+    fps = 30
+    frames = int(animation_duration / fps)
+    interval = int(1_000 / fps)
 
     def get_data(frame):
-        shock_length = starting_shock * ((100 - frame)/100)
+        max_percent = 30
+        perc = max_percent * (frame / frames)
+        shock_length = starting_shock * ((100 - perc)/100)
         shock.constrain_length(shock_length)
         platform.solve()
-        joints = [a, b, c, d, e, f]
-        return [j.x for j in joints], [j.y for j in joints]
+        js = joints.values()
+        return [j.x for j in js], [j.y for j in js]
 
     plot = ax.plot(*get_data(0), 'o')[0]
-    ax.set_xlim([-1, 10])
-    ax.set_ylim([-1, 7])
+
+    min_x = min(j.x for j in joints.values())
+    max_x = max(j.x for j in joints.values())
+    min_y = min(j.y for j in joints.values())
+    max_y = max(j.y for j in joints.values())
+    padding_x = (0.2 * (max_x - min_x));
+    padding_y = (0.4 * (max_y - min_y));
+
+    ax.set_xlim([min_x - padding_x, max_x + padding_x])
+    ax.set_ylim([min_y - padding_y, max_y + padding_y])
+    ax.set_aspect(1)
 
     def update(frame):
         plot.set_data(*get_data(frame))
 
-    ani = animation.FuncAnimation(fig=fig, func=update, frames=60, interval=30)
+    ani = animation.FuncAnimation(fig=fig, func=update, frames=frames, interval=interval)
     plt.show()
 
 
