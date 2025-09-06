@@ -469,7 +469,7 @@ class PlatformTest(unittest.TestCase):
         )
 
 
-def draw():
+def patrol():
     # a dump from sim.html of a transition patrol
     patrol_dump = [{"name":"axle","x":143,"y":292},{"name":"chainstay left","x":167,"y":296},{"name":"chainstay right","x":297,"y":270},{"name":"seatstay top","x":282,"y":204},{"name":"triangle bottom","x":315,"y":210},{"name":"shock top","x":333,"y":193},{"name":"shock bottom","x":336,"y":265}]
     # the 1000 is just a random big number to make it bottom left coord from top left
@@ -504,8 +504,14 @@ def draw():
     shock = platform.add_linkage(joints['shock top'], joints['shock bottom'], name='shock')
     starting_shock = shock.current_length;
 
+    return platform, joints, shock, starting_shock
+
+
+def draw():
     import matplotlib.pyplot as plt
     import matplotlib.animation as animation
+
+    platform, joints, shock, starting_shock = patrol()
 
     fig, ax = plt.subplots()
 
@@ -516,7 +522,7 @@ def draw():
     interval = int(1_000 / fps)
 
     def get_data(frame):
-        max_percent = 30
+        max_percent = 60 / 205 * 100
         perc = max_percent * (frame / frames)
         shock_length = starting_shock * ((100 - perc)/100)
         shock.constrain_length(shock_length)
@@ -544,6 +550,31 @@ def draw():
     plt.show()
 
 
+def leverage_curve():
+    platform, joints, shock, starting_shock = patrol()
+    percent_change_shock = 60 / 205 / 100
+
+    prev_shock_length = starting_shock
+    prev_axle = Joint(joints['axle'].x, joints['axle'].y, 'prev')
+    starting_axle = Joint(joints['axle'].x, joints['axle'].y, 'prev')
+
+    for i in range(1, 101):
+        remove = percent_change_shock * i * starting_shock
+        shock.constrain_length(starting_shock - remove)
+        platform.solve()
+
+        delta_shock = shock.current_length - prev_shock_length
+        delta_axle = Joint.dist(joints['axle'], prev_axle)
+        delta_axle_total = Joint.dist(joints['axle'], starting_axle)
+        leverage = abs(delta_axle / delta_shock)
+        
+        print(delta_axle_total, leverage)
+
+        prev_shock_length = shock.current_length
+        prev_axle = Joint(joints['axle'].x, joints['axle'].y, 'prev')
+
+
 if __name__ == '__main__':
     # unittest.main()
-    draw()
+    # draw()
+    leverage_curve()
