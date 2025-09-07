@@ -609,10 +609,36 @@ def leverage_curve():
         prev_shock_length = shock.current_length
         prev_axle = Joint(joints['axle'].x, joints['axle'].y, 'prev')
 
-    import matplotlib.pyplot as plt
-
+    # convert x axis to wheel travel scale
     x_data = [x/x_data[-1]*travel for x in x_data]
 
+    # do error correction based on the area under the reciprical (integral) and
+    # edge it towards to correct solution
+
+    y_recip = [1/y for y in y_data]
+    x_deltas = [d[1] - d[0] for d in zip(x_data[:-1], x_data[1:])]
+    area = sum(d[0]*d[1] for d in zip(x_deltas, y_recip))
+    error = (area - stroke) / stroke
+    og_error = error
+    corrections = 0
+    print('applying error correction...')
+
+    while abs(error) > 0.0001 and corrections < 10_000:
+        if error < 0:
+            y_data = [d*0.999 for d in y_data]
+        else:
+            y_data = [d*1.001 for d in y_data]
+
+        y_recip = [1/y for y in y_data]
+        x_deltas = [d[1] - d[0] for d in zip(x_data[:-1], x_data[1:])]
+        area = sum(d[0]*d[1] for d in zip(x_deltas, y_recip))
+        error = (area - stroke) / stroke
+        corrections += 1
+
+    print('original error: ', og_error)
+    print('new error: ', error)
+
+    import matplotlib.pyplot as plt
     fig, ax = plt.subplots()
     ax.plot(x_data, y_data)
     plt.show()
