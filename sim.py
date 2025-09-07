@@ -528,11 +528,57 @@ def patrol():
     return platform, joints, shock, starting_shock
 
 
-def draw():
+def firebird():
+    firebird_dump = [
+        {"name":"axle","x":26,"y":408},
+        {"name":"bb joint","x":285,"y":380},
+        {"name":"chainstay","x":253,"y":384},
+        {"name":"seatstay","x":281,"y":265},
+        {"name":"shock bottom","x":335,"y":400},
+        {"name":"triangle bottom","x":295,"y":302},
+        {"name":"triangle right","x":325,"y":283}
+    ]
+
+    # the 1000 is just a random big number to make it bottom left coord from top left
+    joints = {j['name']: Joint(j['x'], 1000 - j['y'], j['name']) for j in firebird_dump}
+    joints['shock bottom'].constrain_coord()
+    joints['triangle bottom'].constrain_coord()
+    joints['bb joint'].constrain_coord()
+
+    platform = Platform()
+
+    chainstay = platform.add_linkage(joints['axle'], joints['chainstay'], name='chainstay')
+    chainstay.constrain_length()
+
+    seatstay = platform.add_linkage(joints['axle'], joints['seatstay'], name='seatstay')
+    seatstay.constrain_length()
+
+    rear_triangle = platform.add_linkage(joints['chainstay'], joints['seatstay'], name='rear_triangle')
+    rear_triangle.constrain_length()
+
+    bb_link = platform.add_linkage(joints['chainstay'], joints['bb joint'], name='bb link')
+    bb_link.constrain_length()
+
+    ttop = platform.add_linkage(joints['triangle right'], joints['seatstay'], name='ttop')
+    ttop.constrain_length()
+
+    tleft = platform.add_linkage(joints['triangle bottom'], joints['seatstay'], name='tleft')
+    tleft.constrain_length()
+
+    tright = platform.add_linkage(joints['triangle bottom'], joints['triangle right'], name='tright')
+    tright.constrain_length()
+
+    shock = platform.add_linkage(joints['triangle right'], joints['shock bottom'], name='shock')
+    starting_shock = shock.current_length;
+
+    return platform, joints, shock, starting_shock
+
+
+def draw(bike):
     import matplotlib.pyplot as plt
     import matplotlib.animation as animation
 
-    platform, joints, shock, starting_shock = patrol()
+    platform, joints, shock, starting_shock = bike()
 
     fig, ax = plt.subplots()
 
@@ -571,7 +617,7 @@ def draw():
     plt.show()
 
 
-def leverage_curve():
+def leverage_curve(bike):
     travel = input('wheel travel (160): ')
     travel = int(travel) if travel else 160
 
@@ -582,7 +628,7 @@ def leverage_curve():
     stroke = int(stroke) if stroke else 60
 
 
-    platform, joints, shock, starting_shock = patrol()
+    platform, joints, shock, starting_shock = bike()
     percent_change_shock = stroke / eye2eye / 100
 
     prev_shock_length = starting_shock
@@ -649,5 +695,5 @@ def leverage_curve():
 
 if __name__ == '__main__':
     # unittest.main()
-    # draw()
-    leverage_curve()
+    # draw(firebird)
+    leverage_curve(firebird)
