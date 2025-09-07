@@ -551,12 +551,24 @@ def draw():
 
 
 def leverage_curve():
+    travel = input('wheel travel (160): ')
+    travel = int(travel) if travel else 160
+
+    eye2eye = input('eye to eye (205): ')
+    eye2eye = int(eye2eye) if eye2eye else 205
+
+    stroke = input('stroke (60): ')
+    stroke = int(stroke) if stroke else 60
+
+
     platform, joints, shock, starting_shock = patrol()
-    percent_change_shock = 60 / 205 / 100
+    percent_change_shock = stroke / eye2eye / 100
 
     prev_shock_length = starting_shock
     prev_axle = Joint(joints['axle'].x, joints['axle'].y, 'prev')
     starting_axle = Joint(joints['axle'].x, joints['axle'].y, 'prev')
+    x_data = []
+    y_data = []
 
     for i in range(1, 101):
         remove = percent_change_shock * i * starting_shock
@@ -570,8 +582,19 @@ def leverage_curve():
         
         print(delta_axle_total, leverage)
 
+        x_data.append(delta_axle_total)
+        y_data.append(leverage)
+
         prev_shock_length = shock.current_length
         prev_axle = Joint(joints['axle'].x, joints['axle'].y, 'prev')
+
+    import matplotlib.pyplot as plt
+
+    x_data = [x/x_data[-1]*travel for x in x_data]
+
+    fig, ax = plt.subplots()
+    ax.plot(x_data, y_data)
+    plt.show()
 
 
 if __name__ == '__main__':
