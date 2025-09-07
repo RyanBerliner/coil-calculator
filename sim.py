@@ -623,11 +623,14 @@ def leverage_curve():
     corrections = 0
     print('applying error correction...')
 
-    while abs(error) > 0.0001 and corrections < 10_000:
+    while abs(error) > 1e-5 and corrections < 10_000:
+        y_min = min(y_data)
+        adjustment = y_min * 1e-5
+
         if error < 0:
-            y_data = [d*0.999 for d in y_data]
+            y_data = [d - adjustment for d in y_data]
         else:
-            y_data = [d*1.001 for d in y_data]
+            y_data = [d + adjustment for d in y_data]
 
         y_recip = [1/y for y in y_data]
         x_deltas = [d[1] - d[0] for d in zip(x_data[:-1], x_data[1:])]
@@ -636,7 +639,7 @@ def leverage_curve():
         corrections += 1
 
     print('original error: ', og_error)
-    print('new error: ', error)
+    print(f'new error ({corrections} corrections): ', error)
 
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots()
