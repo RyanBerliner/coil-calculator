@@ -471,7 +471,28 @@ class PlatformTest(unittest.TestCase):
 
 def patrol():
     # a dump from sim.html of a transition patrol
-    patrol_dump = [{"name":"axle","x":143,"y":292},{"name":"chainstay left","x":167,"y":296},{"name":"chainstay right","x":297,"y":270},{"name":"seatstay top","x":282,"y":204},{"name":"triangle bottom","x":315,"y":210},{"name":"shock top","x":333,"y":193},{"name":"shock bottom","x":336,"y":265}]
+    # (complete bike image)
+    # patrol_dump = [
+    #     {"name":"axle","x":143,"y":292},
+    #     {"name":"chainstay left","x":167,"y":296},
+    #     {"name":"chainstay right","x":297,"y":270},
+    #     {"name":"seatstay top","x":282,"y":204},
+    #     {"name":"triangle bottom","x":315,"y":210},
+    #     {"name":"shock top","x":333,"y":193},
+    #     {"name":"shock bottom","x":336,"y":265}
+    # ]
+
+    # (just the frame image)
+    patrol_dump = [
+        {"name":"axle","x":32,"y":284},
+        {"name":"chainstay left","x":55,"y":290},
+        {"name":"chainstay right","x":184,"y":276},
+        {"name":"seatstay top","x":175,"y":206},
+        {"name":"triangle bottom","x":207,"y":216},
+        {"name":"shock top","x":226,"y":200},
+        {"name":"shock bottom","x":223,"y":272}
+    ]
+
     # the 1000 is just a random big number to make it bottom left coord from top left
     joints = {j['name']: Joint(j['x'], 1000 - j['y'], j['name']) for j in patrol_dump}
     joints['chainstay right'].constrain_coord()
