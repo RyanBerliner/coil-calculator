@@ -631,7 +631,8 @@ def get_bike_data():
 
 
 def leverage_curve(bike, draw=False):
-    travel, eye2eye, stroke = get_bike_data()
+    bike_data = get_bike_data()
+    travel, eye2eye, stroke = bike_data
 
     platform, joints, shock, starting_shock = bike()
     percent_change_shock = stroke / eye2eye / 100
@@ -697,7 +698,7 @@ def leverage_curve(bike, draw=False):
     print(f'new error ({corrections} corrections): ', error)
 
     if not draw:
-        return x_data, y_data
+        return x_data, y_data, bike_data
 
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots()
@@ -705,10 +706,12 @@ def leverage_curve(bike, draw=False):
     plt.show()
 
 
-def quantized_leverage_curve(bike, draw=False, resolution=6):
+def quantized_leverage_curve(bike, draw=False, resolution=6, normalized=False):
     assert resolution >= 2, 'resolution must be 2 or greater'
 
-    raw_x_data, raw_y_data = leverage_curve(bike)
+    raw_x_data, raw_y_data, bike_data = leverage_curve(bike)
+    travel, _eye2eye, stroke = bike_data
+
     deltas = raw_x_data[-1] / (resolution-1)
     x_data = [x*deltas for x in range(0, resolution)]
 
@@ -727,8 +730,25 @@ def quantized_leverage_curve(bike, draw=False, resolution=6):
 
         y_data.append(raw_y_data[closest_i])
 
+    # do error correction
+    # area under recip should be stroke
+    recip_y = [1/y for y in y_data]
+    area = sum([
+        ((recip_y[i]*deltas)+(recip_y[i+1]*deltas))/2
+        for i in range(resolution-1)
+    ])
+    diff = stroke - area
+    change = diff / (resolution-1) / deltas
+
+    recip_y = [y+change for y in recip_y]
+    y_data = [1/y for y in recip_y]
+
+    if normalized:
+        leverage = travel / stroke
+        y_data = [y / leverage for y in y_data]
+
     if not draw:
-        return x_data, y_data
+        return x_data, y_data, bike_data
 
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots()
@@ -740,4 +760,6 @@ if __name__ == '__main__':
     # unittest.main()
     # draw(patrol)
     # leverage_curve(patrol, draw=True)
-    quantized_leverage_curve(patrol, draw=True, resolution=6)
+    # quantized_leverage_curve(patrol, draw=True, resolution=6, normalized=True)
+    x_data, y_data, _bike_data = quantized_leverage_curve(patrol, resolution=6, normalized=True)
+    print(','.join([str(y) for y in y_data]))
