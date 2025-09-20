@@ -617,7 +617,7 @@ def draw(bike):
     plt.show()
 
 
-def leverage_curve(bike):
+def get_bike_data():
     travel = input('wheel travel (160): ')
     travel = int(travel) if travel else 160
 
@@ -627,6 +627,11 @@ def leverage_curve(bike):
     stroke = input('stroke (60): ')
     stroke = int(stroke) if stroke else 60
 
+    return travel, eye2eye, stroke
+
+
+def leverage_curve(bike, draw=False):
+    travel, eye2eye, stroke = get_bike_data()
 
     platform, joints, shock, starting_shock = bike()
     percent_change_shock = stroke / eye2eye / 100
@@ -637,7 +642,8 @@ def leverage_curve(bike):
     x_data = []
     y_data = []
 
-    for i in range(1, 101):
+    i = 1
+    while i <= 100:
         remove = percent_change_shock * i * starting_shock
         shock.constrain_length(starting_shock - remove)
         platform.solve()
@@ -647,13 +653,16 @@ def leverage_curve(bike):
         delta_axle_total = Joint.dist(joints['axle'], starting_axle)
         leverage = abs(delta_axle / delta_shock)
         
-        print(delta_axle_total, leverage)
+        print(i, leverage)
 
         x_data.append(delta_axle_total)
         y_data.append(leverage)
 
         prev_shock_length = shock.current_length
         prev_axle = Joint(joints['axle'].x, joints['axle'].y, 'prev')
+
+        # TODO: make more precise
+        i += 1
 
     # convert x axis to wheel travel scale
     x_data = [x/x_data[-1]*travel for x in x_data]
@@ -687,6 +696,40 @@ def leverage_curve(bike):
     print('original error: ', og_error)
     print(f'new error ({corrections} corrections): ', error)
 
+    if not draw:
+        return x_data, y_data
+
+    import matplotlib.pyplot as plt
+    fig, ax = plt.subplots()
+    ax.plot(x_data, y_data)
+    plt.show()
+
+
+def quantized_leverage_curve(bike, draw=False, resolution=6):
+    assert resolution >= 2, 'resolution must be 2 or greater'
+
+    raw_x_data, raw_y_data = leverage_curve(bike)
+    deltas = raw_x_data[-1] / (resolution-1)
+    x_data = [x*deltas for x in range(0, resolution)]
+
+    # need to find the closest data points we have to our desired x_data
+    y_data = []
+    for i in range(resolution):
+        x = x_data[i]
+        closest_i = None
+        closest_i_dist = float('inf')
+
+        for i, raw_x in enumerate(raw_x_data):
+            dist = abs(raw_x - x)
+            if dist < closest_i_dist:
+                closest_i_dist = dist
+                closest_i = i
+
+        y_data.append(raw_y_data[closest_i])
+
+    if not draw:
+        return x_data, y_data
+
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots()
     ax.plot(x_data, y_data)
@@ -695,5 +738,6 @@ def leverage_curve(bike):
 
 if __name__ == '__main__':
     # unittest.main()
-    # draw(firebird)
-    leverage_curve(firebird)
+    # draw(patrol)
+    # leverage_curve(patrol, draw=True)
+    quantized_leverage_curve(patrol, draw=True, resolution=6)
