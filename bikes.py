@@ -14,11 +14,22 @@ def update_kinematics(args):
         assert data.get('kinematics') is not None, 'kinematics not found in datasheet'
         assert data['kinematics'].get('img') is not None, 'no reference image found'
 
+        joints = ','.join([j['name'] for j in data['kinematics']['joints']])
         simhtml = os.path.abspath('sim.html')
-        webbrowser.open(f'file://{simhtml}?img={data['kinematics']['img']}', new=2)
+        url = f'file://{simhtml}?img={data['kinematics']['img']}&js={joints}'
+        webbrowser.open(url, new=2)
 
-        data = input('Update kinematics in browser, paste output here: ')
-        print(data)
+        kin_data = input('Update kinematics in browser, paste output here: ')
+        kin_data = json.loads(kin_data)
+
+        for i, joint in enumerate(data['kinematics']['joints']):
+            name = joint['name']
+            match = next((kin_d for kin_d in kin_data if kin_d['name'] == name), None) 
+            data['kinematics']['joints'][i]['x'] = match['x']
+            data['kinematics']['joints'][i]['y'] = match['y']
+
+    with open(args[0], 'w') as file:
+        json.dump(data, file, indent=2)
 
 
 if __name__ == '__main__':

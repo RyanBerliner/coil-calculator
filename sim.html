@@ -3,38 +3,51 @@ img {height: auto; width: 80ch;}
 </style>
 
 <div>
+  <h1></h1>
   <img src="" />
   <input type="file" />
 </div>
 
 <script>
-  const img = document.querySelector('img');
-  const input = document.querySelector('input');
+  (function() {
+    const url = new URL(window.location);
+    const preloadImg = url.searchParams.get('img');
+    const preloadJs = url.searchParams.get('js');
 
-  const url = new URL(window.location);
-  const preloadImg = url.searchParams.get('img');
+    if (!preloadImg || !preloadJs) {
+      alert('You must open this page with the update_kin command');
+      return;
+    }
 
-  if (preloadImg) {
+    const h1 = document.querySelector('h1');
+    const img = document.querySelector('img');
+    const input = document.querySelector('input');
+
     img.src = preloadImg;
-  }
+    let joints = preloadJs.split(',');
+    let currentJoint = 0;
 
-  input.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    img.src = URL.createObjectURL(file);
-  });
+    h1.innerText = joints[currentJoint];
 
-  let x, y;
+    let x, y;
 
-  img.addEventListener('mousemove', function(e) {
-    x = e.clientX;
-    y = e.clientY;
-  });
+    img.addEventListener('mousemove', function(e) {
+      x = e.clientX;
+      y = e.clientY;
+    });
 
-  const joints = [];
+    const savedJoints = [];
 
-  img.addEventListener('click', function(_e) {
-    const name = prompt('joint name');
-    joints.push({name, x, y});
-    console.log(JSON.stringify(joints));
-  });
+    img.addEventListener('click', function(_e) {
+      savedJoints.push({name: joints[currentJoint], x, y});
+      currentJoint += 1;
+
+      if (currentJoint >= joints.length) {
+        alert(`Copy this data back into the program: ${JSON.stringify(savedJoints)}`);
+        return;
+      }
+
+      h1.innerText = joints[currentJoint];
+    });
+  })();
 </script>

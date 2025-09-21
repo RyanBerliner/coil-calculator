@@ -12,13 +12,45 @@
   "kinematics": {
     "img": "https://www.transitionbikes.com/images/C8_Patrol_Framesets.jpg",
     "joints": [
-      {"name": "axle", "is_axle": true},
-      {"name": "chainstay left"},
-      {"name": "chainstay right", "fixed": true},
-      {"name": "triangle left"},
-      {"name": "triangle bottom", "fixed": true},
-      {"name": "shock top"},
-      {"name": "shock bottom", "fixed": true}
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 30,
+        "y": 363
+      },
+      {
+        "name": "chainstay left",
+        "x": 54,
+        "y": 368
+      },
+      {
+        "name": "chainstay right",
+        "fixed": true,
+        "x": 186,
+        "y": 355
+      },
+      {
+        "name": "triangle left",
+        "x": 175,
+        "y": 285
+      },
+      {
+        "name": "triangle bottom",
+        "fixed": true,
+        "x": 207,
+        "y": 295
+      },
+      {
+        "name": "shock top",
+        "x": 226,
+        "y": 278
+      },
+      {
+        "name": "shock bottom",
+        "fixed": true,
+        "x": 223,
+        "y": 351
+      }
     ],
     "links": [
       {
