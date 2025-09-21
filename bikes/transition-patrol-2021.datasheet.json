@@ -1,0 +1,67 @@
+{
+  "make": "Transition",
+  "model": "Patrol",
+  "year_start": 2021,
+  "year_end": 2026,
+  "size_start": "XS",
+  "size_end": "XL",
+  "wheel_travel": 160,
+  "stroke": 60,
+  "eyetoeye": 205,
+  "url": "https://web.archive.org/web/20250731015312/https://www.transitionbikes.com/Bikes_Patrol.cfm",
+  "kinematics": {
+    "img": "https://www.transitionbikes.com/images/C8_Patrol_Framesets.jpg",
+    "joints": [
+      {"name": "axle", "is_axle": true},
+      {"name": "chainstay left"},
+      {"name": "chainstay right", "fixed": true},
+      {"name": "triangle left"},
+      {"name": "triangle bottom", "fixed": true},
+      {"name": "shock top"},
+      {"name": "shock bottom", "fixed": true}
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay left",
+        "j2": "chainstay right"
+      },
+      {
+        "name": "chainstay (mini)",
+        "j1": "chainstay left",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay",
+        "j1": "triangle left",
+        "j2": "axle"
+      },
+      {
+        "name": "axle weld",
+        "j1": "triangle left",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "triangle top",
+        "j1": "triangle left",
+        "j2": "shock top"
+      },
+      {
+        "name": "triangle left",
+        "j1": "triangle left",
+        "j2": "triangle bottom"
+      },
+      {
+        "name": "triangle right",
+        "j1": "shock top",
+        "j2": "triangle bottom"
+      }
+    ]
+  }
+}

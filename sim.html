@@ -11,6 +11,13 @@ img {height: auto; width: 80ch;}
   const img = document.querySelector('img');
   const input = document.querySelector('input');
 
+  const url = new URL(window.location);
+  const preloadImg = url.searchParams.get('img');
+
+  if (preloadImg) {
+    img.src = preloadImg;
+  }
+
   input.addEventListener('change', function(e) {
     const file = e.target.files[0];
     img.src = URL.createObjectURL(file);

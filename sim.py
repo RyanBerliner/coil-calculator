@@ -5,7 +5,9 @@
 A geometric constraint solver to find leverage curves from pictures of bikes.
 """
 
+import json
 import math
+import sys
 import unittest
 
 
@@ -128,6 +130,12 @@ class Platform:
 
     def __init__(self):
         self.linkages = {}
+
+    @staticmethod
+    def from_datasheet(datasheet):
+        with open(datasheet) as file:
+            data = json.loads(file.read())
+            assert False, 'TODO: not implemented yet'
 
     def add_linkage(self, j1, j2, name):
         assert self.linkages.get(name, None) is None, 'duplicate linkage'
@@ -761,5 +769,8 @@ if __name__ == '__main__':
     # draw(patrol)
     # leverage_curve(patrol, draw=True)
     # quantized_leverage_curve(patrol, draw=True, resolution=6, normalized=True)
-    x_data, y_data, _bike_data = quantized_leverage_curve(patrol, resolution=6, normalized=True)
-    print(','.join([str(y) for y in y_data]))
+    # x_data, y_data, _bike_data = quantized_leverage_curve(patrol, resolution=6, normalized=True)
+    # print(','.join([str(y) for y in y_data]))
+
+    datasheet = sys.argv[1]
+    platform = Platform.from_datasheet(datasheet)
