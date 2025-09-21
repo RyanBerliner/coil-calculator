@@ -15,41 +15,41 @@
       {
         "name": "axle",
         "is_axle": true,
-        "x": 30,
-        "y": 363
+        "x": 181,
+        "y": 305
       },
       {
         "name": "chainstay left",
-        "x": 54,
-        "y": 368
+        "x": 333,
+        "y": 242
       },
       {
         "name": "chainstay right",
         "fixed": true,
-        "x": 186,
-        "y": 355
+        "x": 399,
+        "y": 373
       },
       {
         "name": "triangle left",
-        "x": 175,
-        "y": 285
+        "x": 251,
+        "y": 395
       },
       {
         "name": "triangle bottom",
         "fixed": true,
-        "x": 207,
-        "y": 295
+        "x": 190,
+        "y": 310
       },
       {
         "name": "shock top",
-        "x": 226,
-        "y": 278
+        "x": 334,
+        "y": 226
       },
       {
         "name": "shock bottom",
         "fixed": true,
-        "x": 223,
-        "y": 351
+        "x": 421,
+        "y": 313
       }
     ],
     "links": [
