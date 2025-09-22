@@ -133,9 +133,42 @@ class Platform:
 
     @staticmethod
     def from_datasheet(datasheet):
-        with open(datasheet) as file:
-            data = json.loads(file.read())
-            assert False, 'TODO: not implemented yet'
+        file = open(datasheet)
+        data = json.loads(file.read())
+        file.close()
+
+        joints = {}
+        axle = None
+
+        for joint in data['kinematics']['joints']:
+            assert joint.get('name') is not None, 'found unnamed joint'
+            assert joint.get('x') is not None, f'{joint.get("name")} must have an x coord'
+            assert joint.get('y') is not None, f'{joint.get("name")} must have an y coord'
+
+            j = Joint(
+                joints.get('x'),
+                joints.get('y'),
+                joints.get('name'),
+            )
+
+            if joints.get('is_fixed'):
+                j.constrain_coord()
+
+            if joints.get('is_axle'):
+                assert axle is None, 'more than one axle is defined'
+                axle = j
+
+            joints[joint.get('name')] = j
+
+        assert axle is not None, 'no axle is defined'
+
+        shock = None
+
+        # TODO: define the linkages here, assert that there is a shock
+
+
+
+
 
     def add_linkage(self, j1, j2, name):
         assert self.linkages.get(name, None) is None, 'duplicate linkage'

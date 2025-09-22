@@ -5,6 +5,8 @@ import json
 import sys
 import webbrowser
 
+from sim import Platform
+
 
 def update_kinematics(args):
     assert len(args) == 1, 'Supply a datasheet file'
@@ -32,12 +34,21 @@ def update_kinematics(args):
         json.dump(data, file, indent=2)
 
 
+def update_leverage_curve(args):
+    assert len(args) == 1, 'Supply a datasheet file'
+    print('generating the leverage curve data')
+    platform = Platform.from_datasheet(args[0])
+    print(platform)
+
+
 if __name__ == '__main__':
     assert len(sys.argv) >= 2, 'Supply a command (ie "update_kin")'
     command, args = sys.argv[1], sys.argv[2:]
 
     if command == 'update_kin':
         update_kinematics(args)
+    elif command == 'update_lev':
+        update_leverage_curve(args)
     else:
         print(f'Invalid command {sys.argv[1]}')
 
