@@ -5,7 +5,7 @@ import json
 import sys
 import webbrowser
 
-from sim import Bike
+from sim import Bike, quantized_leverage_curve
 
 
 def update_kinematics(args):
@@ -46,14 +46,14 @@ def update_kinematics(args):
 
 def update_leverage_curve(args):
     assert len(args) == 1, 'Supply a datasheet file'
-    print('generating the leverage curve data')
     bike = Bike.from_datasheet(args[0])
-    print(bike)
+    data = quantized_leverage_curve(bike, resolution=6, normalized=True)
+    print('Normalized leverage data', ','.join([str(y) for y in data[1]]))
+    # TODO: add this data to the datasheets. then we can use the datasheets
+    #       directly instead of the csv
 
 
 if __name__ == '__main__':
-    print('here in the bikes command')
-
     assert len(sys.argv) >= 2, 'Supply a command (ie "update_kin")'
     command, args = sys.argv[1], sys.argv[2:]
 

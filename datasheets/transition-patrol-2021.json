@@ -27,7 +27,7 @@
       },
       {
         "name": "chainstay right",
-        "fixed": true,
+        "is_fixed": true,
         "x": 184,
         "y": 356
       },
@@ -38,7 +38,7 @@
       },
       {
         "name": "triangle bottom",
-        "fixed": true,
+        "is_fixed": true,
         "x": 207,
         "y": 297
       },
@@ -49,7 +49,7 @@
       },
       {
         "name": "shock bottom",
-        "fixed": true,
+        "is_fixed": true,
         "x": 223,
         "y": 351
       }

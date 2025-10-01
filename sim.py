@@ -198,7 +198,9 @@ class Bike:
         for joint in data['kinematics']['joints']:
             name = joint.get('name')
             x = joint.get('x')
-            y = joint.get('y')
+            # subtract from som big number because the data we get is from the
+            # 0,0 in top left cordinate system of the web
+            y = 100000 - joint.get('y')
 
             assert name is not None, 'found unnamed joint'
             assert x is not None, f'{name} must have an x coord'
@@ -254,7 +256,7 @@ class Bike:
             joints,
             shock,
             shock_starting_length,
-            float(wheel_travel),
+            float(travel),
             float(eye2eye),
             float(stroke),
         )
@@ -722,22 +724,8 @@ def draw(bike):
     plt.show()
 
 
-def get_bike_data(bike):
-    travel = input(f'wheel travel ({bike.travel}): ')
-    travel = int(travel) if travel else bike.travel
-
-    eye2eye = input(f'eye to eye ({bike.eye2eye}): ')
-    eye2eye = int(eye2eye) if eye2eye else bike.eye2eye
-
-    stroke = input(f'stroke ({bike.stroke}): ')
-    stroke = int(stroke) if stroke else bike.stroke
-
-    return travel, eye2eye, stroke
-
-
 def leverage_curve(bike, draw=False):
-    bike_data = get_bike_data(bike)
-    travel, eye2eye, stroke = bike_data
+    travel, eye2eye, stroke = bike.travel, bike.eye2eye, bike.stroke
 
     percent_change_shock = stroke / eye2eye / 100
 
@@ -802,7 +790,7 @@ def leverage_curve(bike, draw=False):
     print(f'new error ({corrections} corrections): ', error)
 
     if not draw:
-        return x_data, y_data, bike_data
+        return x_data, y_data
 
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots()
@@ -813,8 +801,8 @@ def leverage_curve(bike, draw=False):
 def quantized_leverage_curve(bike, draw=False, resolution=6, normalized=False):
     assert resolution >= 2, 'resolution must be 2 or greater'
 
-    raw_x_data, raw_y_data, bike_data = leverage_curve(bike)
-    travel, _eye2eye, stroke = bike_data
+    raw_x_data, raw_y_data = leverage_curve(bike)
+    travel, stroke = bike.travel, bike.stroke
 
     deltas = raw_x_data[-1] / (resolution-1)
     x_data = [x*deltas for x in range(0, resolution)]
@@ -852,7 +840,7 @@ def quantized_leverage_curve(bike, draw=False, resolution=6, normalized=False):
         y_data = [y / leverage for y in y_data]
 
     if not draw:
-        return x_data, y_data, bike_data
+        return x_data, y_data
 
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots()
@@ -865,7 +853,7 @@ if __name__ == '__main__':
     # draw(firebird())
     # leverage_curve(firebird(), draw=True)
     # quantized_leverage_curve(patrol(), draw=True, resolution=6, normalized=True)
-    # x_data, y_data, _bike_data = quantized_leverage_curve(patrol(), resolution=6, normalized=True)
+    # x_data, y_data = quantized_leverage_curve(patrol(), resolution=6, normalized=True)
     # print(','.join([str(y) for y in y_data]))
 
     # datasheet = sys.argv[1]
