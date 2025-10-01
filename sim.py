@@ -131,44 +131,6 @@ class Platform:
     def __init__(self):
         self.linkages = {}
 
-    @staticmethod
-    def from_datasheet(datasheet):
-        file = open(datasheet)
-        data = json.loads(file.read())
-        file.close()
-
-        joints = {}
-        axle = None
-
-        for joint in data['kinematics']['joints']:
-            assert joint.get('name') is not None, 'found unnamed joint'
-            assert joint.get('x') is not None, f'{joint.get("name")} must have an x coord'
-            assert joint.get('y') is not None, f'{joint.get("name")} must have an y coord'
-
-            j = Joint(
-                joints.get('x'),
-                joints.get('y'),
-                joints.get('name'),
-            )
-
-            if joints.get('is_fixed'):
-                j.constrain_coord()
-
-            if joints.get('is_axle'):
-                assert axle is None, 'more than one axle is defined'
-                axle = j
-
-            joints[joint.get('name')] = j
-
-        assert axle is not None, 'no axle is defined'
-
-        shock = None
-
-        # TODO: define the linkages here, assert that there is a shock
-
-
-
-
 
     def add_linkage(self, j1, j2, name):
         assert self.linkages.get(name, None) is None, 'duplicate linkage'
@@ -204,6 +166,98 @@ class Platform:
             ret += '\n'
 
         return ret
+
+
+class Bike:
+    def __init__(self,
+                 platform,
+                 joints,
+                 shock,
+                 shock_starting_length,
+                 travel=None,
+                 eye2eye=None,
+                 stroke=None,
+            ):
+        self.platform = platform
+        self.joints = joints
+        self.shock = shock
+        self.shock_starting_length = shock_starting_length
+        self.travel = travel
+        self.eye2eye = eye2eye
+        self.stroke = stroke
+
+    @staticmethod
+    def from_datasheet(datasheet):
+        file = open(datasheet)
+        data = json.loads(file.read())
+        file.close()
+
+        joints = {}
+        axle = None
+
+        for joint in data['kinematics']['joints']:
+            name = joint.get('name')
+            x = joint.get('x')
+            y = joint.get('y')
+
+            assert name is not None, 'found unnamed joint'
+            assert x is not None, f'{name} must have an x coord'
+            assert y is not None, f'{name} must have an y coord'
+
+            j = Joint(x, y, name)
+
+            if joint.get('is_fixed'):
+                j.constrain_coord()
+
+            if joint.get('is_axle'):
+                assert axle is None, 'more than one axle is defined'
+                axle = j
+
+            joints[name] = j
+
+        assert axle is not None, 'no axle is defined'
+
+        platform = Platform()
+        shock = None
+        shock_starting_length = None
+
+        for link in data['kinematics']['links']:
+            name = link.get('name')
+            j1 = link.get('j1')
+            j2 = link.get('j2')
+
+            assert name is not None, 'found unnamed link'
+            assert j1 is not None, f'{name} must have j1 defined'
+            assert j2 is not None, f'{name} must have j2 defined'
+            assert j1 != j2, '{name} j1 and j2 cannot be the same'
+
+            l = platform.add_linkage(joints[j1], joints[j2], name)
+            l.constrain_length()
+
+            if link.get('is_shock'):
+                assert shock is None, 'more than one shock is defined'
+                shock = l
+                shock_starting_length = l.current_length
+
+        assert shock is not None, 'no shock is defined'
+
+        travel = data.get('wheel_travel')
+        eye2eye = data.get('eyetoeye')
+        stroke = data.get('stroke')
+
+        assert travel is not None, 'wheel_travel not defined'
+        assert eye2eye is not None, 'eyetoeye not defined'
+        assert stroke is not None, 'stroke not defined'
+
+        return Bike(
+            platform,
+            joints,
+            shock,
+            shock_starting_length,
+            float(wheel_travel),
+            float(eye2eye),
+            float(stroke),
+        )
 
 
 class PlatformTest(unittest.TestCase):
@@ -566,7 +620,13 @@ def patrol():
     shock = platform.add_linkage(joints['shock top'], joints['shock bottom'], name='shock')
     starting_shock = shock.current_length;
 
-    return platform, joints, shock, starting_shock
+    return Bike(
+        platform,
+        joints,
+        shock,
+        starting_shock,
+        160, 205, 60
+    )
 
 
 def firebird():
@@ -612,14 +672,18 @@ def firebird():
     shock = platform.add_linkage(joints['triangle right'], joints['shock bottom'], name='shock')
     starting_shock = shock.current_length;
 
-    return platform, joints, shock, starting_shock
+    return Bike(
+        platform,
+        joints,
+        shock,
+        starting_shock,
+        165, 205, 65
+    )
 
 
 def draw(bike):
     import matplotlib.pyplot as plt
     import matplotlib.animation as animation
-
-    platform, joints, shock, starting_shock = bike()
 
     fig, ax = plt.subplots()
 
@@ -632,18 +696,18 @@ def draw(bike):
     def get_data(frame):
         max_percent = 60 / 205 * 100
         perc = max_percent * (frame / frames)
-        shock_length = starting_shock * ((100 - perc)/100)
-        shock.constrain_length(shock_length)
-        platform.solve()
-        js = joints.values()
+        shock_length = bike.shock_starting_length * ((100 - perc)/100)
+        bike.shock.constrain_length(shock_length)
+        bike.platform.solve()
+        js = bike.joints.values()
         return [j.x for j in js], [j.y for j in js]
 
     plot = ax.plot(*get_data(0), 'o')[0]
 
-    min_x = min(j.x for j in joints.values())
-    max_x = max(j.x for j in joints.values())
-    min_y = min(j.y for j in joints.values())
-    max_y = max(j.y for j in joints.values())
+    min_x = min(j.x for j in bike.joints.values())
+    max_x = max(j.x for j in bike.joints.values())
+    min_y = min(j.y for j in bike.joints.values())
+    max_y = max(j.y for j in bike.joints.values())
     padding_x = (0.2 * (max_x - min_x));
     padding_y = (0.4 * (max_y - min_y));
 
@@ -658,41 +722,40 @@ def draw(bike):
     plt.show()
 
 
-def get_bike_data():
-    travel = input('wheel travel (160): ')
-    travel = int(travel) if travel else 160
+def get_bike_data(bike):
+    travel = input(f'wheel travel ({bike.travel}): ')
+    travel = int(travel) if travel else bike.travel
 
-    eye2eye = input('eye to eye (205): ')
-    eye2eye = int(eye2eye) if eye2eye else 205
+    eye2eye = input(f'eye to eye ({bike.eye2eye}): ')
+    eye2eye = int(eye2eye) if eye2eye else bike.eye2eye
 
-    stroke = input('stroke (60): ')
-    stroke = int(stroke) if stroke else 60
+    stroke = input(f'stroke ({bike.stroke}): ')
+    stroke = int(stroke) if stroke else bike.stroke
 
     return travel, eye2eye, stroke
 
 
 def leverage_curve(bike, draw=False):
-    bike_data = get_bike_data()
+    bike_data = get_bike_data(bike)
     travel, eye2eye, stroke = bike_data
 
-    platform, joints, shock, starting_shock = bike()
     percent_change_shock = stroke / eye2eye / 100
 
-    prev_shock_length = starting_shock
-    prev_axle = Joint(joints['axle'].x, joints['axle'].y, 'prev')
-    starting_axle = Joint(joints['axle'].x, joints['axle'].y, 'prev')
+    prev_shock_length = bike.shock_starting_length
+    prev_axle = Joint(bike.joints['axle'].x, bike.joints['axle'].y, 'prev')
+    starting_axle = Joint(bike.joints['axle'].x, bike.joints['axle'].y, 'prev')
     x_data = []
     y_data = []
 
     i = 1
     while i <= 100:
-        remove = percent_change_shock * i * starting_shock
-        shock.constrain_length(starting_shock - remove)
-        platform.solve()
+        remove = percent_change_shock * i * bike.shock_starting_length
+        bike.shock.constrain_length(bike.shock_starting_length - remove)
+        bike.platform.solve()
 
-        delta_shock = shock.current_length - prev_shock_length
-        delta_axle = Joint.dist(joints['axle'], prev_axle)
-        delta_axle_total = Joint.dist(joints['axle'], starting_axle)
+        delta_shock = bike.shock.current_length - prev_shock_length
+        delta_axle = Joint.dist(bike.joints['axle'], prev_axle)
+        delta_axle_total = Joint.dist(bike.joints['axle'], starting_axle)
         leverage = abs(delta_axle / delta_shock)
         
         print(i, leverage)
@@ -700,8 +763,8 @@ def leverage_curve(bike, draw=False):
         x_data.append(delta_axle_total)
         y_data.append(leverage)
 
-        prev_shock_length = shock.current_length
-        prev_axle = Joint(joints['axle'].x, joints['axle'].y, 'prev')
+        prev_shock_length = bike.shock.current_length
+        prev_axle = Joint(bike.joints['axle'].x, bike.joints['axle'].y, 'prev')
 
         # TODO: make more precise
         i += 1
@@ -798,12 +861,12 @@ def quantized_leverage_curve(bike, draw=False, resolution=6, normalized=False):
 
 
 if __name__ == '__main__':
-    # unittest.main()
-    # draw(patrol)
-    # leverage_curve(patrol, draw=True)
-    # quantized_leverage_curve(patrol, draw=True, resolution=6, normalized=True)
-    # x_data, y_data, _bike_data = quantized_leverage_curve(patrol, resolution=6, normalized=True)
+    unittest.main()
+    # draw(firebird())
+    # leverage_curve(firebird(), draw=True)
+    # quantized_leverage_curve(patrol(), draw=True, resolution=6, normalized=True)
+    # x_data, y_data, _bike_data = quantized_leverage_curve(patrol(), resolution=6, normalized=True)
     # print(','.join([str(y) for y in y_data]))
 
-    datasheet = sys.argv[1]
-    platform = Platform.from_datasheet(datasheet)
+    # datasheet = sys.argv[1]
+    # platform = Platform.from_datasheet(datasheet)
