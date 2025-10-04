@@ -191,6 +191,8 @@ function selectBike(el) {
   config.points = bike.curve;
   config.stroke = bike.stroke;
   config.travel = bike.wheel_travel;
+  // TODO: accessing "private" form here not ideal (same in curve)
+  config._form.querySelector('select').value = 'c';
   searchInput.value = `${bike.make} ${bike.model}`;
   hideResults();
 }

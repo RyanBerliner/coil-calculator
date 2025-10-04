@@ -310,7 +310,7 @@ class LeverageCurve {
     }
 
     this._config.points = newPoints;
-    // TODO: accessing "private" form here not ideal
+    // TODO: accessing "private" form here not ideal (same in when selecting bike)
     this._config._form.querySelector('select').value = 'c';
   }
 
