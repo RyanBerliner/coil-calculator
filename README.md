@@ -6,21 +6,60 @@ particular coil spring.
 
 ## Adding a Bike
 
-If you would like to add a bike to the search feature, please submit an issue
-here on GitHub. In your submission, please provide the following information:
+Adding a bike comes down to creating a new datasheet in the `datasheets/`
+directory. Each datasheet contains the relevent details about a bike, such as
+the make, model, kinematic and/or curve data, etc.
 
-- Make
-- Model
-- Year (could range multiple years)
-- Size (could range multiple sizes)
-- Wheel Travel
-- Shock Stroke
-- A URL with leverage curve information (ideally a chart)
-- (if different) A URL acting as a source for all your information
+The `./bikes.py` script provides helpful utilities for easily creating these
+datasheets, plotting kinematic data, and calculating leverage curves.
 
-Please limit a single issue to 1 make and model, opening a separate issue if
-you'd wish to add another bike. If all the information required is submitted I
-can add it to the website.
+You can run the help command (`./bikes.py help`) to see all the commands.
+
+The general workflow is as follows:
+
+### Step 1:
+
+Run `./bikes.py add_bike` to initialize a new datasheet file with basic info.
+
+IMPORTANT: when adding urls to the bike, please create and provide internet
+archive links so that they don't break or change in the future as companies
+update there websites.
+
+### Step 2:
+
+Determine how you've like to specify leverage curve data.
+
+#### Option 1: plot pivots and calculator (recommended)
+
+Open your newly created bike datasheet and go to the kinematics sections. Your
+first job will be finding a straight on, clear image of the bike/frame in which
+all the pivots are visible.
+
+Add the url to this image to the img property.
+
+Then, configure the joints and links, being sure to properly flag the axle,
+fixed joints, and the link representing the shock.
+
+Now, run `./bikes.py update_kin datasheets/your-new-datasheet.json` and follow
+the instructions. This will open the image you provided of the bike/frame in
+your web browser and ask you to mark all the joints that you specified.
+
+Once you finish this process, you'll see all the joints in your datasheet have
+been annotated with x,y coordinates.
+
+Lastly, run `./bikes.py update_lev datasheets/your-new-datasheet.json`. This
+calculates the leverage curve based on the provided kinematics and adds the data
+to the `curves` key of your datasheet.
+
+#### Option 2: add curve data directly
+
+If you are able to find leverage curve on the manufacturers website, please
+make sure the resource is listed as a url in the urls key of the datasheet, and
+add the curve data directly to the datasheet after approximating with the
+coil-calculator.
+
+THIS IS CURRENTLY A PITA because the coil calculator doesn't by default allow
+you to export curves once you set them... maybe it should.
 
 ## The Math
 
