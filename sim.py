@@ -857,4 +857,5 @@ if __name__ == '__main__':
     # print(','.join([str(y) for y in y_data]))
 
     # datasheet = sys.argv[1]
-    # platform = Platform.from_datasheet(datasheet)
+    # bike = Bike.from_datasheet(datasheet)
+    # draw(bike)

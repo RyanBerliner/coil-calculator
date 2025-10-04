@@ -5,7 +5,7 @@ import json
 import sys
 import webbrowser
 
-from sim import Bike, quantized_leverage_curve
+from sim import Bike, quantized_leverage_curve, draw
 
 
 def add_bike(_args):
@@ -88,6 +88,13 @@ def update_kinematics(args):
         json.dump(data, file, indent=2)
 
 
+def check_kinematics(args):
+    assert len(args) == 1, 'Supply a datasheet file'
+    datasheet = args[0]
+    bike = Bike.from_datasheet(datasheet)
+    draw(bike)
+
+
 def update_leverage_curve(args):
     assert len(args) == 1, 'Supply a datasheet file'
     datasheet_file = args[0]
@@ -107,6 +114,7 @@ if __name__ == '__main__':
     valid_commands = {
         'add_bike': (add_bike, 'add a new datasheet file for a bike'),
         'update_kin': (update_kinematics, 'update kinematics for an existing bike'),
+        'check_kin': (check_kinematics, 'visualize kinematics to check correctness'),
         'update_lev': (update_leverage_curve, 'update curve based on existing kinematics'),
     }
 
