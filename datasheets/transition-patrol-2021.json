@@ -12,7 +12,7 @@
     "https://web.archive.org/web/20250731015312/https://www.transitionbikes.com/Bikes_Patrol.cfm"
   ],
   "kinematics": {
-    "img": "https://web.archive.org/web/20250815235827/https://www.transitionbikes.com/images/C8_Patrol_Framesets.jpg",
+    "img": "https://www.transitionbikes.com/images/C8_Patrol_Framesets.jpg",
     "joints": [
       {
         "name": "axle",
