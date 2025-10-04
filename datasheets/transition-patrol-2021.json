@@ -12,7 +12,7 @@
     "https://web.archive.org/web/20250731015312/https://www.transitionbikes.com/Bikes_Patrol.cfm"
   ],
   "kinematics": {
-    "img": "https://www.transitionbikes.com/images/C8_Patrol_Framesets.jpg",
+    "img": "https://web.archive.org/web/20250815235827/https://www.transitionbikes.com/images/C8_Patrol_Framesets.jpg",
     "joints": [
       {
         "name": "axle",
@@ -97,5 +97,13 @@
         "j2": "triangle bottom"
       }
     ]
-  }
+  },
+  "leverage_curve": [
+    1.2186470221061025,
+    1.116677942496078,
+    1.0268329370205438,
+    0.9577508098886935,
+    0.9064965422266841,
+    0.872499503265066
+  ]
 }

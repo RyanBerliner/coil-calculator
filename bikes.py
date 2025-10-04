@@ -46,11 +46,17 @@ def update_kinematics(args):
 
 def update_leverage_curve(args):
     assert len(args) == 1, 'Supply a datasheet file'
-    bike = Bike.from_datasheet(args[0])
-    data = quantized_leverage_curve(bike, resolution=6, normalized=True)
-    print('Normalized leverage data', ','.join([str(y) for y in data[1]]))
-    # TODO: add this data to the datasheets. then we can use the datasheets
-    #       directly instead of the csv
+    datasheet_file = args[0]
+    bike = Bike.from_datasheet(datasheet_file)
+    leverage_data = quantized_leverage_curve(bike, resolution=6, normalized=True)
+
+    with open(datasheet_file) as file:
+        data = json.loads(file.read())
+
+    data['leverage_curve'] = leverage_data[1]
+
+    with open(args[0], 'w') as file:
+        json.dump(data, file, indent=2)
 
 
 if __name__ == '__main__':
