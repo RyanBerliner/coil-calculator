@@ -83,23 +83,27 @@ input_filename = 'bikes.csv'
 header = None
 bikes = []
 
-
-with open(input_filename) as bikes_csv:
-    reader = csv.reader(bikes_csv)
-    rows = [row for row in reader]
-    header = rows[0]
-    bikes = rows[1:]
-
-field_transformation = {
-    'make': lambda x: x,
-    'model': lambda x: x,
-    'wheel_travel': lambda x: int(x),
-    'stroke': lambda x: float(x),
-    'year_start': lambda x: int(x),
-    'year_end': lambda x: int(x),
-    'size_start': lambda x: x,
-    'size_end': lambda x: x,
+fields = {
+    'make',
+    'model',
+    'wheel_travel',
+    'stroke',
+    'year_start',
+    'year_end',
+    'size_start',
+    'size_end',
+    'curve',
 }
+
+with os.scandir('datasheets') as items:
+    for item in items:
+        if not item.is_file() or item.name.endswith('.swp'):
+            continue
+
+        with open(item.path, 'r') as datasheet_file:
+            full_data = json.loads(datasheet_file.read())
+            trimmed_data = {field: full_data[field] for field in fields}
+            bikes.append(trimmed_data)
 
 output_object = {
     # bikes can be an array with constant time lookup because the "ids" we
@@ -111,20 +115,7 @@ output_object = {
 
 terms_trie = Trie()
 
-for i, bike in enumerate(bikes):
-    all_data = list(zip(header, bike))
-    bike_data = {}
-    curve_data = []
-
-    for data in all_data:
-        name, value = data
-
-        if name.startswith('curve_'):
-            curve_data.append(float(value))
-        elif name in field_transformation.keys():
-            bike_data[name] = field_transformation[name](value)
-
-    bike_data['curve'] = curve_data
+for i, bike_data in enumerate(bikes):
     output_object['bikes'].append(bike_data)
 
     searchable_terms = [str(f).lower() for f in [

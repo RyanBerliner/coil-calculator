@@ -53,7 +53,7 @@ def update_leverage_curve(args):
     with open(datasheet_file) as file:
         data = json.loads(file.read())
 
-    data['leverage_curve'] = leverage_data[1]
+    data['curve'] = leverage_data[1]
 
     with open(args[0], 'w') as file:
         json.dump(data, file, indent=2)
