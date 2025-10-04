@@ -8,6 +8,50 @@ import webbrowser
 from sim import Bike, quantized_leverage_curve
 
 
+def add_bike(_args):
+    with open('datasheets/reference.json') as file:
+        reference_data = json.loads(file.read())
+
+    exclude = ['kinematics', 'curve']
+
+    for data_name in reference_data.keys():
+        if data_name in exclude:
+            continue
+
+        default_value = reference_data[data_name]
+        default_type = type(default_value)
+        is_list = default_type == list
+
+        if is_list:
+            default_value = default_value[0]
+            default_type = type(default_value)
+
+        value = None
+
+        while not value:
+            if default_value:
+                value = input(f'{data_name} ({default_value}): ')
+            else:
+                value = input(f'{data_name}: ')
+
+            value = default_type(value) if value else default_value
+
+        if is_list:
+            reference_data[data_name] = [value]
+        else:
+            reference_data[data_name] = value
+
+    default_datasheet_name = f'{reference_data["make"]}-{reference_data["model"]}-{reference_data["year_start"]}'
+    datasheet_name = input(f'datasheet name ({default_datasheet_name}): ')
+    datasheet_name = datasheet_name if datasheet_name else default_datasheet_name
+    datasheet_name = f'datasheets/{datasheet_name}.json'
+
+    with open(datasheet_name, 'w') as file:
+        json.dump(reference_data, file, indent=2)
+
+    print(f'Bike added, open {datasheet_name} to add kinematic or curve data')
+
+
 def update_kinematics(args):
     assert len(args) == 1, 'Supply a datasheet file'
 
@@ -60,12 +104,22 @@ def update_leverage_curve(args):
 
 
 if __name__ == '__main__':
-    assert len(sys.argv) >= 2, 'Supply a command (ie "update_kin")'
+    valid_commands = {
+        'add_bike': (add_bike, 'add a new datasheet file for a bike'),
+        'update_kin': (update_kinematics, 'update kinematics for an existing bike'),
+        'update_lev': (update_leverage_curve, 'update curve based on existing kinematics'),
+    }
+
+    def show_commands(_args):
+        print('Available commands are:')
+        [print(f'  {c} - {valid_commands[c][1]}') for c in valid_commands.keys()]
+
+    valid_commands['help'] = (show_commands, 'display available commands')
+
+    assert len(sys.argv) >= 2, 'Command missing, run help command for options'
     command, args = sys.argv[1], sys.argv[2:]
 
-    if command == 'update_kin':
-        update_kinematics(args)
-    elif command == 'update_lev':
-        update_leverage_curve(args)
-    else:
-        print(f'Invalid command {sys.argv[1]}')
+    assert command in valid_commands.keys(), \
+        'Invalid command, run help command for options'
+
+    valid_commands[command][0](args)

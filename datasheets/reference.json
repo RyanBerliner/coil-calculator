@@ -5,12 +5,10 @@
   "year_end": 2000,
   "size_start": "XS",
   "size_end": "XL",
-  "wheel_travel": 0,
-  "stroke": 0,
-  "eyetoeye": 0,
-  "urls": [
-    "<wayback-link>"
-  ],
+  "wheel_travel": 160,
+  "stroke": 60.0,
+  "eyetoeye": 205,
+  "urls": [""],
   "kinematics": {
     "img": "",
     "joints": [
