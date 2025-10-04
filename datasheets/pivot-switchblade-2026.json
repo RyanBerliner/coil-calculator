@@ -1,0 +1,109 @@
+{
+  "make": "Pivot",
+  "model": "Switchblade",
+  "year_start": 2026,
+  "year_end": 2026,
+  "size_start": "XS",
+  "size_end": "XL",
+  "wheel_travel": 142,
+  "stroke": 55.0,
+  "eyetoeye": 185,
+  "urls": [
+    "https://web.archive.org/web/20251004232803/https://global.pivotcycles.com/bikes/switchblade"
+  ],
+  "kinematics": {
+    "img": "https://portal.pivotcycles.com/portalimages/bikes/clv/00SWBV629CXXB--PNKLGDRPCN.png",
+    "joints": [
+      {
+        "name": "rear triangle bottom",
+        "x": 288,
+        "y": 334
+      },
+      {
+        "name": "rear triangle top",
+        "x": 298,
+        "y": 263
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 142,
+        "y": 350
+      },
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 304,
+        "y": 331
+      },
+      {
+        "name": "top link bottom",
+        "is_fixed": true,
+        "x": 306,
+        "y": 284
+      },
+      {
+        "name": "shock top",
+        "x": 323,
+        "y": 275
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 327,
+        "y": 341
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock bottom",
+        "j2": "shock top"
+      },
+      {
+        "name": "rear triangle bottom",
+        "j1": "axle",
+        "j2": "rear triangle bottom"
+      },
+      {
+        "name": "rear triangle top",
+        "j1": "axle",
+        "j2": "rear triangle top"
+      },
+      {
+        "name": "rear triangle right",
+        "j1": "rear triangle bottom",
+        "j2": "rear triangle top"
+      },
+      {
+        "name": "top link top",
+        "j1": "rear triangle top",
+        "j2": "shock top"
+      },
+      {
+        "name": "top link left",
+        "j1": "rear triangle top",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "top link right",
+        "j1": "shock top",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "bottom link",
+        "j1": "rear triangle bottom",
+        "j2": "bottom link right"
+      }
+    ]
+  },
+  "curve": [
+    1.2642837484504468,
+    1.127920917954965,
+    1.0267450191778744,
+    0.9587308075312357,
+    0.90722063395245,
+    0.83518858678369
+  ]
+}
