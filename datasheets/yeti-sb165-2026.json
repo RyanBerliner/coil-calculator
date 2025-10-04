@@ -1,0 +1,22 @@
+{
+  "make": "Yeti",
+  "model": "SB165",
+  "year_start": 2026,
+  "year_end": 2026,
+  "size_start": "SM",
+  "size_end": "XL",
+  "wheel_travel": 165,
+  "stroke": 65.0,
+  "eyetoeye": 230,
+  "urls": [
+    "https://web.archive.org/web/20250803011842/https://yeticycles.com/en-us/bikes/sb165"
+  ],
+  "curve": [
+    1.0609447361883515,
+    1.043305316381935,
+    1.0306457945489365,
+    1.0192265306824961,
+    0.9806689567581399,
+    0.8266399743238622
+  ]
+}

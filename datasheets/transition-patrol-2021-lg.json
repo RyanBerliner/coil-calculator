@@ -1,0 +1,22 @@
+{
+  "make": "Transition",
+  "model": "Patrol",
+  "year_start": 2021,
+  "year_end": 2026,
+  "size_start": "LG",
+  "size_end": "XL",
+  "wheel_travel": 160,
+  "stroke": 60.0,
+  "eyetoeye": 205,
+  "urls": [
+    "https://web.archive.org/web/20250731015312/https://www.transitionbikes.com/Bikes_Patrol.cfm"
+  ],
+  "curve": [
+    1.1550383387653893,
+    1.0857256758030416,
+    1.0249975326835568,
+    0.9721754705644511,
+    0.9255068005662133,
+    0.8870497088587596
+  ]
+}

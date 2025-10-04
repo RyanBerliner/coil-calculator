@@ -1,0 +1,22 @@
+{
+  "make": "Transition",
+  "model": "TR11",
+  "year_start": 2026,
+  "year_end": 2026,
+  "size_start": "SM",
+  "size_end": "XL",
+  "wheel_travel": 200,
+  "stroke": 75.0,
+  "eyetoeye": 250,
+  "urls": [
+    "https://web.archive.org/web/20250802013916/https://www.transitionbikes.com/Bikes_TR11.cfm"
+  ],
+  "curve": [
+    1.105388994175806,
+    1.1339224557318306,
+    1.1047541949276336,
+    1.0167399754046116,
+    0.895398737657772,
+    0.744874320003445
+  ]
+}

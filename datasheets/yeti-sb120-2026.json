@@ -1,0 +1,22 @@
+{
+  "make": "Yeti",
+  "model": "SB120",
+  "year_start": 2026,
+  "year_end": 2026,
+  "size_start": "XS",
+  "size_end": "XXL",
+  "wheel_travel": 120,
+  "stroke": 45.0,
+  "eyetoeye": 190,
+  "urls": [
+    "https://web.archive.org/web/20250803014824/https://yeticycles.com/en-us/bikes/sb120"
+  ],
+  "curve": [
+    1.0514147248319008,
+    1.031418233152065,
+    1.0123213115903835,
+    0.9908910537774188,
+    0.9697213310249171,
+    0.948728878570881
+  ]
+}

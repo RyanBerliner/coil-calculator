@@ -1,0 +1,22 @@
+{
+  "make": "Yeti",
+  "model": "SB160",
+  "year_start": 2026,
+  "year_end": 2026,
+  "size_start": "SM",
+  "size_end": "XXL",
+  "wheel_travel": 160,
+  "stroke": 65.0,
+  "eyetoeye": 230,
+  "urls": [
+    "https://web.archive.org/web/20250803013246/https://yeticycles.com/en-us/bikes/sb160"
+  ],
+  "curve": [
+    1.05735899848374,
+    1.0376482534267975,
+    1.019540942971408,
+    1.002800435363931,
+    0.9733136403433639,
+    0.8935671228577378
+  ]
+}

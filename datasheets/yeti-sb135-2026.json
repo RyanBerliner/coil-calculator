@@ -1,0 +1,22 @@
+{
+  "make": "Yeti",
+  "model": "SB135",
+  "year_start": 2026,
+  "year_end": 2026,
+  "size_start": "XS",
+  "size_end": "XL",
+  "wheel_travel": 135,
+  "stroke": 55.0,
+  "eyetoeye": 210,
+  "urls": [
+    "https://web.archive.org/web/20250803014441/https://yeticycles.com/en-us/bikes/sb135"
+  ],
+  "curve": [
+    1.0605302038156463,
+    1.040186569655336,
+    1.0207859710083467,
+    0.9989811626893341,
+    0.9704493332240833,
+    0.8968414551593867
+  ]
+}

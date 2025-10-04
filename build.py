@@ -79,10 +79,6 @@ size_maps = [
 ]
 
 
-input_filename = 'bikes.csv'
-header = None
-bikes = []
-
 fields = {
     'make',
     'model',
@@ -95,9 +91,17 @@ fields = {
     'curve',
 }
 
+bikes = []
+
 with os.scandir('datasheets') as items:
     for item in items:
-        if not item.is_file() or item.name.endswith('.swp'):
+        if not item.is_file():
+            continue
+
+        if item.name.endswith('.swp'):
+            continue
+
+        if item.name == 'reference.json':
             continue
 
         with open(item.path, 'r') as datasheet_file:

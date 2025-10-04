@@ -1,0 +1,22 @@
+{
+  "make": "Transition",
+  "model": "Sentinel",
+  "year_start": 2026,
+  "year_end": 2026,
+  "size_start": "XS",
+  "size_end": "XXL",
+  "wheel_travel": 150,
+  "stroke": 60.0,
+  "eyetoeye": 205,
+  "urls": [
+    "https://web.archive.org/web/20250731021210/https://www.transitionbikes.com/Bikes_Sentinel.cfm"
+  ],
+  "curve": [
+    1.1692561759748636,
+    1.0885448022223685,
+    1.0241403269078075,
+    0.9703601221334065,
+    0.9229205894963056,
+    0.8836254105765216
+  ]
+}

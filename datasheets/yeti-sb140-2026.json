@@ -1,0 +1,22 @@
+{
+  "make": "Yeti",
+  "model": "SB140",
+  "year_start": 2026,
+  "year_end": 2026,
+  "size_start": "SM",
+  "size_end": "XXL",
+  "wheel_travel": 140,
+  "stroke": 55.0,
+  "eyetoeye": 210,
+  "urls": [
+    "https://web.archive.org/web/20250803014005/https://yeticycles.com/en-us/bikes/sb140"
+  ],
+  "curve": [
+    1.0579649081093363,
+    1.0382232921987824,
+    1.0201042735957675,
+    1.0000275123549707,
+    0.9671865299883778,
+    0.9072630687399782
+  ]
+}

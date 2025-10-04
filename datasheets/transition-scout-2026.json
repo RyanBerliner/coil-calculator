@@ -1,0 +1,22 @@
+{
+  "make": "Transition",
+  "model": "Scout",
+  "year_start": 2026,
+  "year_end": 2026,
+  "size_start": "XS",
+  "size_end": "MD",
+  "wheel_travel": 150,
+  "stroke": 57.5,
+  "eyetoeye": 205,
+  "urls": [
+    "https://web.archive.org/web/20250802012943/https://www.transitionbikes.com/Bikes_Scout.cfm"
+  ],
+  "curve": [
+    1.218191831487662,
+    1.114267778961346,
+    1.0291235524535916,
+    0.9617365448672075,
+    0.9067838667526901,
+    0.8592900227378106
+  ]
+}

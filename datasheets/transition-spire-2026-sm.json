@@ -1,0 +1,22 @@
+{
+  "make": "Transition",
+  "model": "Spire",
+  "year_start": 2026,
+  "year_end": 2026,
+  "size_start": "SM",
+  "size_end": "LG",
+  "wheel_travel": 170,
+  "stroke": 65.0,
+  "eyetoeye": 205,
+  "urls": [
+    "https://web.archive.org/web/20250802011310/https://www.transitionbikes.com/Bikes_Spire.cfm"
+  ],
+  "curve": [
+    1.1566851167689922,
+    1.083768735170531,
+    1.0195912097729567,
+    0.9695284903346959,
+    0.9285340677604458,
+    0.895975650746806
+  ]
+}
