@@ -1,0 +1,109 @@
+{
+  "make": "Pivot",
+  "model": "Firebird",
+  "year_start": 2026,
+  "year_end": 2026,
+  "size_start": "XS",
+  "size_end": "XL",
+  "wheel_travel": 165,
+  "stroke": 65.0,
+  "eyetoeye": 205,
+  "urls": [
+    "https://web.archive.org/web/20251004140932/https://global.pivotcycles.com/bikes/firebird"
+  ],
+  "kinematics": {
+    "img": "https://cdn.shopify.com/oxygen-v2/29487/19315/39907/2410802/build/_assets/firebird_geometry_frame-CND6MXVL.png",
+    "joints": [
+      {
+        "name": "rear triangle bottom",
+        "x": 253,
+        "y": 464
+      },
+      {
+        "name": "rear triangle top",
+        "x": 281,
+        "y": 345
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 25,
+        "y": 486
+      },
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 286,
+        "y": 462
+      },
+      {
+        "name": "top link bottom",
+        "is_fixed": true,
+        "x": 296,
+        "y": 381
+      },
+      {
+        "name": "shock top",
+        "x": 325,
+        "y": 364
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 336,
+        "y": 480
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock bottom",
+        "j2": "shock top"
+      },
+      {
+        "name": "rear triangle bottom",
+        "j1": "axle",
+        "j2": "rear triangle bottom"
+      },
+      {
+        "name": "rear triangle top",
+        "j1": "axle",
+        "j2": "rear triangle top"
+      },
+      {
+        "name": "rear triangle right",
+        "j1": "rear triangle bottom",
+        "j2": "rear triangle top"
+      },
+      {
+        "name": "top link top",
+        "j1": "rear triangle top",
+        "j2": "shock top"
+      },
+      {
+        "name": "top link left",
+        "j1": "rear triangle top",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "top link right",
+        "j1": "shock top",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "bottom link",
+        "j1": "rear triangle bottom",
+        "j2": "bottom link right"
+      }
+    ]
+  },
+  "curve": [
+    1.2062835499319209,
+    1.0701660595101758,
+    0.9852976107190594,
+    0.9410049189706688,
+    0.9370598902025377,
+    0.9875836781615644
+  ]
+}
