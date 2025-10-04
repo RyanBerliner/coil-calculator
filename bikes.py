@@ -41,7 +41,7 @@ def add_bike(_args):
         else:
             reference_data[data_name] = value
 
-    default_datasheet_name = f'{reference_data["make"]}-{reference_data["model"]}-{reference_data["year_start"]}'
+    default_datasheet_name = f'{reference_data["make"]}-{reference_data["model"]}-{reference_data["year_start"]}'.lower()
     datasheet_name = input(f'datasheet name ({default_datasheet_name}): ')
     datasheet_name = datasheet_name if datasheet_name else default_datasheet_name
     datasheet_name = f'datasheets/{datasheet_name}.json'
