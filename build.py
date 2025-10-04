@@ -98,7 +98,7 @@ with os.scandir('datasheets') as items:
         if not item.is_file():
             continue
 
-        if item.name.endswith('.swp'):
+        if not item.name.endswith('.json'):
             continue
 
         if item.name == 'reference.json':
