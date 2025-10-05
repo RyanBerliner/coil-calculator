@@ -173,7 +173,6 @@ class Bike:
                  platform,
                  joints,
                  shock,
-                 shock_starting_length,
                  travel=None,
                  eye2eye=None,
                  stroke=None,
@@ -182,7 +181,7 @@ class Bike:
         self.platform = platform
         self.joints = joints
         self.shock = shock
-        self.shock_starting_length = shock_starting_length
+        self.shock_starting_length = shock.current_length
         self.travel = travel
         self.eye2eye = eye2eye
         self.stroke = stroke
@@ -231,7 +230,6 @@ class Bike:
         # shock when it moves through the travel. This is used for inline angle
         # restrictions
         shock_shadow = None
-        shock_starting_length = None
 
         for link in data['kinematics']['links']:
             name = link.get('name')
@@ -249,7 +247,6 @@ class Bike:
             if link.get('is_shock'):
                 assert shock is None, 'more than one shock is defined'
                 shock = l
-                shock_starting_length = l.current_length
 
             if link.get('is_shock_shadow'):
                 shock_shadow = l
@@ -268,7 +265,6 @@ class Bike:
             platform,
             joints,
             shock,
-            shock_starting_length,
             float(travel),
             float(eye2eye),
             float(stroke),
@@ -634,13 +630,11 @@ def patrol():
     tright.constrain_length()
 
     shock = platform.add_linkage(joints['shock top'], joints['shock bottom'], name='shock')
-    starting_shock = shock.current_length;
 
     return Bike(
         platform,
         joints,
         shock,
-        starting_shock,
         160, 205, 60
     )
 
@@ -686,13 +680,11 @@ def firebird():
     tright.constrain_length()
 
     shock = platform.add_linkage(joints['triangle right'], joints['shock bottom'], name='shock')
-    starting_shock = shock.current_length;
 
     return Bike(
         platform,
         joints,
         shock,
-        starting_shock,
         165, 205, 65
     )
 
@@ -767,8 +759,19 @@ def leverage_curve(bike, draw=False):
         bike.platform.solve()
 
         delta_shock = bike.shock.current_length - prev_shock_length
-        delta_axle = Joint.dist(bike.joints['axle'], prev_axle)
-        delta_axle_total = Joint.dist(bike.joints['axle'], starting_axle)
+
+        # we don't actually want to do the full delta of the axle, but rather
+        # just the delta y ... because when companies say "160mm travel" they
+        # really mean "160mm *vertical* travel" ... not "the wheel travels 160mm"
+        #
+        # this is what "the wheel travels 160mm" would look like
+        # delta_axle = Joint.dist(bike.joints['axle'], prev_axle)
+        # delta_axle_total = Joint.dist(bike.joints['axle'], starting_axle)
+
+        # and this is "160mm *vertical* travel
+        delta_axle = bike.joints['axle'].y - prev_axle.y
+        delta_axle_total = bike.joints['axle'].y - starting_axle.y
+
         leverage = abs(delta_axle / delta_shock)
         
         print(i, leverage)
