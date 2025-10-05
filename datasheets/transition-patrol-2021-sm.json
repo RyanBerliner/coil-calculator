@@ -2,7 +2,7 @@
   "make": "Transition",
   "model": "Patrol",
   "year_start": 2021,
-  "year_end": 2026,
+  "year_end": 2025,
   "size_start": "SM",
   "size_end": "MD",
   "wheel_travel": 160,

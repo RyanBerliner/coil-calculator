@@ -1,8 +1,8 @@
 {
   "make": "Yeti",
   "model": "SB120",
-  "year_start": 2026,
-  "year_end": 2026,
+  "year_start": 2025,
+  "year_end": 2025,
   "size_start": "XS",
   "size_end": "XXL",
   "wheel_travel": 120,

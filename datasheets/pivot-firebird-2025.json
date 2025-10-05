@@ -1,57 +1,57 @@
 {
   "make": "Pivot",
-  "model": "Mach 6",
-  "year_start": 2026,
-  "year_end": 2026,
+  "model": "Firebird",
+  "year_start": 2025,
+  "year_end": 2025,
   "size_start": "XS",
-  "size_end": "LG",
-  "wheel_travel": 158,
+  "size_end": "XL",
+  "wheel_travel": 165,
   "stroke": 65.0,
   "eyetoeye": 205,
   "urls": [
-    "https://web.archive.org/web/20251004231930/https://global.pivotcycles.com/bikes/mach-6"
+    "https://web.archive.org/web/20251004140932/https://global.pivotcycles.com/bikes/firebird"
   ],
   "kinematics": {
-    "img": "https://portal.pivotcycles.com/portalimages/bikes/clv/00M6CV427CXRAH-MNTLGDRPFN.png",
+    "img": "https://portal.pivotcycles.com/portalimages/bikes/clv/00FBCV5MXCXXBPLWHGMDDRPON.png",
     "joints": [
       {
         "name": "rear triangle bottom",
-        "x": 280,
-        "y": 331
+        "x": 282,
+        "y": 339
       },
       {
         "name": "rear triangle top",
-        "x": 286,
-        "y": 268
+        "x": 300,
+        "y": 265
       },
       {
         "name": "axle",
         "is_axle": true,
-        "x": 142,
-        "y": 356
+        "x": 138,
+        "y": 358
       },
       {
         "name": "bottom link right",
         "is_fixed": true,
-        "x": 296,
-        "y": 330
+        "x": 302,
+        "y": 337
       },
       {
         "name": "top link bottom",
         "is_fixed": true,
-        "x": 296,
-        "y": 287
+        "x": 309,
+        "y": 288
       },
       {
         "name": "shock top",
-        "x": 314,
-        "y": 275
+        "x": 327,
+        "y": 277
       },
       {
         "name": "shock bottom",
         "is_fixed": true,
-        "x": 318,
-        "y": 348
+        "x": 334,
+        "y": 350
       }
     ],
     "links": [
@@ -99,11 +99,11 @@
     ]
   },
   "curve": [
-    1.2169981642481897,
-    1.0846384684644752,
-    0.9948688376092305,
-    0.9498858641265553,
-    0.9310880964021895,
-    0.9341273411110318
+    1.2476381048616523,
+    1.0986050855257063,
+    0.9969551147940537,
+    0.938871076853047,
+    0.9194833196804985,
+    0.9376164230246552
   ]
 }

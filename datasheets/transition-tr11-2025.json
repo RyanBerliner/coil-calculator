@@ -1,8 +1,8 @@
 {
   "make": "Transition",
   "model": "TR11",
-  "year_start": 2026,
-  "year_end": 2026,
+  "year_start": 2025,
+  "year_end": 2025,
   "size_start": "SM",
   "size_end": "XL",
   "wheel_travel": 200,

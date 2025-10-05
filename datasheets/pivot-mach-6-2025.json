@@ -1,57 +1,57 @@
 {
   "make": "Pivot",
-  "model": "Switchblade",
-  "year_start": 2026,
-  "year_end": 2026,
+  "model": "Mach 6",
+  "year_start": 2025,
+  "year_end": 2025,
   "size_start": "XS",
-  "size_end": "XL",
-  "wheel_travel": 142,
-  "stroke": 55.0,
-  "eyetoeye": 185,
+  "size_end": "LG",
+  "wheel_travel": 158,
+  "stroke": 65.0,
+  "eyetoeye": 205,
   "urls": [
-    "https://web.archive.org/web/20251004232803/https://global.pivotcycles.com/bikes/switchblade"
+    "https://web.archive.org/web/20251004231930/https://global.pivotcycles.com/bikes/mach-6"
   ],
   "kinematics": {
-    "img": "https://portal.pivotcycles.com/portalimages/bikes/clv/00SWBV629CXXB--PNKLGDRPCN.png",
+    "img": "https://portal.pivotcycles.com/portalimages/bikes/clv/00M6CV427CXRAH-MNTLGDRPFN.png",
     "joints": [
       {
         "name": "rear triangle bottom",
-        "x": 288,
-        "y": 334
+        "x": 280,
+        "y": 331
       },
       {
         "name": "rear triangle top",
-        "x": 298,
-        "y": 263
+        "x": 286,
+        "y": 268
       },
       {
         "name": "axle",
         "is_axle": true,
         "x": 142,
-        "y": 350
+        "y": 356
       },
       {
         "name": "bottom link right",
         "is_fixed": true,
-        "x": 304,
-        "y": 331
+        "x": 296,
+        "y": 330
       },
       {
         "name": "top link bottom",
         "is_fixed": true,
-        "x": 306,
-        "y": 284
+        "x": 296,
+        "y": 287
       },
       {
         "name": "shock top",
-        "x": 323,
+        "x": 314,
         "y": 275
       },
       {
         "name": "shock bottom",
         "is_fixed": true,
-        "x": 327,
-        "y": 341
+        "x": 318,
+        "y": 348
       }
     ],
     "links": [
@@ -99,11 +99,11 @@
     ]
   },
   "curve": [
-    1.2642837484504468,
-    1.127920917954965,
-    1.0267450191778744,
-    0.9587308075312357,
-    0.90722063395245,
-    0.83518858678369
+    1.2169981642481897,
+    1.0846384684644752,
+    0.9948688376092305,
+    0.9498858641265553,
+    0.9310880964021895,
+    0.9341273411110318
   ]
 }

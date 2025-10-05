@@ -1,8 +1,8 @@
 {
   "make": "Transition",
   "model": "Scout",
-  "year_start": 2026,
-  "year_end": 2026,
+  "year_start": 2025,
+  "year_end": 2025,
   "size_start": "XS",
   "size_end": "MD",
   "wheel_travel": 150,

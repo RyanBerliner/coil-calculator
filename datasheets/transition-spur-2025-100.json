@@ -1,22 +1,22 @@
 {
   "make": "Transition",
   "model": "Spur",
-  "year_start": 2026,
-  "year_end": 2026,
+  "year_start": 2025,
+  "year_end": 2025,
   "size_start": "SM",
   "size_end": "XL",
-  "wheel_travel": 120,
-  "stroke": 45.0,
+  "wheel_travel": 100,
+  "stroke": 37.5,
   "eyetoeye": 190,
   "urls": [
     "https://web.archive.org/web/20250802013234/https://www.transitionbikes.com/Bikes_Spur.cfm"
   ],
   "curve": [
-    1.2297839160730886,
-    1.1117025398598788,
-    1.019599410932144,
-    0.9523943420170956,
-    0.9076158297415104,
-    0.8844819466205978
+    1.2335792931932115,
+    1.1178501007654276,
+    1.0188440661295037,
+    0.9498280071092262,
+    0.9061075225631663,
+    0.8830334973157961
   ]
 }
