@@ -199,6 +199,7 @@ class Bike:
 
         joints = {}
         axle = None
+        reverse_x = data['kinematics'].get('reverse_x', False)
 
         for joint in data['kinematics']['joints']:
             name = joint.get('name')
@@ -206,6 +207,10 @@ class Bike:
             # subtract from som big number because the data we get is from the
             # 0,0 in top left cordinate system of the web
             y = 100000 - joint.get('y')
+            x = joint.get('x')
+
+            if reverse_x:
+                x = 100000 - x
 
             assert name is not None, 'found unnamed joint'
             assert x is not None, f'{name} must have an x coord'
@@ -702,7 +707,7 @@ def draw(bike):
     interval = int(1_000 / fps)
 
     def get_data(frame):
-        max_percent = 60 / 205 * 100
+        max_percent = bike.stroke / bike.travel * 100 * .8
         perc = max_percent * (frame / frames)
         shock_length = bike.shock_starting_length * ((100 - perc)/100)
         bike.shock.constrain_length(shock_length)

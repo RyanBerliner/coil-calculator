@@ -3,7 +3,7 @@
   "model": "DH Frame",
   "year_start": 2025,
   "year_end": 2025,
-  "size_start": "M",
+  "size_start": "MD",
   "size_end": "LG",
   "wheel_travel": 210,
   "stroke": 75.0,

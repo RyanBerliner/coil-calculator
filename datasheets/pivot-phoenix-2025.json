@@ -1,0 +1,137 @@
+{
+  "make": "Pivot",
+  "model": "Phoenix",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "S1",
+  "size_end": "S4",
+  "wheel_travel": 210,
+  "stroke": 75.0,
+  "eyetoeye": 225,
+  "urls": [
+    "https://web.archive.org/web/20251005225249/https://global.pivotcycles.com/bikes/phoenix"
+  ],
+  "kinematics": {
+    "img": "https://p.vitalmtb.com/styles/ckeditor_fullscreen/s3/photos/stories/2024/09/30/DSC_0307.JPG?VersionId=JAxcqvda.y4AxxGlwL.F_89X0nKrEVA.&itok=M7d74IMm",
+    "tmp": "https://ep1.pinkbike.org/p5pb27314803/p5pb27314803.jpg",
+    "reverse_x": true,
+    "joints": [
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 670,
+        "y": 460
+      },
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 417,
+        "y": 413
+      },
+      {
+        "name": "bottom link left",
+        "x": 407,
+        "y": 401
+      },
+      {
+        "name": "middle link right",
+        "x": 424,
+        "y": 368
+      },
+      {
+        "name": "middle link left",
+        "is_fixed": true,
+        "x": 403,
+        "y": 363
+      },
+      {
+        "name": "top link right",
+        "x": 410,
+        "y": 263
+      },
+      {
+        "name": "top link bottom",
+        "is_fixed": true,
+        "x": 390,
+        "y": 301
+      },
+      {
+        "name": "shock top",
+        "x": 360,
+        "y": 277
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 329,
+        "y": 417
+      }
+    ],
+    "links": [
+      {
+        "name": "bottom link",
+        "j1": "bottom link right",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "middle link",
+        "j1": "middle link right",
+        "j2": "middle link left"
+      },
+      {
+        "name": "seat stay",
+        "j1": "axle",
+        "j2": "top link right"
+      },
+      {
+        "name": "top link top",
+        "j1": "top link right",
+        "j2": "shock top"
+      },
+      {
+        "name": "top link right",
+        "j1": "top link right",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "top link left",
+        "j1": "shock top",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "shock",
+        "j1": "shock top",
+        "j2": "shock bottom",
+        "is_shock": true
+      },
+      {
+        "name": "chainstay top",
+        "j1": "axle",
+        "j2": "middle link right"
+      },
+      {
+        "name": "chainstay bottom",
+        "j1": "axle",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "meta link bridge",
+        "j1": "middle link left",
+        "j2": "bottom link right"
+      },
+      {
+        "name": "rear triangle weld",
+        "j1": "top link right",
+        "j2": "middle link right"
+      }
+    ]
+  },
+  "curve": [
+    1.321826908057427,
+    1.1541168461591322,
+    1.0546717478574301,
+    1.008974739583551,
+    0.9924022339179105,
+    0.6185447743614183
+  ]
+}
