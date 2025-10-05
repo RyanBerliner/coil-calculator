@@ -146,7 +146,7 @@ class Platform:
         error = self.error
         count = 0
         while error > 0.00001:
-            assert count < 100_000, 'unable to solve platform'
+            assert count < 1_000_000, 'unable to solve platform'
 
             for link in self.linkages.values():
                 link.adjust()
@@ -177,6 +177,7 @@ class Bike:
                  travel=None,
                  eye2eye=None,
                  stroke=None,
+                 shock_shadow=None,
             ):
         self.platform = platform
         self.joints = joints
@@ -185,6 +186,11 @@ class Bike:
         self.travel = travel
         self.eye2eye = eye2eye
         self.stroke = stroke
+        self.shock_shadow = shock_shadow
+        self.shock_shadow_starting_length = None
+
+        if shock_shadow:
+            self.shock_shadow_starting_length = shock_shadow.current_length
 
     @staticmethod
     def from_datasheet(datasheet):
@@ -221,6 +227,10 @@ class Bike:
 
         platform = Platform()
         shock = None
+        # a shock_shadow is a link that adds and remove length along with the
+        # shock when it moves through the travel. This is used for inline angle
+        # restrictions
+        shock_shadow = None
         shock_starting_length = None
 
         for link in data['kinematics']['links']:
@@ -241,6 +251,9 @@ class Bike:
                 shock = l
                 shock_starting_length = l.current_length
 
+            if link.get('is_shock_shadow'):
+                shock_shadow = l
+
         assert shock is not None, 'no shock is defined'
 
         travel = data.get('wheel_travel')
@@ -259,6 +272,7 @@ class Bike:
             float(travel),
             float(eye2eye),
             float(stroke),
+            shock_shadow,
         )
 
 
@@ -700,6 +714,13 @@ def draw(bike):
         perc = max_percent * (frame / frames)
         shock_length = bike.shock_starting_length * ((100 - perc)/100)
         bike.shock.constrain_length(shock_length)
+
+        total_shock_delta = bike.shock_starting_length - shock_length
+
+        if bike.shock_shadow:
+            new_shock_shadow = bike.shock_shadow_starting_length - total_shock_delta
+            bike.shock_shadow.constrain_length(new_shock_shadow)
+
         bike.platform.solve()
         js = bike.joints.values()
         return [j.x for j in js], [j.y for j in js]
@@ -739,6 +760,10 @@ def leverage_curve(bike, draw=False):
     while i <= 100:
         remove = percent_change_shock * i * bike.shock_starting_length
         bike.shock.constrain_length(bike.shock_starting_length - remove)
+
+        if bike.shock_shadow:
+            bike.shock_shadow.constrain_length(bike.shock_shadow_starting_length - remove)
+
         bike.platform.solve()
 
         delta_shock = bike.shock.current_length - prev_shock_length

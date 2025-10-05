@@ -1,0 +1,125 @@
+{
+  "make": "Frameworks",
+  "model": "DH Frame",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "M",
+  "size_end": "LG",
+  "wheel_travel": 210,
+  "stroke": 75.0,
+  "eyetoeye": 250,
+  "urls": [
+    "https://web.archive.org/web/20251005125432/https://rideframeworks.com/products/dh-frame"
+  ],
+  "kinematics": {
+    "img": "https://rideframeworks.com/cdn/shop/files/2025_DH_FRAME_w_background.jpg?v=1742910721&width=2200",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 321,
+        "y": 374
+      },
+      {
+        "name": "chainstay left",
+        "x": 93,
+        "y": 393
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 60,
+        "y": 385
+      },
+      {
+        "name": "upper left",
+        "x": 261,
+        "y": 273
+      },
+      {
+        "name": "upper bottom",
+        "is_fixed": true,
+        "x": 328,
+        "y": 292
+      },
+      {
+        "name": "shock top",
+        "x": 360,
+        "y": 256
+      },
+      {
+        "name": "shock bottom",
+        "x": 349,
+        "y": 387
+      },
+      {
+        "name": "shock anchor",
+        "is_fixed": true,
+        "x": 348,
+        "y": 400
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "shock minilink",
+        "j1": "shock anchor",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "shock inline",
+        "is_shock_shadow": true,
+        "j1": "shock top",
+        "j2": "shock anchor"
+      },
+      {
+        "name": "upper top",
+        "j1": "upper left",
+        "j2": "shock top"
+      },
+      {
+        "name": "upper left",
+        "j1": "upper left",
+        "j2": "upper bottom"
+      },
+      {
+        "name": "upper right",
+        "j1": "shock top",
+        "j2": "upper bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay long",
+        "j1": "axle",
+        "j2": "upper left"
+      },
+      {
+        "name": "seatstay short",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "upper left",
+        "j2": "chainstay left"
+      }
+    ]
+  },
+  "curve": [
+    1.3263447628194227,
+    1.1654825283107766,
+    1.0341805746098587,
+    0.9431366563045205,
+    0.8772207223002536,
+    0.8363923256712549
+  ]
+}
