@@ -707,9 +707,11 @@ def draw(bike):
     interval = int(1_000 / fps)
 
     def get_data(frame):
-        max_percent = bike.stroke / bike.travel * 100 * .8
-        perc = max_percent * (frame / frames)
-        shock_length = bike.shock_starting_length * ((100 - perc)/100)
+        max_percent = bike.stroke / bike.eye2eye
+        ending_length = bike.shock_starting_length * (1 - max_percent)
+        max_diff = bike.shock_starting_length - ending_length
+        curr_diff = max_diff * (frame / frames)
+        shock_length = bike.shock_starting_length - curr_diff
         bike.shock.constrain_length(shock_length)
 
         total_shock_delta = bike.shock_starting_length - shock_length
@@ -745,7 +747,9 @@ def draw(bike):
 def leverage_curve(bike, draw=False):
     travel, eye2eye, stroke = bike.travel, bike.eye2eye, bike.stroke
 
-    percent_change_shock = stroke / eye2eye / 100
+    max_percent = bike.stroke / bike.eye2eye
+    ending_length = bike.shock_starting_length * (1 - max_percent)
+    max_shock_diff = bike.shock_starting_length - ending_length
 
     prev_shock_length = bike.shock_starting_length
     prev_axle = Joint(bike.joints['axle'].x, bike.joints['axle'].y, 'prev')
@@ -754,8 +758,9 @@ def leverage_curve(bike, draw=False):
     y_data = []
 
     i = 1
-    while i <= 100:
-        remove = percent_change_shock * i * bike.shock_starting_length
+    steps = 100
+    while i <= steps:
+        remove = (max_shock_diff * (i/steps))
         bike.shock.constrain_length(bike.shock_starting_length - remove)
 
         if bike.shock_shadow:
@@ -882,8 +887,8 @@ def quantized_leverage_curve(bike, draw=False, resolution=6, normalized=False):
 
 
 if __name__ == '__main__':
-    unittest.main()
-    # draw(firebird())
+    # unittest.main()
+    draw(patrol())
     # leverage_curve(firebird(), draw=True)
     # quantized_leverage_curve(patrol(), draw=True, resolution=6, normalized=True)
     # x_data, y_data = quantized_leverage_curve(patrol(), resolution=6, normalized=True)

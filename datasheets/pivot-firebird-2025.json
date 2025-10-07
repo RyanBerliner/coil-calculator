@@ -12,46 +12,47 @@
     "https://web.archive.org/web/20251004140932/https://global.pivotcycles.com/bikes/firebird"
   ],
   "kinematics": {
-    "img": "https://portal.pivotcycles.com/portalimages/bikes/clv/00FBCV5MXCXXBPLWHGMDDRPON.png",
+    "imgalt": "https://portal.pivotcycles.com/portalimages/bikes/clv/00FBCV5MXCXXBPLWHGMDDRPON.png",
+    "img": "https://enduro-mtb.com/wp-content/uploads/2021/08/Pivot_Firebird_2022_First_Ride_WEB_Res-2.jpg",
     "joints": [
       {
         "name": "rear triangle bottom",
-        "x": 282,
-        "y": 339
+        "x": 303,
+        "y": 364
       },
       {
         "name": "rear triangle top",
-        "x": 300,
-        "y": 265
+        "x": 314,
+        "y": 316
       },
       {
         "name": "axle",
         "is_axle": true,
-        "x": 138,
-        "y": 358
+        "x": 206,
+        "y": 372
       },
       {
         "name": "bottom link right",
         "is_fixed": true,
-        "x": 302,
-        "y": 337
+        "x": 317,
+        "y": 363
       },
       {
         "name": "top link bottom",
         "is_fixed": true,
-        "x": 309,
-        "y": 288
+        "x": 319,
+        "y": 332
       },
       {
         "name": "shock top",
-        "x": 327,
-        "y": 277
+        "x": 332,
+        "y": 325
       },
       {
         "name": "shock bottom",
         "is_fixed": true,
-        "x": 334,
-        "y": 350
+        "x": 337,
+        "y": 372
       }
     ],
     "links": [
@@ -99,11 +100,11 @@
     ]
   },
   "curve": [
-    1.247248361011608,
-    1.1063554475180202,
-    1.0055480113873836,
-    0.9433080829338878,
-    0.9151555867556873,
-    0.9124805744121158
+    1.1981357462903577,
+    1.0898602479120665,
+    1.0112694188349882,
+    0.9586147878038702,
+    0.9255601632747561,
+    0.9046804575235845
   ]
 }
