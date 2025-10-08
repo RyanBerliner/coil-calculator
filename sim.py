@@ -56,6 +56,9 @@ class Linkage:
 
     @property
     def error(self):
+        # TODO: add some sort of error multiplier to allow for error to
+        #       accumulate a bt in this particular link (error doesn't matter
+        #       as much for this
         return self.constrained_length - self.current_length
 
     def adjust(self):
@@ -145,7 +148,13 @@ class Platform:
 
         error = self.error
         count = 0
-        while error > 0.00001:
+        # IDEA: allow defining error for a partocular linkage, like the weld
+        #       linkage to accumlate error on just that part ... ie "flex" and
+        #       enforce all the other parts to remain rigid
+        #       i think this can be done by making the error for that particular
+        #       linkage a multiple of what it would be (ie 0.5, 0.1, etc)
+        # while error > 0.00001:
+        while error > 2.5:
             assert count < 1_000_000, 'unable to solve platform'
 
             for link in self.linkages.values():
