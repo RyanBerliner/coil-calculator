@@ -13,13 +13,12 @@
   ],
   "kinematics": {
     "img": "https://p.vitalmtb.com/styles/ckeditor_fullscreen/s3/photos/stories/2024/09/30/DSC_0307.JPG?VersionId=JAxcqvda.y4AxxGlwL.F_89X0nKrEVA.&itok=M7d74IMm",
-    "tmp": "https://ep1.pinkbike.org/p5pb27314803/p5pb27314803.jpg",
-    "reverse_x": false,
+    "reverse_x": true,
     "joints": [
       {
         "name": "axle",
         "is_axle": true,
-        "x": 669,
+        "x": 670,
         "y": 460
       },
       {
@@ -116,13 +115,13 @@
       },
       {
         "name": "meta link bridge",
-        "j1": "middle link left",
-        "j2": "bottom link right"
+        "j1": "middle link right",
+        "j2": "bottom link left"
       },
       {
         "name": "rear triangle weld",
         "j1": "top link right",
-        "j2": "bottom link left"
+        "j2": "middle link right"
       }
     ]
   },
