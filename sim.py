@@ -700,28 +700,28 @@ def draw(bike):
 
     fig, ax = plt.subplots()
 
-    # this is an estimate duration, cause computation of each frame takes time
-    animation_duration = 2_000
     fps = 30
-    frames = int(animation_duration / fps)
+    frames = 100
+    forward = [i for i in range(frames + 1)]
+    back = [i for i in range(1, frames)]
+    back.reverse()
+    all_frames = forward + back
     interval = int(1_000 / fps)
 
-    def get_data(frame):
-        max_percent = bike.stroke / bike.eye2eye
-        ending_length = bike.shock_starting_length * (1 - max_percent)
-        max_diff = bike.shock_starting_length - ending_length
-        curr_diff = max_diff * (frame / frames)
-        shock_length = bike.shock_starting_length - curr_diff
-        bike.shock.constrain_length(shock_length)
+    max_percent = bike.stroke / bike.eye2eye
+    ending_length = bike.shock_starting_length * (1 - max_percent)
+    max_shock_diff = bike.shock_starting_length - ending_length
 
-        total_shock_delta = bike.shock_starting_length - shock_length
+    def get_data(frame):
+        remove = (max_shock_diff * (frame / frames))
+        bike.shock.constrain_length(bike.shock_starting_length - remove)
 
         if bike.shock_shadow:
-            new_shock_shadow = bike.shock_shadow_starting_length - total_shock_delta
-            bike.shock_shadow.constrain_length(new_shock_shadow)
+            bike.shock_shadow.constrain_length(bike.shock_shadow_starting_length - remove)
 
         bike.platform.solve()
         js = bike.joints.values()
+
         return [j.x for j in js], [j.y for j in js]
 
     plot = ax.plot(*get_data(0), 'o')[0]
@@ -740,7 +740,7 @@ def draw(bike):
     def update(frame):
         plot.set_data(*get_data(frame))
 
-    ani = animation.FuncAnimation(fig=fig, func=update, frames=frames, interval=interval)
+    ani = animation.FuncAnimation(fig=fig, func=update, frames=all_frames, interval=interval)
     plt.show()
 
 
