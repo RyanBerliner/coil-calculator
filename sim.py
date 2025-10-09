@@ -56,9 +56,9 @@ class Linkage:
 
     @property
     def error(self):
-        # TODO: add some sort of error multiplier to allow for error to
-        #       accumulate a bt in this particular link (error doesn't matter
-        #       as much for this
+        if self.constrained_length is None:
+            return 0
+
         return self.constrained_length - self.current_length
 
     def adjust(self):
@@ -142,19 +142,18 @@ class Platform:
         return linkage
 
     def solve(self):
+        something_constrained = False
         for link in self.linkages.values():
-            assert link.constrained_length is not None, \
-                f'{link.name} must have constrained length'
+            if link.constrained_length is not None:
+                something_constrained = True
+
+        # not much thought put in here... just constrain something please
+        assert something_constrained, 'must have at least 1 constrained link'
 
         error = self.error
         count = 0
-        # IDEA: allow defining error for a partocular linkage, like the weld
-        #       linkage to accumlate error on just that part ... ie "flex" and
-        #       enforce all the other parts to remain rigid
-        #       i think this can be done by making the error for that particular
-        #       linkage a multiple of what it would be (ie 0.5, 0.1, etc)
+
         while error > 0.00001:
-        # while error > 2.5:
             assert count < 1_000_000, 'unable to solve platform'
 
             for link in self.linkages.values():
@@ -256,7 +255,9 @@ class Bike:
             assert j1 != j2, '{name} j1 and j2 cannot be the same'
 
             l = platform.add_linkage(joints[j1], joints[j2], name)
-            l.constrain_length()
+
+            if not link.get('ignore', False):
+                l.constrain_length()
 
             if link.get('is_shock'):
                 assert shock is None, 'more than one shock is defined'
