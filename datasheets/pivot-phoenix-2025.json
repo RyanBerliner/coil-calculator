@@ -121,8 +121,7 @@
       {
         "name": "rear triangle weld",
         "j1": "top link right",
-        "j2": "middle link right",
-        "error_multiplier": 0.001
+        "j2": "middle link right"
       }
     ]
   },
