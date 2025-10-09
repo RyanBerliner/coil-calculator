@@ -38,11 +38,12 @@ class Joint:
 
 
 class Linkage:
-    def __init__(self, j1, j2, name):
+    def __init__(self, j1, j2, name, error_multiplier=1):
         self.name = name
         self.j1 = j1
         self.j2 = j2
         self.constrained_length = None
+        self.error_multiplier = error_multiplier
 
     @property
     def current_length(self):
@@ -54,12 +55,18 @@ class Linkage:
         if to is None:
             self.constrained_length = self.current_length
 
-    @property
-    def error(self):
+    def error(self, true_error=True):
         # TODO: add some sort of error multiplier to allow for error to
         #       accumulate a bt in this particular link (error doesn't matter
         #       as much for this
-        return self.constrained_length - self.current_length
+        actual = self.constrained_length - self.current_length
+
+        if true_error:
+            actual
+
+        # if we are not returning the actual error, lets make it percentage
+        # based instead of the value
+        return self.error_multiplier * (actual / self.constrained_length)
 
     def adjust(self):
         constrained_joints = len(list(filter(
@@ -74,7 +81,7 @@ class Linkage:
         if constrained_joints == 2:
             return
 
-        error = self.error
+        error = self.error()
 
         if error == 0:
             return
@@ -135,9 +142,9 @@ class Platform:
         self.linkages = {}
 
 
-    def add_linkage(self, j1, j2, name):
+    def add_linkage(self, j1, j2, name, **kwargs):
         assert self.linkages.get(name, None) is None, 'duplicate linkage'
-        linkage = Linkage(j1, j2, name)
+        linkage = Linkage(j1, j2, name, **kwargs)
         self.linkages[name] = linkage
         return linkage
 
@@ -146,26 +153,29 @@ class Platform:
             assert link.constrained_length is not None, \
                 f'{link.name} must have constrained length'
 
-        error = self.error
+        error = self.error(true_error=False)
         count = 0
-        # IDEA: allow defining error for a partocular linkage, like the weld
-        #       linkage to accumlate error on just that part ... ie "flex" and
-        #       enforce all the other parts to remain rigid
-        #       i think this can be done by making the error for that particular
-        #       linkage a multiple of what it would be (ie 0.5, 0.1, etc)
-        while error > 0.00001:
-        # while error > 2.5:
+
+        # the average linkage needs to be withing 0.01% of its error tolerance
+        while error > 0.0001:
             assert count < 1_000_000, 'unable to solve platform'
 
             for link in self.linkages.values():
                 link.adjust()
 
-            error = self.error
+            error = self.error(true_error=False)
             count += 1
 
-    @property
-    def error(self):
-        return sum([abs(link.error) for link in self.linkages.values()])
+    def error(self, true_error=True):
+        errors = [
+            abs(link.error(true_error=true_error))
+            for link in self.linkages.values()
+        ]
+
+        if true_error:
+            return sum(errors)
+
+        return max(errors)
 
     def __str__(self):
         ret = ''
@@ -249,13 +259,18 @@ class Bike:
             name = link.get('name')
             j1 = link.get('j1')
             j2 = link.get('j2')
+            error_multiplier = link.get('error_multiplier', None)
 
             assert name is not None, 'found unnamed link'
             assert j1 is not None, f'{name} must have j1 defined'
             assert j2 is not None, f'{name} must have j2 defined'
             assert j1 != j2, '{name} j1 and j2 cannot be the same'
 
-            l = platform.add_linkage(joints[j1], joints[j2], name)
+            lkwargs = {}
+            if error_multiplier is not None:
+                lkwargs['error_multiplier'] = error_multiplier
+
+            l = platform.add_linkage(joints[j1], joints[j2], name, **lkwargs)
             l.constrain_length()
 
             if link.get('is_shock'):
@@ -722,6 +737,7 @@ def draw(bike):
     max_shock_diff = bike.shock_starting_length - ending_length
 
     cached = [None] * 101
+    lengths = [0] * 101
 
     def get_data(frame):
         cache = cached[frame]
@@ -735,8 +751,11 @@ def draw(bike):
             bike.shock_shadow.constrain_length(bike.shock_shadow_starting_length - remove)
 
         bike.platform.solve()
-        js = bike.joints.values()
 
+        lengths[frame] = bike.platform.linkages['rear triangle weld'].current_length
+        print(min(lengths), max(lengths))
+
+        js = bike.joints.values()
         cached[frame] = [j.x for j in js], [j.y for j in js]
         return cached[frame]
 
