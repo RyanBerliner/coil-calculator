@@ -153,8 +153,8 @@ class Platform:
         #       enforce all the other parts to remain rigid
         #       i think this can be done by making the error for that particular
         #       linkage a multiple of what it would be (ie 0.5, 0.1, etc)
-        # while error > 0.00001:
-        while error > 2.5:
+        while error > 0.00001:
+        # while error > 2.5:
             assert count < 1_000_000, 'unable to solve platform'
 
             for link in self.linkages.values():
@@ -721,7 +721,13 @@ def draw(bike):
     ending_length = bike.shock_starting_length * (1 - max_percent)
     max_shock_diff = bike.shock_starting_length - ending_length
 
+    cached = [None] * 101
+
     def get_data(frame):
+        cache = cached[frame]
+        if cache is not None:
+            return cache
+
         remove = (max_shock_diff * (frame / frames))
         bike.shock.constrain_length(bike.shock_starting_length - remove)
 
@@ -731,7 +737,8 @@ def draw(bike):
         bike.platform.solve()
         js = bike.joints.values()
 
-        return [j.x for j in js], [j.y for j in js]
+        cached[frame] = [j.x for j in js], [j.y for j in js]
+        return cached[frame]
 
     plot = ax.plot(*get_data(0), 'o')[0]
 
