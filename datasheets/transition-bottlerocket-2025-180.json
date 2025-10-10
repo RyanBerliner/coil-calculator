@@ -1,0 +1,109 @@
+{
+  "make": "Transition",
+  "model": "Bottlerocket 180",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "SM",
+  "size_end": "XL",
+  "wheel_travel": 180,
+  "stroke": 70.0,
+  "eyetoeye": 225,
+  "urls": [
+    "https://web.archive.org/web/20251010011352/https://www.transitionbikes.com/Bikes/Bottlerocket"
+  ],
+  "kinematics": {
+    "img": "https://www.transitionbikes.com/images/C-BR-SC_Snowstorm.avif",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 307,
+        "y": 345
+      },
+      {
+        "name": "chainstay left",
+        "x": 173,
+        "y": 370
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 148,
+        "y": 365
+      },
+      {
+        "name": "triangle left",
+        "x": 292,
+        "y": 276
+      },
+      {
+        "name": "triangle bottom",
+        "is_fixed": true,
+        "x": 320,
+        "y": 286
+      },
+      {
+        "name": "shock top",
+        "x": 340,
+        "y": 269
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 336,
+        "y": 350
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "little chainstay",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "triangle left",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "triangle left",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "triangle top",
+        "j1": "triangle left",
+        "j2": "shock top"
+      },
+      {
+        "name": "triangle left",
+        "j1": "triangle left",
+        "j2": "triangle bottom"
+      },
+      {
+        "name": "triangle right",
+        "j1": "shock top",
+        "j2": "triangle bottom"
+      }
+    ]
+  },
+  "curve": [
+    1.2224478466316349,
+    1.1182866213717697,
+    1.0271689139082232,
+    0.9565819935858151,
+    0.9044203938186988,
+    0.8739111346286443
+  ]
+}
