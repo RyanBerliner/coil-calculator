@@ -271,6 +271,14 @@ button span:last-child {
   cursor: row-resize;
 }
 
+.disclaimer {
+  margin-top: 2rem;
+  text-align: justify;
+  display: block;
+  color: #777;
+  line-height: 1.5;
+}
+
 @media (max-width: 800px) {
   body {
     grid-template-areas:
