@@ -1,0 +1,120 @@
+{
+  "make": "Commencal",
+  "model": "Meta V5",
+  "year_start": 2024,
+  "year_end": 2025,
+  "size_start": "SM",
+  "size_end": "XL",
+  "wheel_travel": 150,
+  "stroke": 55.0,
+  "eyetoeye": 210,
+  "urls": [
+    "https://web.archive.org/web/20251011214019/https://www.commencal.com/us/en/BT4MTRV5SGEU3.html"
+  ],
+  "kinematics": {
+    "img": "https://www.commencal.com/dw/image/v2/BFNN_PRD/on/demandware.static/-/Library-Sites-commencal-shared-library/default/dwd858a700/images/Landing/meta-sx-v5/metasxv5-signature.jpg",
+    "joints": [
+      {
+        "name": "bottom link right",
+        "x": 306,
+        "y": 365
+      },
+      {
+        "name": "bottom link left",
+        "is_fixed": true,
+        "x": 292,
+        "y": 367
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 143,
+        "y": 394
+      },
+      {
+        "name": "top link bottom",
+        "is_fixed": true,
+        "x": 303,
+        "y": 329
+      },
+      {
+        "name": "top link left",
+        "x": 285,
+        "y": 314
+      },
+      {
+        "name": "top link right",
+        "x": 296,
+        "y": 309
+      },
+      {
+        "name": "shock left",
+        "x": 305,
+        "y": 300
+      },
+      {
+        "name": "shock right",
+        "is_fixed": true,
+        "x": 367,
+        "y": 255
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock left",
+        "j2": "shock right"
+      },
+      {
+        "name": "shock shadow",
+        "is_shock_shadow": true,
+        "j1": "top link left",
+        "j2": "shock right"
+      },
+      {
+        "name": "bottom link",
+        "j1": "bottom link right",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "chainstay",
+        "j1": "bottom link right",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay",
+        "j1": "top link right",
+        "j2": "axle"
+      },
+      {
+        "name": "rear triangle weld",
+        "j1": "top link right",
+        "j2": "bottom link right"
+      },
+      {
+        "name": "top link right",
+        "j1": "top link right",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "top link top",
+        "j1": "top link right",
+        "j2": "top link left"
+      },
+      {
+        "name": "top link left",
+        "j1": "top link bottom",
+        "j2": "top link left"
+      }
+    ]
+  },
+  "curve": [
+    1.0847025373671282,
+    1.0512504009673644,
+    1.012314317797012,
+    0.973456249282843,
+    0.9467573668246847,
+    0.9681364277880523
+  ]
+}
