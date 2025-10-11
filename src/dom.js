@@ -143,7 +143,8 @@ function updateResults() {
       const value = document.createElement('span');
       const [start, end] = [b[`${name}_start`], b[`${name}_end`]];
 
-      if (start === end) {
+      // make an exception to just show the first year
+      if (start === end || name == 'year') {
         value.innerText = start;
       } else {
         value.innerText = `${start}-${end}`;
