@@ -1,0 +1,154 @@
+{
+  "make": "Commencal",
+  "model": "Supreme DH V5",
+  "year_start": 2025,
+  "year_end": 2026,
+  "size_start": "SM",
+  "size_end": "XL",
+  "wheel_travel": 220,
+  "stroke": 75.0,
+  "eyetoeye": 250,
+  "urls": [
+    "https://web.archive.org/web/20251011160002/https://www.commencal.com/us/en/commencal-supreme-dh-v5-signature-pure-white-2026-downhill-bike-united-states/BT5SUPV5SGEU1.html"
+  ],
+  "kinematics": {
+    "img": "https://www.commencal.com/on/demandware.static/-/Sites-commencal-master/default/dw1dbdf151/images/FT4SUPV52.jpg",
+    "joints": [
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 326,
+        "y": 454
+      },
+      {
+        "name": "bottom link left",
+        "x": 308,
+        "y": 486
+      },
+      {
+        "name": "chainstay left",
+        "x": 104,
+        "y": 475
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 74,
+        "y": 473
+      },
+      {
+        "name": "upper link right",
+        "is_fixed": true,
+        "x": 359,
+        "y": 372
+      },
+      {
+        "name": "upper link left",
+        "x": 329,
+        "y": 361
+      },
+      {
+        "name": "shock top",
+        "x": 393,
+        "y": 354
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 363,
+        "y": 490
+      },
+      {
+        "name": "vert bottom",
+        "x": 303,
+        "y": 468
+      },
+      {
+        "name": "vert top",
+        "x": 339,
+        "y": 389
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock bottom",
+        "j2": "shock top"
+      },
+      {
+        "name": "bottom link bottom",
+        "j1": "bottom link left",
+        "j2": "bottom link right"
+      },
+      {
+        "name": "bottom link left",
+        "j1": "bottom link left",
+        "j2": "vert bottom"
+      },
+      {
+        "name": "bottom link right",
+        "j1": "bottom link right",
+        "j2": "vert bottom"
+      },
+      {
+        "name": "upper link",
+        "j1": "upper link left",
+        "j2": "upper link right"
+      },
+      {
+        "name": "chainstay",
+        "j1": "bottom link left",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "mini chainstay",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "axle",
+        "j2": "upper link left"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "chainstay left",
+        "j2": "upper link left"
+      },
+      {
+        "name": "vert",
+        "j1": "vert bottom",
+        "j2": "vert top"
+      },
+      {
+        "name": "rocker left",
+        "j1": "vert top",
+        "j2": "upper link right"
+      },
+      {
+        "name": "rocker right",
+        "j1": "shock top",
+        "j2": "upper link right"
+      },
+      {
+        "name": "rocker bottom",
+        "j1": "shock top",
+        "j2": "vert top"
+      },
+      {
+        "name": "rocker upper weld",
+        "j1": "shock top",
+        "j2": "upper link left"
+      }
+    ]
+  },
+  "curve": [
+    1.145268426004941,
+    1.0980572301697646,
+    1.0262968188498909,
+    0.9642600744710933,
+    0.9195407158968201,
+    0.9028843850041787
+  ]
+}
