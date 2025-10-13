@@ -1,0 +1,109 @@
+{
+  "make": "Specialized",
+  "model": "Demo",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "S2",
+  "size_end": "S4",
+  "wheel_travel": 200,
+  "stroke": 75.0,
+  "eyetoeye": 225,
+  "urls": [
+    "https://web.archive.org/web/20251013013038/https://www.specialized.com/us/en/demo-race-frameset/p/4221386?color=5429255-4221386"
+  ],
+  "kinematics": {
+    "img": "https://assets.specialized.com/i/specialized/74525-70_DEMO-RACE-FRM-FLKSIL-GUN-BRSH_HERO-PDP?$scom-pdp-gallery-image$&fmt=webp",
+    "joints": [
+      {
+        "name": "frame bottom",
+        "is_fixed": true,
+        "x": 398,
+        "y": 419
+      },
+      {
+        "name": "shock left",
+        "x": 327,
+        "y": 412
+      },
+      {
+        "name": "chainstay left",
+        "x": 129,
+        "y": 451
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 101,
+        "y": 437
+      },
+      {
+        "name": "top link left",
+        "x": 311,
+        "y": 315
+      },
+      {
+        "name": "top link right",
+        "is_fixed": true,
+        "x": 392,
+        "y": 332
+      },
+      {
+        "name": "shock right",
+        "is_fixed": true,
+        "x": 443,
+        "y": 364
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock left",
+        "j2": "shock right"
+      },
+      {
+        "name": "chainstay",
+        "j1": "frame bottom",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "mini chainstay",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "axle",
+        "j2": "top link left"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "chainstay left",
+        "j2": "top link left"
+      },
+      {
+        "name": "top link",
+        "j1": "top link right",
+        "j2": "top link left"
+      },
+      {
+        "name": "bottom link",
+        "j1": "frame bottom",
+        "j2": "shock left"
+      },
+      {
+        "name": "vertical",
+        "j1": "top link left",
+        "j2": "shock left"
+      }
+    ]
+  },
+  "curve": [
+    1.280331063267657,
+    1.1601842181969777,
+    1.0562545933355425,
+    0.9631110215375764,
+    0.8807024695521866,
+    0.7973930520934274
+  ]
+}
