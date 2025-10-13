@@ -1,0 +1,109 @@
+{
+  "make": "Santa Cruz",
+  "model": "V10",
+  "year_start": 2024,
+  "year_end": 2026,
+  "size_start": "SM",
+  "size_end": "XL",
+  "wheel_travel": 208,
+  "stroke": 75.0,
+  "eyetoeye": 250,
+  "urls": [
+    "https://web.archive.org/web/20251013010151/https://www.santacruzbicycles.com/collections/v10/products/v-10-frame-2025?variant=50294265315610"
+  ],
+  "kinematics": {
+    "img": "https://www.santacruzbicycles.com/cdn/shop/files/MY25_V10_CC_Frame_GlossKelpGreen_3c80f8ed-5025-4940-bafa-824794662287.png?crop=region&crop_height=3513&crop_left=90&crop_top=386&crop_width=5419&v=1739997197&width=1388",
+    "joints": [
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 298,
+        "y": 409
+      },
+      {
+        "name": "bottom link bottom",
+        "x": 273,
+        "y": 426
+      },
+      {
+        "name": "shock left",
+        "x": 279,
+        "y": 387
+      },
+      {
+        "name": "shock right",
+        "is_fixed": true,
+        "x": 353,
+        "y": 347
+      },
+      {
+        "name": "top link top",
+        "is_fixed": true,
+        "x": 304,
+        "y": 316
+      },
+      {
+        "name": "top link bottom",
+        "x": 310,
+        "y": 355
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 144,
+        "y": 425
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock left",
+        "j2": "shock right"
+      },
+      {
+        "name": "bottom link top",
+        "j1": "shock left",
+        "j2": "bottom link right"
+      },
+      {
+        "name": "bottom link bottom",
+        "j1": "bottom link bottom",
+        "j2": "bottom link right"
+      },
+      {
+        "name": "bottom link left",
+        "j1": "bottom link bottom",
+        "j2": "shock left"
+      },
+      {
+        "name": "chainstay",
+        "j1": "bottom link bottom",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay",
+        "j1": "top link bottom",
+        "j2": "axle"
+      },
+      {
+        "name": "rear triangle weld",
+        "j1": "top link bottom",
+        "j2": "bottom link bottom"
+      },
+      {
+        "name": "top link",
+        "j1": "top link bottom",
+        "j2": "top link top"
+      }
+    ]
+  },
+  "curve": [
+    1.2048294270654607,
+    1.1028135396638055,
+    1.0279241359020423,
+    0.9612650162407343,
+    0.910606495729912,
+    0.8819393318959345
+  ]
+}
