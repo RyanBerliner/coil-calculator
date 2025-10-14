@@ -88,8 +88,19 @@ size_map_alt1 = [
     ('S6', 'Size 6'),
 ]
 
+size_map_alt2 = [
+    ('S/M', 'Small'),
+    ('M/L', 'Medium'),
+    ('L/XL', 'Large'),
+    ('S6', 'Size 6'),
+]
+
 def get_size_map(s):
-    maps = [size_map_traditional, size_map_alt1]
+    maps = [
+        size_map_traditional,
+        size_map_alt1,
+        size_map_alt2
+    ]
 
     for size_map in maps:
         sizes = [size[0] for size in size_map]

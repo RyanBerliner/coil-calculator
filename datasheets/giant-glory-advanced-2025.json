@@ -1,0 +1,103 @@
+{
+  "make": "Giant",
+  "model": "Glory Advanced",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "S/M",
+  "size_end": "L/XL",
+  "wheel_travel": 200,
+  "stroke": 75.0,
+  "eyetoeye": 225,
+  "urls": [
+    "asdf"
+  ],
+  "kinematics": {
+    "img": "https://images2.giant-bicycles.com/b_white%2Cc_pad%2Ch_850%2Cq_80/eba4rownjiezzw1srvcc/MY25GloryAdvanced_ColorABlackLava_Mercury.jpg",
+    "joints": [
+      {
+        "name": "rear triangle bottom",
+        "x": 281,
+        "y": 418
+      },
+      {
+        "name": "rear triangle top",
+        "x": 265,
+        "y": 329
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 140,
+        "y": 427
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 316,
+        "y": 409
+      },
+      {
+        "name": "top link bottom",
+        "is_fixed": true,
+        "x": 299,
+        "y": 348
+      },
+      {
+        "name": "shock top",
+        "x": 323,
+        "y": 333
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock bottom",
+        "j2": "shock top"
+      },
+      {
+        "name": "rear triangle bottom",
+        "j1": "axle",
+        "j2": "rear triangle bottom"
+      },
+      {
+        "name": "rear triangle top",
+        "j1": "axle",
+        "j2": "rear triangle top"
+      },
+      {
+        "name": "rear triangle right",
+        "j1": "rear triangle bottom",
+        "j2": "rear triangle top"
+      },
+      {
+        "name": "top link top",
+        "j1": "rear triangle top",
+        "j2": "shock top"
+      },
+      {
+        "name": "top link left",
+        "j1": "rear triangle top",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "top link right",
+        "j1": "shock top",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "bottom link",
+        "j1": "rear triangle bottom",
+        "j2": "shock bottom"
+      }
+    ]
+  },
+  "curve": [
+    1.2225821840513829,
+    1.1046692021835385,
+    1.0127284412858455,
+    0.9494125655729021,
+    0.9147792833447879,
+    0.9059499277162807
+  ]
+}
