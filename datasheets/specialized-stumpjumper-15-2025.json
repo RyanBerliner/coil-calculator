@@ -1,0 +1,125 @@
+{
+  "make": "Specialized",
+  "model": "Stumpjumper 15",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "S2",
+  "size_end": "S6",
+  "wheel_travel": 145,
+  "stroke": 55.0,
+  "eyetoeye": 210,
+  "urls": [
+    "https://web.archive.org/web/20251014012648/https://www.specialized.com/us/en/s-works-stumpjumper-15-ltd-fox-dhx-live-valve-neo/p/4278252?color=5444076-4278252"
+  ],
+  "kinematics": {
+    "img": "https://assets.specialized.com/i/specialized/93325-02_SJ-15-SW-LTD-FJDMET-DLMMET_HERO-PDP?$scom-pdp-gallery-image$&fmt=webp",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 307,
+        "y": 333
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 168,
+        "y": 341
+      },
+      {
+        "name": "chainstay left",
+        "x": 182,
+        "y": 343
+      },
+      {
+        "name": "link left",
+        "x": 290,
+        "y": 280
+      },
+      {
+        "name": "link right",
+        "is_fixed": true,
+        "x": 318,
+        "y": 285
+      },
+      {
+        "name": "link middle",
+        "x": 297,
+        "y": 283
+      },
+      {
+        "name": "shock left",
+        "x": 319,
+        "y": 264
+      },
+      {
+        "name": "shock right",
+        "is_fixed": true,
+        "x": 370,
+        "y": 223
+      }
+    ],
+    "links": [
+      {
+        "name": "yoke",
+        "j1": "link middle",
+        "j2": "shock left"
+      },
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock left",
+        "j2": "shock right"
+      },
+      {
+        "name": "shock shadow",
+        "is_shock_shadow": true,
+        "j1": "link middle",
+        "j2": "shock right"
+      },
+      {
+        "name": "link long",
+        "j1": "link left",
+        "j2": "link right"
+      },
+      {
+        "name": "link left",
+        "j1": "link left",
+        "j2": "link middle"
+      },
+      {
+        "name": "link right",
+        "j1": "link right",
+        "j2": "link middle"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "chainstay mini",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "chainstay left",
+        "j2": "link left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "link left",
+        "j2": "axle"
+      }
+    ]
+  },
+  "curve": [
+    1.1104366215468289,
+    1.0671815556989244,
+    1.017051765573934,
+    0.9751614337535986,
+    0.9420453334988067,
+    0.9217378405472765
+  ]
+}

@@ -83,6 +83,8 @@ size_map_alt1 = [
     ('S2', 'Size 2'),
     ('S3', 'Size 3'),
     ('S4', 'Size 4'),
+    ('S5', 'Size 5'),
+    ('S6', 'Size 6'),
 ]
 
 def get_size_map(s):
