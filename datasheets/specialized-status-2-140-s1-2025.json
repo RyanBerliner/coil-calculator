@@ -1,0 +1,125 @@
+{
+  "make": "Specialized",
+  "model": "Status 2 140",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "S1",
+  "size_end": "S1",
+  "wheel_travel": 140,
+  "stroke": 50.0,
+  "eyetoeye": 210,
+  "urls": [
+    "https://web.archive.org/web/20251014015142/https://www.specialized.com/us/en/status-2-140/p/221251?color=363309-221251"
+  ],
+  "kinematics": {
+    "img": "https://assets.specialized.com/i/specialized/93723-72_STATUS-140-2-CLGRY-DSRTRS-BLK_HERO-PDP?$scom-pdp-gallery-image$&fmt=webp",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 301,
+        "y": 327
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 163,
+        "y": 347
+      },
+      {
+        "name": "chainstay left",
+        "x": 179,
+        "y": 349
+      },
+      {
+        "name": "link left",
+        "x": 288,
+        "y": 282
+      },
+      {
+        "name": "link right",
+        "is_fixed": true,
+        "x": 319,
+        "y": 282
+      },
+      {
+        "name": "link middle",
+        "x": 296,
+        "y": 278
+      },
+      {
+        "name": "shock left",
+        "x": 324,
+        "y": 263
+      },
+      {
+        "name": "shock right",
+        "is_fixed": true,
+        "x": 385,
+        "y": 233
+      }
+    ],
+    "links": [
+      {
+        "name": "yoke",
+        "j1": "link middle",
+        "j2": "shock left"
+      },
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock left",
+        "j2": "shock right"
+      },
+      {
+        "name": "shock shadow",
+        "is_shock_shadow": true,
+        "j1": "link middle",
+        "j2": "shock right"
+      },
+      {
+        "name": "link long",
+        "j1": "link left",
+        "j2": "link right"
+      },
+      {
+        "name": "link left",
+        "j1": "link left",
+        "j2": "link middle"
+      },
+      {
+        "name": "link right",
+        "j1": "link right",
+        "j2": "link middle"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "chainstay mini",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "chainstay left",
+        "j2": "link left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "link left",
+        "j2": "axle"
+      }
+    ]
+  },
+  "curve": [
+    1.1362392195616982,
+    1.0894877289469052,
+    1.0300818940544136,
+    0.9744366895021311,
+    0.9257585404731622,
+    0.8851696862212989
+  ]
+}

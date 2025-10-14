@@ -79,6 +79,7 @@ size_map_traditional = [
 ]
 
 size_map_alt1 = [
+    ('S0', 'Size 0'),
     ('S1', 'Size 1'),
     ('S2', 'Size 2'),
     ('S3', 'Size 3'),
