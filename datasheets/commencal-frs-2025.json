@@ -1,0 +1,109 @@
+{
+  "make": "Commencal",
+  "model": "FRS",
+  "year_start": 2025,
+  "year_end": 2026,
+  "size_start": "SM",
+  "size_end": "XL",
+  "wheel_travel": 200,
+  "stroke": 75.0,
+  "eyetoeye": 250,
+  "urls": [
+    "https://web.archive.org/web/20251014004452/https://www.commencal.com/us/en/commencal-frs-signature-pure-white-2026-downhill-freeride-bike-usa/BT5FRSSGEU1.html"
+  ],
+  "kinematics": {
+    "img": "https://www.commencal.com/on/demandware.static/-/Sites-commencal-master/default/dwd2712e2a/images/BT5FRSSGEU1_01.jpg",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 290,
+        "y": 360
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 145,
+        "y": 388
+      },
+      {
+        "name": "seatstay left",
+        "x": 154,
+        "y": 374
+      },
+      {
+        "name": "link left",
+        "x": 295,
+        "y": 333
+      },
+      {
+        "name": "link right",
+        "is_fixed": true,
+        "x": 344,
+        "y": 332
+      },
+      {
+        "name": "shock left",
+        "x": 306,
+        "y": 322
+      },
+      {
+        "name": "shock right",
+        "is_fixed": true,
+        "x": 382,
+        "y": 281
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock left",
+        "j2": "shock right"
+      },
+      {
+        "name": "link bottom",
+        "j1": "link left",
+        "j2": "link right"
+      },
+      {
+        "name": "link left",
+        "j1": "link left",
+        "j2": "shock left"
+      },
+      {
+        "name": "link right",
+        "j1": "link right",
+        "j2": "shock left"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay",
+        "j1": "link left",
+        "j2": "seatstay left"
+      },
+      {
+        "name": "seatstay mini",
+        "j1": "axle",
+        "j2": "seatstay left"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "axle",
+        "j2": "link left"
+      }
+    ]
+  },
+  "curve": [
+    1.3041692180108577,
+    1.17476394215991,
+    1.0555710179860491,
+    0.9579717106636216,
+    0.873956254485164,
+    0.7937382432176415
+  ]
+}
