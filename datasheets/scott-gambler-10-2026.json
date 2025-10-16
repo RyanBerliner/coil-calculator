@@ -1,0 +1,154 @@
+{
+  "make": "Scott",
+  "model": "Gambler 10",
+  "year_start": 2026,
+  "year_end": 2026,
+  "size_start": "MD",
+  "size_end": "XL",
+  "wheel_travel": 210,
+  "stroke": 75.0,
+  "eyetoeye": 250,
+  "urls": [
+    "https://web.archive.org/web/20251016015104/https://www.scott-sports.com/us/en/product/scott-gambler-10-bike?article=4255828316008"
+  ],
+  "kinematics": {
+    "img": "https://assets.scott-sports.com/pages/gambler/gambler-animation-kinematics.mp4",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "x": 367,
+        "y": 400
+      },
+      {
+        "name": "chainstay left",
+        "x": 142,
+        "y": 374
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 91,
+        "y": 368
+      },
+      {
+        "name": "top link left",
+        "x": 334,
+        "y": 237
+      },
+      {
+        "name": "top link right",
+        "is_fixed": true,
+        "x": 413,
+        "y": 243
+      },
+      {
+        "name": "vert link top",
+        "x": 377,
+        "y": 263
+      },
+      {
+        "name": "vert link bottom",
+        "x": 353,
+        "y": 371
+      },
+      {
+        "name": "shock left",
+        "x": 352,
+        "y": 330
+      },
+      {
+        "name": "shock right",
+        "is_fixed": true,
+        "x": 507,
+        "y": 287
+      },
+      {
+        "name": "bb",
+        "is_fixed": true,
+        "x": 386,
+        "y": 359
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock left",
+        "j2": "shock right"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "axle",
+        "j2": "top link left"
+      },
+      {
+        "name": "seatstay mini",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "top link left",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "top link top",
+        "j1": "top link left",
+        "j2": "top link right"
+      },
+      {
+        "name": "top link left",
+        "j1": "top link left",
+        "j2": "vert link top"
+      },
+      {
+        "name": "top link right",
+        "j1": "vert link top",
+        "j2": "top link right"
+      },
+      {
+        "name": "vert",
+        "j1": "vert link top",
+        "j2": "vert link bottom"
+      },
+      {
+        "name": "chainstay bb link",
+        "j1": "bb",
+        "j2": "chainstay right"
+      },
+      {
+        "name": "vert link bottom bb link",
+        "j1": "bb",
+        "j2": "vert link bottom"
+      },
+      {
+        "name": "shock bb link",
+        "j1": "bb",
+        "j2": "shock left"
+      },
+      {
+        "name": "chainstay vert link bottom",
+        "j1": "chainstay right",
+        "j2": "vert link bottom"
+      },
+      {
+        "name": "vert link bottom shock left",
+        "j1": "vert link bottom",
+        "j2": "shock left"
+      }
+    ]
+  },
+  "curve": [
+    1.2047701870103593,
+    1.106479505970467,
+    1.0226215288747287,
+    0.9563925036528734,
+    0.9119739494982206,
+    0.8909185412232302
+  ]
+}
