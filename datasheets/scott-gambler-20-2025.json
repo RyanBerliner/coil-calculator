@@ -1,0 +1,109 @@
+{
+  "make": "Scott",
+  "model": "Gambler 20",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "SM",
+  "size_end": "XL",
+  "wheel_travel": 200,
+  "stroke": 75.0,
+  "eyetoeye": 225,
+  "urls": [
+    "https://web.archive.org/web/20251016012102/https://www.scott-sports.com/us/en/product/scott-gambler-20-bike?article=4250802308008"
+  ],
+  "kinematics": {
+    "img": "https://asset.scott-sports.com/fit-in/2000x2000/425/4250802308_2184353_1.png?signature=be0d1aa32ab6dc3d68200e8351e99dc0581a4e24f84ab2dc295c30d916502a9d",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 286,
+        "y": 508
+      },
+      {
+        "name": "chainstay left",
+        "x": 168,
+        "y": 539
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 141,
+        "y": 536
+      },
+      {
+        "name": "triangle left",
+        "x": 267,
+        "y": 454
+      },
+      {
+        "name": "triangle bottom",
+        "is_fixed": true,
+        "x": 301,
+        "y": 453
+      },
+      {
+        "name": "shock top",
+        "x": 319,
+        "y": 436
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 308,
+        "y": 511
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "little chainstay",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "triangle left",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "triangle left",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "triangle top",
+        "j1": "triangle left",
+        "j2": "shock top"
+      },
+      {
+        "name": "triangle left",
+        "j1": "triangle left",
+        "j2": "triangle bottom"
+      },
+      {
+        "name": "triangle right",
+        "j1": "shock top",
+        "j2": "triangle bottom"
+      }
+    ]
+  },
+  "curve": [
+    1.2073609664927791,
+    1.1254514379897456,
+    1.0358466893204434,
+    0.960202440439842,
+    0.9008020720155574,
+    0.8615065461436847
+  ]
+}
