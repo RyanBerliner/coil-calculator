@@ -1,6 +1,6 @@
 class LeverageCurve {
   HEIGHT = 200;
-  MAX_LEVERAGE_MULTIPLIER = 0.4;  // ex: 0.2 is +/-20%
+  MAX_LEVERAGE_MULTIPLIER = 0.5;  // ex: 0.2 is +/-20%
 
   constructor(node, config) {
     this._config = config;

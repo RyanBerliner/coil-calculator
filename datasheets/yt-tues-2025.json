@@ -1,0 +1,109 @@
+{
+  "make": "YT",
+  "model": "Tues",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "SM",
+  "size_end": "XXL",
+  "wheel_travel": 200,
+  "stroke": 75.0,
+  "eyetoeye": 250,
+  "urls": [
+    "https://web.archive.org/web/20251016004520/https://www.yt-industries.com/en-us/Bikes/Downhill-Tues/CORE-4/"
+  ],
+  "kinematics": {
+    "img": "https://www.yt-industries.com/thumbnail/01/c2/f3/1720601067/TUES-MK4-29-CF-Core4-ShellWhite_SideRlZUv1jX3jFmg.png_1280x1280.png?ts=1729861622",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 301,
+        "y": 354
+      },
+      {
+        "name": "chainstay left",
+        "x": 203,
+        "y": 370
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 175,
+        "y": 364
+      },
+      {
+        "name": "seatstay right",
+        "x": 324,
+        "y": 323
+      },
+      {
+        "name": "top link right",
+        "is_fixed": true,
+        "x": 356,
+        "y": 329
+      },
+      {
+        "name": "shock left",
+        "x": 323,
+        "y": 347
+      },
+      {
+        "name": "shock right",
+        "is_fixed": true,
+        "x": 366,
+        "y": 289
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock left",
+        "j2": "shock right"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay left",
+        "j2": "chainstay right"
+      },
+      {
+        "name": "seatstay",
+        "j1": "axle",
+        "j2": "seatstay right"
+      },
+      {
+        "name": "seatstay mini",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "chainstay left",
+        "j2": "seatstay right"
+      },
+      {
+        "name": "shock mount",
+        "j1": "seatstay right",
+        "j2": "shock left"
+      },
+      {
+        "name": "shock mount weld",
+        "j1": "shock left",
+        "j2": "axle"
+      },
+      {
+        "name": "link",
+        "j1": "seatstay right",
+        "j2": "top link right"
+      }
+    ]
+  },
+  "curve": [
+    1.445810020974898,
+    1.20676807455952,
+    1.0387822702606089,
+    0.9334188115224848,
+    0.856451003748809,
+    0.8013998927328169
+  ]
+}
