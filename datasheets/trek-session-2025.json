@@ -1,0 +1,94 @@
+{
+  "make": "Trek",
+  "model": "Session",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "R1",
+  "size_end": "R3",
+  "wheel_travel": 200,
+  "stroke": 72.5,
+  "eyetoeye": 250,
+  "urls": [
+    "https://web.archive.org/web/20251016010346/https://www.trekbikes.com/us/en_US/bikes/mountain-bikes/downhill-mountain-bikes/session/f/F351/session-8-29-gx/61330/5342069/"
+  ],
+  "kinematics": {
+    "img": "https://res.cloudinary.com/trekbikes/image/upload/b_rgb:FFFFFF,c_pad,dpr_1.0,f_auto,h_1600,q_auto,w_2000/c_pad,h_1600,w_2000/Session829-26-61330-A-Primary?pgw=1&pgwact=1",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 286,
+        "y": 477
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 141,
+        "y": 508
+      },
+      {
+        "name": "seatstay right",
+        "x": 283,
+        "y": 415
+      },
+      {
+        "name": "top link bottom",
+        "is_fixed": true,
+        "x": 316,
+        "y": 418
+      },
+      {
+        "name": "shock top",
+        "x": 337,
+        "y": 403
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 316,
+        "y": 489
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay",
+        "j1": "seatstay right",
+        "j2": "axle"
+      },
+      {
+        "name": "top link top",
+        "j1": "seatstay right",
+        "j2": "shock top"
+      },
+      {
+        "name": "top link left",
+        "j1": "seatstay right",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "top link right",
+        "j1": "shock top",
+        "j2": "top link bottom"
+      }
+    ]
+  },
+  "curve": [
+    1.2263188125563924,
+    1.1285459424553685,
+    1.0341481244738677,
+    0.9577327688638378,
+    0.8986225000084435,
+    0.8587327448782481
+  ]
+}
