@@ -1,0 +1,118 @@
+{
+  "make": "Propaine",
+  "model": "Tyee CF",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "XS",
+  "size_end": "XL",
+  "wheel_travel": 160,
+  "stroke": 55,
+  "eyetoeye": 210,
+  "urls": [
+    ""
+  ],
+  "kinematics": {
+    "img": "https://media-na.propain-bikes.com/wp-content/uploads/sites/4/2025/05/21005241/PROPAIN-Tyee-6-1-CF-pigeon-blue-us-signature-spec-2-Side-1920x1280.png",
+    "joints": [
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 340,
+        "y": 376
+      },
+      {
+        "name": "shock bottom",
+        "x": 322,
+        "y": 368
+      },
+      {
+        "name": "bottom link left",
+        "x": 316,
+        "y": 380
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 165,
+        "y": 383
+      },
+      {
+        "name": "top link bottom",
+        "x": 337,
+        "y": 322
+      },
+      {
+        "name": "top link top",
+        "is_fixed": true,
+        "x": 335,
+        "y": 297
+      },
+      {
+        "name": "shock top",
+        "x": 317,
+        "y": 302
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "bottom link bottom",
+        "j1": "bottom link right",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "bottom link right",
+        "j1": "bottom link right",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "bottom link left",
+        "j1": "bottom link left",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "axle",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "axle",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "triangle weld",
+        "j1": "top link bottom",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "top link vert",
+        "j1": "top link bottom",
+        "j2": "top link top"
+      },
+      {
+        "name": "top link top",
+        "j1": "top link top",
+        "j2": "shock top"
+      },
+      {
+        "name": "top link weld",
+        "j1": "top link bottom",
+        "j2": "shock top"
+      }
+    ]
+  },
+  "curve": [
+    1.1029077498982398,
+    1.0761371963462916,
+    1.0423504016965592,
+    0.9988414243814743,
+    0.9414574492767659,
+    0.8407737839617374
+  ]
+}
