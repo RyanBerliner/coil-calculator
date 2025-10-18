@@ -1,0 +1,109 @@
+{
+  "make": "Zink",
+  "model": "Vacay",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "SM",
+  "size_end": "LG",
+  "wheel_travel": 150,
+  "stroke": 65.0,
+  "eyetoeye": 230,
+  "urls": [
+    "https://web.archive.org/web/20251018203145/https://zink.bike/collections/bikes/products/vacay-al"
+  ],
+  "kinematics": {
+    "img": "https://zink.bike/cdn/shop/files/polished_profile.png?crop=center&height=1001&v=1734470930&width=1500",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 334,
+        "y": 444
+      },
+      {
+        "name": "chainstay left",
+        "x": 160,
+        "y": 470
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 134,
+        "y": 457
+      },
+      {
+        "name": "top link left",
+        "x": 330,
+        "y": 368
+      },
+      {
+        "name": "top link right",
+        "is_fixed": true,
+        "x": 367,
+        "y": 373
+      },
+      {
+        "name": "shock left",
+        "x": 366,
+        "y": 342
+      },
+      {
+        "name": "shock right",
+        "is_fixed": true,
+        "x": 470,
+        "y": 299
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock left",
+        "j2": "shock right"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay left",
+        "j1": "axle",
+        "j2": "top link left"
+      },
+      {
+        "name": "seatstay right",
+        "j1": "top link left",
+        "j2": "shock left"
+      },
+      {
+        "name": "seatstay long",
+        "j1": "axle",
+        "j2": "shock left"
+      },
+      {
+        "name": "chainstay short",
+        "j1": "chainstay left",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "chainstay left",
+        "j2": "top link left"
+      },
+      {
+        "name": "top link",
+        "j1": "top link left",
+        "j2": "top link right"
+      }
+    ]
+  },
+  "curve": [
+    1.3621328256951621,
+    1.1837742546142167,
+    1.0468664647733434,
+    0.9435971780441037,
+    0.8650389602303824,
+    0.8101761755638491
+  ]
+}
