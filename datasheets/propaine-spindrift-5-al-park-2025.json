@@ -1,0 +1,118 @@
+{
+  "make": "Propaine",
+  "model": "Spindrift 5 AL Park",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "SM",
+  "size_end": "XL",
+  "wheel_travel": 180,
+  "stroke": 65,
+  "eyetoeye": 230,
+  "urls": [
+    ""
+  ],
+  "kinematics": {
+    "img": "https://media-na.propain-bikes.com/wp-content/uploads/sites/4/2024/08/20051526/01_PP_Spindrift_Alu_DoubleCrown-eignerframes_9382_ps.jpg",
+    "joints": [
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 353,
+        "y": 365
+      },
+      {
+        "name": "shock bottom",
+        "x": 339,
+        "y": 360
+      },
+      {
+        "name": "bottom link left",
+        "x": 334,
+        "y": 367
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 219,
+        "y": 376
+      },
+      {
+        "name": "top link bottom",
+        "x": 349,
+        "y": 320
+      },
+      {
+        "name": "top link top",
+        "is_fixed": true,
+        "x": 349,
+        "y": 301
+      },
+      {
+        "name": "shock top",
+        "x": 335,
+        "y": 304
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "bottom link bottom",
+        "j1": "bottom link right",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "bottom link right",
+        "j1": "bottom link right",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "bottom link left",
+        "j1": "bottom link left",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "axle",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "axle",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "triangle weld",
+        "j1": "top link bottom",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "top link vert",
+        "j1": "top link bottom",
+        "j2": "top link top"
+      },
+      {
+        "name": "top link top",
+        "j1": "top link top",
+        "j2": "shock top"
+      },
+      {
+        "name": "top link weld",
+        "j1": "top link bottom",
+        "j2": "shock top"
+      }
+    ]
+  },
+  "curve": [
+    1.1547565874192813,
+    1.117519369986146,
+    1.0726089211707082,
+    1.0131997000278474,
+    0.9226941188436227,
+    0.7472635817420676
+  ]
+}
