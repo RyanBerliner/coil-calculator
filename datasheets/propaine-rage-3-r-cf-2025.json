@@ -1,0 +1,118 @@
+{
+  "make": "Propaine",
+  "model": "Rage 3 R CF",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "MD",
+  "size_end": "XL",
+  "wheel_travel": 215,
+  "stroke": 75.0,
+  "eyetoeye": 225,
+  "urls": [
+    "https://web.archive.org/web/20251018193753/https://www.propain-bikes.com/us/product/bikes/downhill/rage-3-r-cf/"
+  ],
+  "kinematics": {
+    "img": "https://media-na.propain-bikes.com/wp-content/uploads/sites/4/2024/10/18032008/RAGE-Timeline-2024-2-1920x1243.png",
+    "joints": [
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 397,
+        "y": 396
+      },
+      {
+        "name": "shock bottom",
+        "x": 361,
+        "y": 379
+      },
+      {
+        "name": "bottom link left",
+        "x": 345,
+        "y": 395
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 147,
+        "y": 407
+      },
+      {
+        "name": "top link bottom",
+        "x": 385,
+        "y": 322
+      },
+      {
+        "name": "top link top",
+        "is_fixed": true,
+        "x": 393,
+        "y": 289
+      },
+      {
+        "name": "shock top",
+        "x": 371,
+        "y": 289
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "bottom link bottom",
+        "j1": "bottom link right",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "bottom link right",
+        "j1": "bottom link right",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "bottom link left",
+        "j1": "bottom link left",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "axle",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "axle",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "triangle weld",
+        "j1": "top link bottom",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "top link vert",
+        "j1": "top link bottom",
+        "j2": "top link top"
+      },
+      {
+        "name": "top link top",
+        "j1": "top link top",
+        "j2": "shock top"
+      },
+      {
+        "name": "top link weld",
+        "j1": "top link bottom",
+        "j2": "shock top"
+      }
+    ]
+  },
+  "curve": [
+    1.1816053271796036,
+    1.1207045282839447,
+    1.063199876336711,
+    0.9984600809433499,
+    0.9124339585547985,
+    0.7734166554674055
+  ]
+}
