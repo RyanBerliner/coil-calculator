@@ -1,0 +1,118 @@
+{
+  "make": "Propaine",
+  "model": "Spindrift 5 CF",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "SM",
+  "size_end": "XL",
+  "wheel_travel": 180,
+  "stroke": 65,
+  "eyetoeye": 230,
+  "urls": [
+    "https://web.archive.org/web/20251018194847/https://www.propain-bikes.com/us/product/bikes/freeride/spindrift-cf/"
+  ],
+  "kinematics": {
+    "img": "https://media-na.propain-bikes.com/wp-content/uploads/sites/4/2024/08/20014114/01_PP_Spindrift_CF-eignerframes_2051-1-scaled-1.jpg",
+    "joints": [
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 347,
+        "y": 373
+      },
+      {
+        "name": "shock bottom",
+        "x": 330,
+        "y": 365
+      },
+      {
+        "name": "bottom link left",
+        "x": 320,
+        "y": 375
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 178,
+        "y": 382
+      },
+      {
+        "name": "top link bottom",
+        "x": 338,
+        "y": 320
+      },
+      {
+        "name": "top link top",
+        "is_fixed": true,
+        "x": 337,
+        "y": 296
+      },
+      {
+        "name": "shock top",
+        "x": 319,
+        "y": 300
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "bottom link bottom",
+        "j1": "bottom link right",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "bottom link right",
+        "j1": "bottom link right",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "bottom link left",
+        "j1": "bottom link left",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "axle",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "axle",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "triangle weld",
+        "j1": "top link bottom",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "top link vert",
+        "j1": "top link bottom",
+        "j2": "top link top"
+      },
+      {
+        "name": "top link top",
+        "j1": "top link top",
+        "j2": "shock top"
+      },
+      {
+        "name": "top link weld",
+        "j1": "top link bottom",
+        "j2": "shock top"
+      }
+    ]
+  },
+  "curve": [
+    1.1412275332215904,
+    1.111632604851326,
+    1.0724683285996364,
+    1.0136687240421047,
+    0.9283102445186286,
+    0.7506072178126258
+  ]
+}
