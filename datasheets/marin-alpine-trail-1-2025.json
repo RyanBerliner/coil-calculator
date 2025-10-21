@@ -1,0 +1,109 @@
+{
+  "make": "Marin",
+  "model": "Alpine Trail 1",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "SM",
+  "size_end": "XL",
+  "wheel_travel": 160,
+  "stroke": 65.0,
+  "eyetoeye": 205,
+  "urls": [
+    "https://web.archive.org/web/20251021224328/https://www.marinbikes.com/bikes/2025-alpine-trail-1"
+  ],
+  "kinematics": {
+    "img": "https://s3.us-east-1.amazonaws.com/craft-marinbikes/images/2020/360-images/2024-Alpine-Trail-1/1.webp",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 298,
+        "y": 353
+      },
+      {
+        "name": "chainstay left",
+        "x": 188,
+        "y": 366
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 167,
+        "y": 363
+      },
+      {
+        "name": "triangle left",
+        "x": 284,
+        "y": 292
+      },
+      {
+        "name": "triangle bottom",
+        "is_fixed": true,
+        "x": 309,
+        "y": 302
+      },
+      {
+        "name": "shock top",
+        "x": 326,
+        "y": 288
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 325,
+        "y": 349
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "little chainstay",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "triangle left",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "triangle left",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "triangle top",
+        "j1": "triangle left",
+        "j2": "shock top"
+      },
+      {
+        "name": "triangle left",
+        "j1": "triangle left",
+        "j2": "triangle bottom"
+      },
+      {
+        "name": "triangle right",
+        "j1": "shock top",
+        "j2": "triangle bottom"
+      }
+    ]
+  },
+  "curve": [
+    1.1942796752259046,
+    1.1093539909234293,
+    1.0291545273196336,
+    0.9631948609566864,
+    0.9094034855100781,
+    0.8765666799353877
+  ]
+}
