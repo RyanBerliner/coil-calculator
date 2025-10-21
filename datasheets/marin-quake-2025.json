@@ -1,0 +1,109 @@
+{
+  "make": "Marin",
+  "model": "Quake",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "SM",
+  "size_end": "LG",
+  "wheel_travel": 180,
+  "stroke": 75.0,
+  "eyetoeye": 225,
+  "urls": [
+    "https://web.archive.org/web/20251021222907/https://www.marinbikes.com/bikes/2025-quake"
+  ],
+  "kinematics": {
+    "img": "https://s3.us-east-1.amazonaws.com/craft-marinbikes/images/2020/bikes/hero/_bikeHero2649Wide/QUAKE-FRM-KIT-25-P.jpg",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 320,
+        "y": 436
+      },
+      {
+        "name": "chainstay left",
+        "x": 107,
+        "y": 449
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 69,
+        "y": 441
+      },
+      {
+        "name": "triangle left",
+        "x": 288,
+        "y": 337
+      },
+      {
+        "name": "triangle bottom",
+        "is_fixed": true,
+        "x": 344,
+        "y": 353
+      },
+      {
+        "name": "shock top",
+        "x": 384,
+        "y": 328
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 349,
+        "y": 444
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "little chainstay",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "triangle left",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "triangle left",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "triangle top",
+        "j1": "triangle left",
+        "j2": "shock top"
+      },
+      {
+        "name": "triangle left",
+        "j1": "triangle left",
+        "j2": "triangle bottom"
+      },
+      {
+        "name": "triangle right",
+        "j1": "shock top",
+        "j2": "triangle bottom"
+      }
+    ]
+  },
+  "curve": [
+    1.260362631966932,
+    1.1519970176871557,
+    1.0516559885241248,
+    0.9612900944873115,
+    0.8820884304532595,
+    0.8191245259597637
+  ]
+}
