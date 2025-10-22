@@ -1,0 +1,109 @@
+{
+  "make": "Santa Cruz",
+  "model": "Nomad",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "SM",
+  "size_end": "XXL",
+  "wheel_travel": 170,
+  "stroke": 65.0,
+  "eyetoeye": 230,
+  "urls": [
+    "https://web.archive.org/web/20251022002309/https://www.santacruzbicycles.com/collections/nomad"
+  ],
+  "kinematics": {
+    "img": "https://www.santacruzbicycles.com/cdn/shop/files/MY25_Nomad_CC_FloatX2_FrameOnly_GlossLightTeal.png?crop=region&crop_height=3513&crop_left=90&crop_top=386&crop_width=5419&v=1732563673&width=1388",
+    "joints": [
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 303,
+        "y": 416
+      },
+      {
+        "name": "bottom link bottom",
+        "x": 282,
+        "y": 427
+      },
+      {
+        "name": "shock left",
+        "x": 292,
+        "y": 392
+      },
+      {
+        "name": "shock right",
+        "is_fixed": true,
+        "x": 366,
+        "y": 371
+      },
+      {
+        "name": "top link top",
+        "is_fixed": true,
+        "x": 307,
+        "y": 322
+      },
+      {
+        "name": "top link bottom",
+        "x": 318,
+        "y": 358
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 149,
+        "y": 425
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock left",
+        "j2": "shock right"
+      },
+      {
+        "name": "bottom link top",
+        "j1": "shock left",
+        "j2": "bottom link right"
+      },
+      {
+        "name": "bottom link bottom",
+        "j1": "bottom link bottom",
+        "j2": "bottom link right"
+      },
+      {
+        "name": "bottom link left",
+        "j1": "bottom link bottom",
+        "j2": "shock left"
+      },
+      {
+        "name": "chainstay",
+        "j1": "bottom link bottom",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay",
+        "j1": "top link bottom",
+        "j2": "axle"
+      },
+      {
+        "name": "rear triangle weld",
+        "j1": "top link bottom",
+        "j2": "bottom link bottom"
+      },
+      {
+        "name": "top link",
+        "j1": "top link bottom",
+        "j2": "top link top"
+      }
+    ]
+  },
+  "curve": [
+    1.183657031122417,
+    1.1132413019175,
+    1.041937042640265,
+    0.9751846711272129,
+    0.9102197739238147,
+    0.8396742169987363
+  ]
+}
