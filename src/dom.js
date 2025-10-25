@@ -573,17 +573,24 @@ function doPhysics(timestamp) {
 
   if (bufferDistance < 0.5) {
     cancelAnimationFrame(raf);
+    raf = null;
   }
 }
 
 function toggleAnimation() {
-  cancelAnimationFrame(raf);
-
-  if (document.visibilityState) {
-    last = 0;
-    raf = requestAnimationFrame(doPhysics);
-    velBuffer = Array.from({length:velBufferLength});
+  if (document.visibilityState !== 'visible') {
+    cancelAnimationFrame(raf);
+    raf = null;
+    return;
   }
+
+  if (raf) {
+    return;
+  }
+
+  last = 0;
+  raf = requestAnimationFrame(doPhysics);
+  velBuffer = Array.from({length:velBufferLength});
 }
 
 config.addChangeCallback(toggleAnimation, {runInitial: true});
