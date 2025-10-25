@@ -13,18 +13,26 @@ let acc = 0;
 let vel = 0;
 let pos = 0;
 
-setTimeout(() => simulating = true, 500);
+setTimeout(() => {
+  simulating = true;
+  toggleAnimation()
+}, 500);
 
-button.addEventListener('mousedown', () => simulating = false);
-button.addEventListener('touchstart', (event) => {
+function stopButtonPress(event) {
   event.preventDefault();
-  simulating = false
-});
-button.addEventListener('mouseup', () => simulating = true);
-button.addEventListener('touchend', () => {
+  simulating = false;
+  toggleAnimation();
+};
+button.addEventListener('mousedown', stopButtonPress);
+button.addEventListener('touchstart', stopButtonPress);
+
+function stopButtonLift(event) {
   event.preventDefault();
   simulating = true;
-});
+  toggleAnimation();
+};
+button.addEventListener('mouseup', stopButtonLift);
+button.addEventListener('touchend', stopButtonLift);
 
 function leverageOfShockAtStroke(s) {
   const { variables } = curve;
@@ -282,6 +290,7 @@ setCanvas();
 
 window.addEventListener('resize', () => {
   requestAnimationFrame(setCanvas);
+  toggleAnimation();
 });
 
 function drawShock(stroke, compression, showSag) {
@@ -507,6 +516,12 @@ function drawShock(stroke, compression, showSag) {
 let last = 0;
 let raf = null;
 
+// absolute value of last X velocities. we'll use this to know when we can
+// pause the physics sim
+const velBufferLength = 25;
+let velBufferIdx = 0;
+let velBuffer = Array.from({length:velBufferLength});
+
 function doPhysics(timestamp) {
   raf = requestAnimationFrame(doPhysics);
   // the > 100 is a safeguard in case our page visibility (focus/blur) doesnt
@@ -547,17 +562,30 @@ function doPhysics(timestamp) {
 
   context.clearRect(0, 0, cWidth, cHeight);
   drawShock(stroke, pos, simulating);
-}
 
-function toggleAnimation() {
-  if (document.visibilityState) {
-    last = 0;
-    raf = requestAnimationFrame(doPhysics);
-  } else {
+  // cancel the animation if we are *basically* not moving anymore
+  velBuffer[velBufferIdx % velBufferLength] = Math.abs(vel);
+  velBufferIdx += 1;
+
+  const bufferDistance = velBuffer.reduce((acc, val) => {
+    return acc + (val === undefined ? 1 : val);
+  }, 0);
+
+  if (bufferDistance < 0.5) {
     cancelAnimationFrame(raf);
   }
 }
 
-toggleAnimation();
+function toggleAnimation() {
+  cancelAnimationFrame(raf);
+
+  if (document.visibilityState) {
+    last = 0;
+    raf = requestAnimationFrame(doPhysics);
+    velBuffer = Array.from({length:velBufferLength});
+  }
+}
+
+config.addChangeCallback(toggleAnimation, {runInitial: true});
 
 window.addEventListener('visibilitychange', toggleAnimation);
