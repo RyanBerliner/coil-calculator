@@ -7,6 +7,16 @@ const curve = new LeverageCurve(
 
 const button = document.getElementById('simulate');
 
+document.addEventListener('click', function(event) {
+  const preset = event.target.closest('[data-coil-preset]');
+
+  if (!preset) {
+    return;
+  }
+
+  config.springWeight = parseInt(preset.getAttribute('data-coil-preset'));
+});
+
 let sag;
 let simulating = false;
 let acc = 0;

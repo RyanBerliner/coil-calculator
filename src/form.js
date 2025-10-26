@@ -47,6 +47,11 @@ class ConfigurationForm {
     this._runChangeCallbacks();
   }
 
+  set springWeight(weight) {
+    this.input('spring-weight').value = weight;
+    this._runChangeCallbacks();
+  }
+
   set stroke(s) {
     this.input('stroke').value = s;
     this._runChangeCallbacks();
