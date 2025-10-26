@@ -279,6 +279,30 @@ button span:last-child {
   line-height: 1.5;
 }
 
+.coil-presets {
+  max-width: 100%;
+  margin: 1rem auto;
+}
+
+.coil-presets > div {
+  height: 2.4rem;
+  overflow: hidden;
+}
+
+.coil-presets > div > div {
+  overflow-x: auto;
+  padding-bottom: 2em;
+  white-space: nowrap;
+}
+
+.coil-presets span {
+  display: inline-block;
+  cursor: pointer;
+  padding: 0.2em 0.5em;
+  margin: 0 0.25em;
+  border: 1px solid black;
+}
+
 @media (max-width: 800px) {
   body {
     grid-template-areas:
