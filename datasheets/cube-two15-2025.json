@@ -1,0 +1,109 @@
+{
+  "make": "Cube",
+  "model": "Two15",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "MD",
+  "size_end": "XL",
+  "wheel_travel": 200,
+  "stroke": 75.0,
+  "eyetoeye": 250,
+  "urls": [
+    "https://web.archive.org/web/20251027234304/https://www.cube.eu/cube-two15-race-27.5-cyclamen-n-black/839110"
+  ],
+  "kinematics": {
+    "img": "https://file.cube.eu/azwesc1xfg346/thumbnail/a6/62/ef/1725092442/synqup_839110_360I_00_1920x1920.jpg?ts=1759814788",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 290,
+        "y": 352
+      },
+      {
+        "name": "chainstay left",
+        "x": 163,
+        "y": 375
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 139,
+        "y": 367
+      },
+      {
+        "name": "triangle left",
+        "x": 279,
+        "y": 286
+      },
+      {
+        "name": "triangle bottom",
+        "is_fixed": true,
+        "x": 319,
+        "y": 287
+      },
+      {
+        "name": "shock top",
+        "x": 343,
+        "y": 271
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 305,
+        "y": 355
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "little chainstay",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "triangle left",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "triangle left",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "triangle top",
+        "j1": "triangle left",
+        "j2": "shock top"
+      },
+      {
+        "name": "triangle left",
+        "j1": "triangle left",
+        "j2": "triangle bottom"
+      },
+      {
+        "name": "triangle right",
+        "j1": "shock top",
+        "j2": "triangle bottom"
+      }
+    ]
+  },
+  "curve": [
+    1.3880864897311596,
+    1.2140744431215174,
+    1.071997771798704,
+    0.9493503298634759,
+    0.8491086340324198,
+    0.7666079303920011
+  ]
+}
