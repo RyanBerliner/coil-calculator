@@ -1,0 +1,146 @@
+{
+  "make": "Atherton",
+  "model": "A.200",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "1",
+  "size_end": "12",
+  "wheel_travel": 200,
+  "stroke": 75.0,
+  "eyetoeye": 225,
+  "urls": [
+    "https://web.archive.org/web/20251027235332/https://www.athertonbikes.com/a200-frame.html"
+  ],
+  "kinematics": {
+    "img": "https://www.athertonbikes.com/media/catalog/category/Branding/IMG_1975_1_.jpg",
+    "reverse_x": true,
+    "joints": [
+      {
+        "name": "top link left",
+        "is_fixed": true,
+        "x": 406,
+        "y": 447
+      },
+      {
+        "name": "top link right",
+        "x": 421,
+        "y": 442
+      },
+      {
+        "name": "bottom link left",
+        "x": 417,
+        "y": 475
+      },
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 427,
+        "y": 488
+      },
+      {
+        "name": "chainstay right",
+        "x": 667,
+        "y": 485
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 691,
+        "y": 471
+      },
+      {
+        "name": "triangle right",
+        "x": 432,
+        "y": 337
+      },
+      {
+        "name": "triangle bottom",
+        "is_fixed": true,
+        "x": 393,
+        "y": 351
+      },
+      {
+        "name": "shock top",
+        "x": 367,
+        "y": 325
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 376,
+        "y": 463
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "top link",
+        "j1": "top link left",
+        "j2": "top link right"
+      },
+      {
+        "name": "bottom link",
+        "j1": "bottom link left",
+        "j2": "bottom link right"
+      },
+      {
+        "name": "seat stay",
+        "j1": "triangle right",
+        "j2": "axle"
+      },
+      {
+        "name": "chainstay tiny",
+        "j1": "axle",
+        "j2": "chainstay right"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "triangle right",
+        "j2": "chainstay right"
+      },
+      {
+        "name": "triangle top",
+        "j1": "shock top",
+        "j2": "triangle right"
+      },
+      {
+        "name": "triangle left",
+        "j1": "triangle bottom",
+        "j2": "shock top"
+      },
+      {
+        "name": "triangle right",
+        "j1": "triangle bottom",
+        "j2": "triangle right"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "chainstay vert",
+        "j1": "bottom link left",
+        "j2": "top link right"
+      },
+      {
+        "name": "chainstay weld",
+        "j1": "top link right",
+        "j2": "chainstay right"
+      }
+    ]
+  },
+  "curve": [
+    1.2179080985891677,
+    1.1001332557283299,
+    1.009100655583675,
+    0.9559467881065763,
+    0.9245331428445358,
+    0.8900163074893288
+  ]
+}

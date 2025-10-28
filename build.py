@@ -100,12 +100,28 @@ size_map_alt3 = [
     ('R3', 'R3'),
 ]
 
+size_map_alt4 = [
+    ('1', '1'),
+    ('2', '2'),
+    ('3', '3'),
+    ('4', '4'),
+    ('5', '5'),
+    ('6', '6'),
+    ('7', '7'),
+    ('8', '8'),
+    ('9', '9'),
+    ('10', '10'),
+    ('11', '11'),
+    ('12', '12'),
+]
+
 def get_size_map(s):
     maps = [
         size_map_traditional,
         size_map_alt1,
         size_map_alt2,
         size_map_alt3,
+        size_map_alt4,
     ]
 
     for size_map in maps:
