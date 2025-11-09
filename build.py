@@ -285,7 +285,8 @@ for filename in os.listdir('dist'):
     with open(f'dist/{filename}', 'rb') as file:
         checksum = hashlib.md5(file.read()).hexdigest()
         new_filename = f'{checksum}.{filename}'
-        html_file_contents = html_file_contents.replace(filename, new_filename)
+        html_file_contents = html_file_contents.replace(f'src="{filename}"', f'src="{new_filename}"')
+        html_file_contents = html_file_contents.replace(f'href="{filename}"', f'href="{new_filename}"')
         os.rename(f'dist/{filename}', f'dist/{new_filename}')
 
 with open('dist/index.html', 'w') as file:
