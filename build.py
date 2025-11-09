@@ -14,6 +14,7 @@ transformation done to them.
 """
 
 import csv
+import hashlib
 import json
 import os
 import re
@@ -241,6 +242,13 @@ for i, bike_data in enumerate(bikes):
 
 output_object['terms_trie'] = terms_trie.__dict__()
 
+# before writing to the dist dir, delete existing files
+for filename in os.listdir('dist'):
+    if filename == '.keep':
+        continue
+
+    os.remove(f'dist/{filename}')
+
 html_file = open('src/index.html', 'r')
 html_file_contents = html_file.read()
 html_file.close()
@@ -259,3 +267,26 @@ other_files_pattern = re.compile('.+[^.html]$')
 for file in os.listdir('src'):
     if other_files_pattern.match(file):
         shutil.copy(f'src/{file}', 'dist/')
+
+# LASTLY cache bust js and css files by appending checksums to their names.
+# always do this last in case there are other transformations to the files
+# before putting them in dist. The current implementation does assume there are
+# only asset references in the index.html file.
+
+with  open('dist/index.html', 'r') as file:
+    html_file_contents = file.read()
+
+assets = re.compile('.+.(js|css)$')
+
+for filename in os.listdir('dist'):
+    if not assets.match(filename):
+        continue
+
+    with open(f'dist/{filename}', 'rb') as file:
+        checksum = hashlib.md5(file.read()).hexdigest()
+        new_filename = f'{checksum}.{filename}'
+        html_file_contents = html_file_contents.replace(filename, new_filename)
+        os.rename(f'dist/{filename}', f'dist/{new_filename}')
+
+with open('dist/index.html', 'w') as file:
+    file.write(html_file_contents)
