@@ -12,12 +12,26 @@
   <body>
     <aside>
       <canvas id="animation"></canvas>
-      <button id="simulate">
-        <span>Calculated Sag</span>
-        <span><span id="sag-output"></span>%</span>
-      </button>
+      <button id="simulate">TRY ME!</button>
     </aside>
     <form>
+      <fieldset>
+        <div>
+          <legend>Coil Selection</legend>
+          <hr aria-hidden="true" />
+        </div>
+
+        <label>
+          Spring Weight (lbs/in)
+          <input type="number" name="spring-weight" value="400" min="0">
+        </label>
+
+        <div class="label estimated-sag">
+          Estimated Sag
+          <span>&cong;&nbsp;<span id="sag-output"></span>%</span>
+        </div>
+      </fieldset>
+
       <fieldset>
         <div>
           <legend>Rider Information</legend>
@@ -45,7 +59,6 @@
           </div>
         </div>
 
-
         <label>
           Rear wheel travel (mm)
           <input type="number" name="travel" value="160" min="0">
@@ -53,10 +66,6 @@
         <label>
           Shock stroke (mm)
           <input type="number" name="stroke" value="60" min="0">
-        </label>
-        <label>
-          Spring Weight (lbs/in)
-          <input type="number" name="spring-weight" value="400" min="0">
         </label>
         <div style="display:none;" id="leverage-points">
           <input type="hidden" value="1" />
