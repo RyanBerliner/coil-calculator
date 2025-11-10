@@ -242,52 +242,75 @@ for i, bike_data in enumerate(bikes):
 
 output_object['terms_trie'] = terms_trie.__dict__()
 
-# before writing to the dist dir, delete existing files
+# To build the site we take the src files, put there contents into a map, and
+# apply tranformations to the file contents. When we are done, we will write the
+# file contents to new files in the dist dir
+#
+# Transformations are:
+#
+# 1. (TODO) Insert html partials into root html pages
+# 2. Insert data into root html pages
+# 3. Generate assets checksums
+# 4. Swap asset references with new filenames (which include checksums)
+
+built_files = {}
+
+html_pattern = re.compile('.+.html$')
+asset_pattern = re.compile('.+.(css|js)$')
+
+for filename in os.listdir('src'):
+    if not html_pattern.match(filename):
+        continue
+
+    with open(f'src/{filename}', 'r') as file:
+        built_files[filename] = file.read()
+
+for filename in os.listdir('src/assets'):
+    if not asset_pattern.match(filename):
+        continue
+
+    with open(f'src/assets/{filename}', 'r') as file:
+        built_files[f'assets/{filename}'] = file.read()
+
+
+for name, contents in built_files.items():
+    if not html_pattern.match(name):
+        continue
+
+    bikes_variable = f'const bikesData = {json.dumps(output_object)};'
+    built_files[name] = contents.replace('// BIKE_DATA', bikes_variable)
+
+for name, contents in list(built_files.items()):
+    if not asset_pattern.match(name):
+        continue
+
+    parts = name.split('.')
+    checksum = hashlib.md5(bytes(contents, 'utf-8')).hexdigest()
+    new_name = f'{".".join(parts[0:-1])}.{checksum}.{parts[-1]}'
+
+    built_files[new_name] = contents
+    del built_files[name]
+
+    for html_name, html_contents in built_files.items():
+        if not html_pattern.match(html_name):
+            continue
+
+        html_contents = html_contents.replace(f'src="{name}"', f'src="{new_name}"')
+        built_files[html_name] = html_contents.replace(f'href="{name}"', f'href="{new_name}"')
+
+# Before writing to the dist/ dir, clean up everything that is there already
+
 for filename in os.listdir('dist'):
     if filename == '.keep':
         continue
 
-    os.remove(f'dist/{filename}')
+    try:
+        os.remove(f'dist/{filename}')
+    except OSError:
+        shutil.rmtree(f'dist/{filename}')
 
-html_file = open('src/index.html', 'r')
-html_file_contents = html_file.read()
-html_file.close()
+for name, content in built_files.items():
+    os.makedirs(os.path.dirname(f'dist/{name}'), exist_ok=True)
 
-bikes_variable = f'const bikesData = {json.dumps(output_object)};'
-
-compiled_html_file_contents = \
-        html_file_contents.replace('// BIKE_DATA', bikes_variable)
-
-compiled_html_file = open('dist/index.html', 'w')
-compiled_html_file.write(compiled_html_file_contents)
-
-# move the rest of the files in src to dist, assume no other html files
-other_files_pattern = re.compile('.+[^.html]$')
-
-for file in os.listdir('src'):
-    if other_files_pattern.match(file):
-        shutil.copy(f'src/{file}', 'dist/')
-
-# LASTLY cache bust js and css files by appending checksums to their names.
-# always do this last in case there are other transformations to the files
-# before putting them in dist. The current implementation does assume there are
-# only asset references in the index.html file.
-
-with  open('dist/index.html', 'r') as file:
-    html_file_contents = file.read()
-
-assets = re.compile('.+.(js|css)$')
-
-for filename in os.listdir('dist'):
-    if not assets.match(filename):
-        continue
-
-    with open(f'dist/{filename}', 'rb') as file:
-        checksum = hashlib.md5(file.read()).hexdigest()
-        new_filename = f'{checksum}.{filename}'
-        html_file_contents = html_file_contents.replace(f'src="{filename}"', f'src="{new_filename}"')
-        html_file_contents = html_file_contents.replace(f'href="{filename}"', f'href="{new_filename}"')
-        os.rename(f'dist/{filename}', f'dist/{new_filename}')
-
-with open('dist/index.html', 'w') as file:
-    file.write(html_file_contents)
+    with open(f'dist/{name}', 'x') as file:
+        file.write(content)
