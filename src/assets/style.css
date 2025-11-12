@@ -14,11 +14,42 @@ body {
   padding: 0 1rem;
   display: grid;
   grid-template-areas:
-    "aside form"
+    "header header"
+    "aside main"
     "footer footer";
   grid-template-columns: 250px auto;
-  grid-template-rows: 1fr auto;
-  gap: 2rem 2rem;
+  grid-template-rows: auto 1fr auto;
+  gap: 1rem 2rem;
+}
+
+header {
+  grid-area: header;
+  position: relative;
+  overflow: hidden;
+  font-family: monospace;
+
+  h1 {
+    font-size: 1.2rem;
+    position: relative;
+    z-index: 2;
+    text-transform: uppercase;
+    padding: 11px 0;
+    margin: 0 0 0 1rem;
+    text-align: center;
+  }
+
+  span {
+    position: absolute;
+    white-space: nowrap;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-transform: uppercase;
+    font-size: 80px;
+    letter-spacing: 5px;
+    opacity: 0.02;
+    font-weight: 700;
+  }
 }
 
 aside {
@@ -33,8 +64,8 @@ footer {
   grid-area: footer;
 }
 
-form {
-  grid-area: form;
+main {
+  grid-area: main;
   padding-top: 2rem;
 }
 
@@ -236,6 +267,8 @@ button:active {
 #base-leverage,
 #lower-leverage {
   line-height: 1;
+  font-family: monospace;
+  font-size: 0.9em;
   transform: translateY(-50%);
   left: 0;
 }
@@ -287,12 +320,17 @@ button:active {
 @media (max-width: 800px) {
   body {
     grid-template-areas:
+      "header"
       "aside"
-      "form"
+      "main"
       "footer";
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
-    gap: 2rem 0;
+    gap: 1rem 0;
+  }
+
+  aside {
+    margin-top: 0;
   }
 }
 

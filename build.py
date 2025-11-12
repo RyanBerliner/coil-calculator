@@ -248,12 +248,13 @@ output_object['terms_trie'] = terms_trie.__dict__()
 #
 # Transformations are:
 #
-# 1. (TODO) Insert html partials into root html pages
+# 1. Insert html partials into root html pages
 # 2. Insert data into root html pages
 # 3. Generate assets checksums
 # 4. Swap asset references with new filenames (which include checksums)
 
 built_files = {}
+partial_files = {}
 
 html_pattern = re.compile('.+.html$')
 asset_pattern = re.compile('.+.(css|js)$')
@@ -265,6 +266,13 @@ for filename in os.listdir('src'):
     with open(f'src/{filename}', 'r') as file:
         built_files[filename] = file.read()
 
+for filename in os.listdir('src/partials'):
+    if not html_pattern.match(filename):
+        continue
+
+    with open(f'src/partials/{filename}', 'r') as file:
+        partial_files[filename] = file.read()
+
 for filename in os.listdir('src/assets'):
     if not asset_pattern.match(filename):
         continue
@@ -272,6 +280,15 @@ for filename in os.listdir('src/assets'):
     with open(f'src/assets/{filename}', 'r') as file:
         built_files[f'assets/{filename}'] = file.read()
 
+for name in built_files.keys():
+    if not html_pattern.match(name):
+        continue
+
+    for partial_name, partial_contents in partial_files.items():
+        built_files[name] = built_files[name].replace(
+            f'<!-- {partial_name} -->',
+            partial_contents
+        )
 
 for name, contents in built_files.items():
     if not html_pattern.match(name):

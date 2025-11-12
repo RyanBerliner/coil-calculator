@@ -10,101 +10,101 @@
     <link rel="preload" href="assets/dom.js" as="script" />
   </head>
   <body>
+    <!-- header.html -->
     <aside>
       <canvas id="animation"></canvas>
       <button id="simulate">TRY ME!</button>
     </aside>
-    <form>
-      <fieldset>
-        <div>
-          <legend>Coil Selection</legend>
-          <hr aria-hidden="true" />
-        </div>
+    <main>
+      <form>
+        <fieldset>
+          <div>
+            <legend>Coil Selection</legend>
+            <hr aria-hidden="true" />
+          </div>
 
-        <label>
-          Spring Weight (lbs/in)
-          <input type="number" name="spring-weight" value="400" min="0">
-        </label>
+          <label>
+            Spring Weight (lbs/in)
+            <input type="number" name="spring-weight" value="400" min="0">
+          </label>
 
-        <div class="label estimated-sag">
-          Estimated Sag
-          <span>&cong;&nbsp;<span id="sag-output"></span>%</span>
-        </div>
-      </fieldset>
+          <div class="label estimated-sag">
+            Estimated Sag
+            <span>&cong;&nbsp;<span id="sag-output"></span>%</span>
+          </div>
+        </fieldset>
 
-      <fieldset>
-        <div>
-          <legend>Rider Information</legend>
-          <hr aria-hidden="true" />
-        </div>
+        <fieldset>
+          <div>
+            <legend>Rider Information</legend>
+            <hr aria-hidden="true" />
+          </div>
 
-        <label>
-          Rider Weight (lbs)
-          <input type="number" name="rider-weight" value="165" min="0">
-        </label>
-        <label>
-          Rear Wheel Bias (default 60%)
-          <input type="number" name="rear-bias" value="60" min="0" max="100">
-        </label>
-      </fieldset>
+          <label>
+            Rider Weight (lbs)
+            <input type="number" name="rider-weight" value="165" min="0">
+          </label>
+          <label>
+            Rear Wheel Bias (default 60%)
+            <input type="number" name="rear-bias" value="60" min="0" max="100">
+          </label>
+        </fieldset>
 
-      <fieldset>
-        <div>
-          <legend>Bike Specs</legend>
-          <hr aria-hidden="true" />
-          <div class="search">
-            <input type="search" placeholder="Search for a bike..." /> 
-            <div id="search-results" style="display: none;">
+        <fieldset>
+          <div>
+            <legend>Bike Specs</legend>
+            <hr aria-hidden="true" />
+            <div class="search">
+              <input type="search" placeholder="Search for a bike..." /> 
+              <div id="search-results" style="display: none;">
+              </div>
             </div>
           </div>
-        </div>
 
-        <label>
-          Rear wheel travel (mm)
-          <input type="number" name="travel" value="160" min="0">
-        </label>
-        <label>
-          Shock stroke (mm)
-          <input type="number" name="stroke" value="60" min="0">
-        </label>
-        <div style="display:none;" id="leverage-points">
-          <input type="hidden" value="1" />
-          <input type="hidden" value="1" />
-          <input type="hidden" value="1" />
-          <input type="hidden" value="1" />
-          <input type="hidden" value="1" />
-          <input type="hidden" value="1" />
-        </div>
-        <div class="curve-heading">
-          <h2 id="curve-heading">Leverage Curve</h2>
-          <select aria-labelledby="curve-heading">
-            <option value="mp">Most Progressive</option>
-            <option value="p" selected>Progressive</option>
-            <option value="flat">Flat</option>
-            <option value="d">Digressive</option>
-            <option value="md">Most Digressive</option>
-            <option value="c">Custom</option>
-          </select>
-        </div>
-        <div class="curve-container">
-          <span id="upper-leverage">1.5</span>
-          <span id="base-leverage">1</span>
-          <span id="lower-leverage">0.5</span>
-          <span class="x-axis">Wheel Travel</span>
-          <canvas id="curve"></canvas>
-        </div>
-        <small class="disclaimer">
-          Leverage curves are estimated from available information on the web,
-          which may include kinematic analysis of product images. This tool is
-          not associated with bike brands, nor has the data been verified.
-          <a href="https://github.com/RyanBerliner/coil-calculator/issues">Suggest improvements.</a>
-        </small>
-      </fieldset>
-    </form>
-    <footer style="text-align:center;padding: 20px;">
-      Learn <a href="https://ryanberliner.com/best-mtb-coil-calculator">about this tool</a>, or
-      view code and license on <a href="https://github.com/RyanBerliner/coil-calculator">GitHub</a>
-    </footer>
+          <label>
+            Rear wheel travel (mm)
+            <input type="number" name="travel" value="160" min="0">
+          </label>
+          <label>
+            Shock stroke (mm)
+            <input type="number" name="stroke" value="60" min="0">
+          </label>
+          <div style="display:none;" id="leverage-points">
+            <input type="hidden" value="1" />
+            <input type="hidden" value="1" />
+            <input type="hidden" value="1" />
+            <input type="hidden" value="1" />
+            <input type="hidden" value="1" />
+            <input type="hidden" value="1" />
+          </div>
+          <div class="curve-heading">
+            <h2 id="curve-heading">Leverage Curve</h2>
+            <select aria-labelledby="curve-heading">
+              <option value="mp">Most Progressive</option>
+              <option value="p" selected>Progressive</option>
+              <option value="flat">Flat</option>
+              <option value="d">Digressive</option>
+              <option value="md">Most Digressive</option>
+              <option value="c">Custom</option>
+            </select>
+          </div>
+          <div class="curve-container">
+            <span id="upper-leverage">1.5</span>
+            <span id="base-leverage">1</span>
+            <span id="lower-leverage">0.5</span>
+            <span class="x-axis">Wheel Travel</span>
+            <canvas id="curve"></canvas>
+          </div>
+          <small class="disclaimer">
+            Leverage curves are estimated from available information on the web,
+            which may include kinematic analysis of product images. This tool is
+            not associated with bike brands, nor has the data been verified.
+            <a href="https://github.com/RyanBerliner/coil-calculator/issues">Suggest improvements.</a>
+          </small>
+        </fieldset>
+      </form>
+    </main>
+    <!-- footer.html -->
     <script>
       // BIKE_DATA
     </script>
