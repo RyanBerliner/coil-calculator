@@ -116,6 +116,8 @@ size_map_alt4 = [
     ('12', '12'),
 ]
 
+size_map_alt5 = [('Custom', 'Custom')]
+
 def get_size_map(s):
     maps = [
         size_map_traditional,
@@ -123,6 +125,7 @@ def get_size_map(s):
         size_map_alt2,
         size_map_alt3,
         size_map_alt4,
+        size_map_alt5,
     ]
 
     for size_map in maps:

@@ -1,0 +1,145 @@
+{
+  "make": "Atherton",
+  "model": "A.170",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "Custom",
+  "size_end": "Custom",
+  "wheel_travel": 170,
+  "stroke": 65.0,
+  "eyetoeye": 205,
+  "urls": [
+    ""
+  ],
+  "kinematics": {
+    "img": "https://www.athertonbikes.com/media/catalog/category/ProductShots/IMG_9678_1_.jpg",
+    "joints": [
+      {
+        "name": "top link left",
+        "is_fixed": true,
+        "x": 319,
+        "y": 452
+      },
+      {
+        "name": "top link right",
+        "x": 303,
+        "y": 447
+      },
+      {
+        "name": "bottom link left",
+        "x": 306,
+        "y": 476
+      },
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 298,
+        "y": 487
+      },
+      {
+        "name": "chainstay right",
+        "x": 74,
+        "y": 477
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 54,
+        "y": 463
+      },
+      {
+        "name": "triangle right",
+        "x": 302,
+        "y": 350
+      },
+      {
+        "name": "triangle bottom",
+        "is_fixed": true,
+        "x": 334,
+        "y": 365
+      },
+      {
+        "name": "shock top",
+        "x": 353,
+        "y": 336
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 369,
+        "y": 459
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "top link",
+        "j1": "top link left",
+        "j2": "top link right"
+      },
+      {
+        "name": "bottom link",
+        "j1": "bottom link left",
+        "j2": "bottom link right"
+      },
+      {
+        "name": "seat stay",
+        "j1": "triangle right",
+        "j2": "axle"
+      },
+      {
+        "name": "chainstay tiny",
+        "j1": "axle",
+        "j2": "chainstay right"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "triangle right",
+        "j2": "chainstay right"
+      },
+      {
+        "name": "triangle top",
+        "j1": "shock top",
+        "j2": "triangle right"
+      },
+      {
+        "name": "triangle left",
+        "j1": "triangle bottom",
+        "j2": "shock top"
+      },
+      {
+        "name": "triangle right",
+        "j1": "triangle bottom",
+        "j2": "triangle right"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "bottom link left"
+      },
+      {
+        "name": "chainstay vert",
+        "j1": "bottom link left",
+        "j2": "top link right"
+      },
+      {
+        "name": "chainstay weld",
+        "j1": "top link right",
+        "j2": "chainstay right"
+      }
+    ]
+  },
+  "curve": [
+    1.2586289841163707,
+    1.1303639345306036,
+    1.034595238782567,
+    0.9573112215101912,
+    0.8994024456055996,
+    0.8402397576856849
+  ]
+}
