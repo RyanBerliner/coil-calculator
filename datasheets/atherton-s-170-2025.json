@@ -1,0 +1,109 @@
+{
+  "make": "Atherton",
+  "model": "S.170",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "1",
+  "size_end": "12",
+  "wheel_travel": 170,
+  "stroke": 65.0,
+  "eyetoeye": 205,
+  "urls": [
+    "https://web.archive.org/web/20251116154333/https://www.athertonbikes.com/s170-1.html"
+  ],
+  "kinematics": {
+    "img": "https://www.athertonbikes.com/media/catalog/product/s/-/s-170-1-hero_1.jpg",
+    "joints": [
+      {
+        "name": "bottom link right",
+        "is_fixed": true,
+        "x": 308,
+        "y": 372
+      },
+      {
+        "name": "rear triangle right",
+        "x": 291,
+        "y": 374
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 157,
+        "y": 396
+      },
+      {
+        "name": "rear triangle top",
+        "x": 301,
+        "y": 309
+      },
+      {
+        "name": "top link bottom",
+        "is_fixed": true,
+        "x": 309,
+        "y": 332
+      },
+      {
+        "name": "shock top",
+        "x": 330,
+        "y": 326
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 324,
+        "y": 393
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "link bottom",
+        "j1": "bottom link right",
+        "j2": "rear triangle right"
+      },
+      {
+        "name": "chain stay",
+        "j1": "axle",
+        "j2": "rear triangle right"
+      },
+      {
+        "name": "seat stay",
+        "j1": "axle",
+        "j2": "rear triangle top"
+      },
+      {
+        "name": "rear triangle webl",
+        "j1": "rear triangle top",
+        "j2": "rear triangle right"
+      },
+      {
+        "name": "triangle left",
+        "j1": "rear triangle top",
+        "j2": "top link bottom"
+      },
+      {
+        "name": "triangle top",
+        "j1": "rear triangle top",
+        "j2": "shock top"
+      },
+      {
+        "name": "triangle right",
+        "j1": "top link bottom",
+        "j2": "shock top"
+      }
+    ]
+  },
+  "curve": [
+    1.1530997090427515,
+    1.0637269930142748,
+    0.9983775859693507,
+    0.9612529692819394,
+    0.9450589463616739,
+    0.9501615009306444
+  ]
+}
