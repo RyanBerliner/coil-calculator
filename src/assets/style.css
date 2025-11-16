@@ -45,9 +45,9 @@ header {
     top: 50%;
     transform: translate(-50%, -50%);
     text-transform: uppercase;
-    font-size: 80px;
+    font-size: 75px;
     letter-spacing: 5px;
-    opacity: 0.02;
+    opacity: 0.05;
     font-weight: 700;
   }
 }
