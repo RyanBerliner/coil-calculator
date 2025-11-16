@@ -15,29 +15,29 @@
     "img": "https://www.athertonbikes.com/media/catalog/category/ProductShots/IMG_9678_1_.jpg",
     "joints": [
       {
-        "name": "top link left",
+        "name": "top link right",
         "is_fixed": true,
         "x": 319,
         "y": 452
       },
       {
-        "name": "top link right",
+        "name": "top link left",
         "x": 303,
         "y": 447
       },
       {
-        "name": "bottom link left",
+        "name": "bottom link right",
         "x": 306,
         "y": 476
       },
       {
-        "name": "bottom link right",
+        "name": "bottom link left",
         "is_fixed": true,
         "x": 298,
         "y": 487
       },
       {
-        "name": "chainstay right",
+        "name": "chainstay left",
         "x": 74,
         "y": 477
       },
@@ -48,7 +48,7 @@
         "y": 463
       },
       {
-        "name": "triangle right",
+        "name": "triangle left",
         "x": 302,
         "y": 350
       },
@@ -89,48 +89,48 @@
       },
       {
         "name": "seat stay",
-        "j1": "triangle right",
+        "j1": "triangle left",
         "j2": "axle"
       },
       {
         "name": "chainstay tiny",
         "j1": "axle",
-        "j2": "chainstay right"
+        "j2": "chainstay left"
       },
       {
         "name": "seatstay weld",
-        "j1": "triangle right",
-        "j2": "chainstay right"
+        "j1": "triangle left",
+        "j2": "chainstay left"
       },
       {
         "name": "triangle top",
         "j1": "shock top",
-        "j2": "triangle right"
-      },
-      {
-        "name": "triangle left",
-        "j1": "triangle bottom",
-        "j2": "shock top"
+        "j2": "triangle left"
       },
       {
         "name": "triangle right",
         "j1": "triangle bottom",
-        "j2": "triangle right"
+        "j2": "shock top"
+      },
+      {
+        "name": "triangle left",
+        "j1": "triangle bottom",
+        "j2": "triangle left"
       },
       {
         "name": "chainstay",
-        "j1": "chainstay right",
-        "j2": "bottom link left"
+        "j1": "chainstay left",
+        "j2": "bottom link right"
       },
       {
         "name": "chainstay vert",
-        "j1": "bottom link left",
-        "j2": "top link right"
+        "j1": "bottom link right",
+        "j2": "top link left"
       },
       {
         "name": "chainstay weld",
-        "j1": "top link right",
-        "j2": "chainstay right"
+        "j1": "top link left",
+        "j2": "chainstay left"
       }
     ]
   },
