@@ -1,17 +1,17 @@
 # Coil Calculator
 
 A calculator to determine the amount of stroke displacement (sag) on the
-rear suspension of a mountain bike a particuler rider will produce with a
+rear suspension of a mountain bike a particular rider will produce with a
 particular coil spring.
 
 ## Adding a Bike
 
-Adding a bike comes down to creating a new datasheet in the `datasheets/`
-directory. Each datasheet contains the relevent details about a bike, such as
+Adding a bike comes down to creating a new data sheet in the `datasheets/`
+directory. Each data sheet contains the relevant details about a bike, such as
 the make, model, kinematic and/or curve data, etc.
 
 The `./bikes.py` script provides helpful utilities for easily creating these
-datasheets, plotting kinematic data, and calculating leverage curves.
+data sheets, plotting kinematic data, and calculating leverage curves.
 
 You can run the help command (`./bikes.py help`) to see all the commands.
 
@@ -19,9 +19,9 @@ The general workflow is as follows:
 
 ### Step 1:
 
-Run `./bikes.py add_bike` to initialize a new datasheet file with basic info.
+Run `./bikes.py add_bike` to initialize a new data sheet file with basic info.
 
-IMPORTANT: when adding urls to the bike, please create and provide internet
+IMPORTANT: when adding URLs to the bike, please create and provide internet
 archive links so that they don't break or change in the future as companies
 update there websites.
 
@@ -31,11 +31,11 @@ Determine how you've like to specify leverage curve data.
 
 #### Option 1: plot pivots and calculator (recommended)
 
-Open your newly created bike datasheet and go to the kinematics sections. Your
+Open your newly created bike data sheet and go to the kinematics sections. Your
 first job will be finding a straight on, clear image of the bike/frame in which
 all the pivots are visible.
 
-Add the url to this image to the img property.
+Add the URL to this image to the image property.
 
 Then, configure the joints and links, being sure to properly flag the axle,
 fixed joints, and the link representing the shock.
@@ -44,18 +44,18 @@ Now, run `./bikes.py update_kin datasheets/your-new-datasheet.json` and follow
 the instructions. This will open the image you provided of the bike/frame in
 your web browser and ask you to mark all the joints that you specified.
 
-Once you finish this process, you'll see all the joints in your datasheet have
+Once you finish this process, you'll see all the joints in your data sheet have
 been annotated with x,y coordinates.
 
 Lastly, run `./bikes.py update_lev datasheets/your-new-datasheet.json`. This
 calculates the leverage curve based on the provided kinematics and adds the data
-to the `curves` key of your datasheet.
+to the `curves` key of your data sheet.
 
 #### Option 2: add curve data directly
 
 If you are able to find leverage curve on the manufacturers website, please
-make sure the resource is listed as a url in the urls key of the datasheet, and
-add the curve data directly to the datasheet after approximating with the
+make sure the resource is listed as a URL in the URLs key of the data sheet, and
+add the curve data directly to the data sheet after approximating with the
 coil-calculator.
 
 THIS IS CURRENTLY A PITA because the coil calculator doesn't by default allow
@@ -107,10 +107,10 @@ the wheel travel. And based on the leverage at any given point, the end result
 **must be that when the wheel moves fully through its travel, the shock moves
 fully through its stroke... EXACTLY**. Not more, not less.
 
-This should ring a bell! What these leverage curves really are, are reciprical
-derivitives of wheel travel vs shock stroke!
+This should ring a bell! What these leverage curves really are, are reciprocal
+derivatives of wheel travel vs shock stroke!
 
-Consider a typical derivitive graph you might have in math class.
+Consider a typical derivative graph you might have in math class.
 
 ```
 x axis is x
@@ -124,9 +124,9 @@ x axis is wheel travel
 y axis is wheel travel / shock stroke
 ```
 
-In order to get to a traditional derivitive we need to flip that from "run
-over rise" to "rise over run" and we can do that by taking the reciprical of
-the leverage curve. At that point we'll then have a traditional derivitive.
+In order to get to a traditional derivative we need to flip that from "run
+over rise" to "rise over run" and we can do that by taking the reciprocal of
+the leverage curve. At that point we'll then have a traditional derivative.
 
 ```
 x axis is wheel travel
@@ -134,9 +134,9 @@ y axis is shock stroke / wheel travel
 ```
 
 Consider a bike with 160mm of wheel travel and a 60mm shock stroke. Whats the
-area under this new (reciprical) leverage curve? 60mm!
+area under this new (reciprocal) leverage curve? 60mm!
 
-**Taking the integral of the reciprical of the leverage curve from 0 to the 
+**Taking the integral of the reciprocal of the leverage curve from 0 to the
 end of the wheel travel MUST ALWAYS equal the shock stroke**. This fact should
 help understand what these curves represent.
 
@@ -144,22 +144,22 @@ help understand what these curves represent.
 #### Selecting a Leverage Curve
 
 We need a way for the user to be able to provide the calculator with one of
-these leverage curves. There a a couple ways to do this: presets for different
+these leverage curves. There are a couple ways to do this: presets for different
 bikes, different platforms, or maybe even allowing the user to draw the pivots
 and calculate the leverage curve from that. I opted for something else.
 
 The solution I went for is to provide 6 (for example) "handles" on a curve
 that the user can drag up and down to match the curve of their bike.
 
-I saw it the customization and accompanying math was going to be innevitable.
+I saw it the customization and accompanying math was going to be inevitable.
 I can always add presets later.
 
 **The resulting curve looks like a smooth curve but that is purely a cosmetic
-desicion. In reality, we have 5 piecewise defined straight lines**
+decision. In reality, we have 5 piecewise defined straight lines**
 
 While you could use either a single or piecewise defined curve(s) to drive 
 the underlying math, using piecewise defined linear equations make the math
-much more approachable with negligable (non existant) real world difference
+much more approachable with negligible (non existent) real world difference
 when all is said and done.
 
 **So you can create any curve you want?**
@@ -168,11 +168,11 @@ No, you cannot. Remember, there is underlying math that defines what a valid
 curve is.
 
 If you adjust the curve you'll notice that every adjustment creates automatic
-adjustments to every other part of the curve. The area under the reciprical of
+adjustments to every other part of the curve. The area under the reciprocal of
 this curve must never change, and that is what you see happen.
 
 Ensuring this is the case is what dictates the set of curves that a user can
-move through. It may seem infinetely adjustable, but its actually a finite set.
+move through. It may seem infinitely adjustable, but its actually a finite set.
 
 
 #### Applying the Curve
@@ -180,15 +180,15 @@ move through. It may seem infinetely adjustable, but its actually a finite set.
 In order to insert the leverage curve into hooks law, we need to do a few
 transformation to it. Right now its 5 piecewise defined lines, with leverage on
 the y axis and wheel travel on the x axis. For hooks law, we need to know the
-instantanious leverage at any give shock stroke... not wheel travel.
+instantaneous leverage at any give shock stroke... not wheel travel.
 
 We can get to this through a series of transformations to each of our piecewise
 defined lines.
 
-1. Take the reciprical to get the d/dx of stroke to travel
+1. Take the reciprocal to get the d/dx of stroke to travel
 2. Take the integral to get the mapping of stroke (y) to travel (x)
-3. Take the inverse to the the mapping of travel (y) to stroke (x)
-4. Take the derivitive to get the d/dx of travel to stroke  <-- THIS IS WHAT WE WANT
+3. Take the inverse to the mapping of travel (y) to stroke (x)
+4. Take the derivative to get the d/dx of travel to stroke  <-- THIS IS WHAT WE WANT
 
 There may be an easier way to go from 1 to 4... but I couldn't reason about that.
 
