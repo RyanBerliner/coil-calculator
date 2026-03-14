@@ -51,7 +51,7 @@ function calculateSag() {
 
   const { variables } = curve;
 
-  // hooks law to solve for the spring rate
+  // Hooke's law to solve for the spring rate
   // F = k*x
   // F   force
   // k   spring rate
@@ -62,9 +62,9 @@ function calculateSag() {
 
   sag *= 25.4 // mm
   sag /= stroke / 100 // %
-  // Do a math.min incase our leverage curve estimate is a little off and would
+  // Do a Math.min in case our leverage curve estimate is a little off and would
   // lead to max sag at like 99.9 or 100.1 or something
-  sag = Math.min(Math.round(sag * 100) / 100, 100).toFixed(2); // round to 2 decimals (so users can see something is changing
+  sag = Math.min(Math.round(sag * 100) / 100, 100).toFixed(2); // round to 2 decimals (so users can see something is changing)
   document.getElementById('sag-output').innerHTML = sag;
   return sag;
 }
@@ -524,7 +524,7 @@ let velBuffer = Array.from({length:velBufferLength});
 
 function doPhysics(timestamp) {
   raf = requestAnimationFrame(doPhysics);
-  // the > 100 is a safeguard in case our page visibility (focus/blur) doesnt
+  // the > 100 is a safeguard in case our page visibility (focus/blur) doesn't
   // work in all cases. this ensures that if the timedelta is larger than we
   // anticipate, it'll reset
   if (!last || (timestamp - last > 100)) {
@@ -544,7 +544,7 @@ function doPhysics(timestamp) {
   forces.push(simulating ? weight : 0);
   forces.push(-springConstant * pos);
 
-  // we want to find the critical damping so it occilates a nice amount
+  // we want to find the critical damping so it oscillates a nice amount
   let criticalDamping = 2 * Math.sqrt(springConstant * weight) * elapsed; // https://en.wikipedia.org/wiki/Damping
   if (vel > 0) criticalDamping /= 3;  // compression damping third of rebound damping
   forces.push(-vel * criticalDamping);

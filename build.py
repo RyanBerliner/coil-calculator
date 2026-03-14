@@ -3,7 +3,7 @@
 """
 Transforms and inlines bike data from the bikes.csv file into the html file.
 
-The bike data is transformed into an data structures for quick searching out of
+The bike data is transformed into data structures for quick searching out of
 the box without any client side indexing required. This is done by making an
 inverted index on the terms (anything we want searchable about a bike... make,
 model, year, etc) and then a radix tree of the terms themselves to do partial
@@ -208,7 +208,7 @@ for i, bike_data in enumerate(bikes):
     # BUG: for bikes with size ranges like XS-LG someone could search
     #      "extra large" and this would match since we break on space and that
     #      matches both "extra" and "large". This is really a generic bug with
-    #      how I'm matching all terms, but its particularly appearent here
+    #      how I'm matching all terms, but its particularly apparent here
 
     size_map = get_size_map(bike_data['size_start'])
 
@@ -235,7 +235,7 @@ for i, bike_data in enumerate(bikes):
         if output_object['terms'].get(term, None) is None:
             output_object['terms'][term] = []
 
-        # dedupe, could use a set by then we'd have to convert back to list i
+        # dedupe, could use a set by then we'd have to convert back to list
         # at some point and ordering would no longer be preserved... this is
         # the lesser evil
         if len(output_object['terms'][term]) and \
@@ -244,7 +244,7 @@ for i, bike_data in enumerate(bikes):
 
         output_object['terms'][term].append(i)
 
-        # IDEA: if we wanted to add some common mispellings we could add
+        # IDEA: if we wanted to add some common misspellings we could add
         #       support for this just in our terms trie, without bothering to
         #       create more indexes in the inverted index
         terms_trie.add(term, i)
@@ -252,8 +252,8 @@ for i, bike_data in enumerate(bikes):
 
 output_object['terms_trie'] = terms_trie.__dict__()
 
-# To build the site we take the src files, put there contents into a map, and
-# apply tranformations to the file contents. When we are done, we will write the
+# To build the site we take the src files, put their contents into a map, and
+# apply transformations to the file contents. When we are done, we will write the
 # file contents to new files in the dist dir
 #
 # Transformations are:

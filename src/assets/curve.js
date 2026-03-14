@@ -148,13 +148,13 @@ class LeverageCurve {
         end = strokePoint;
       }
 
-      // TODO: This is an estimation of the area under the derivitive by
+      // TODO: This is an estimation of the area under the derivative by
       //       averaging the endpoints, and multiplying by the range (ie
       //       fitting a rectangle roughly. If we want this to be dead accurate
-      //       then we should take the integral of the derivitive and eval it on
+      //       then we should take the integral of the derivative and eval it on
       //       the same range
       //
-      //       The derivitive here is dt/ds vs s
+      //       The derivative here is dt/ds vs s
       const derivitive = (s) => Math.pow(Math.E, (m*s)-(m*Y)+Math.log((m*X)+b));
       accTravel += ((derivitive(start)+derivitive(end))/2)*(end-start);
       if (end == strokePoint) break accLoop;
@@ -245,7 +245,7 @@ class LeverageCurve {
 
   _getY(y) {
     // this should return the Y coordinate in the canvas given a "Y" values
-    // straight form the "points"
+    // straight from the "points"
     //
     // 0 is the top (1 * max multiplier)
     // 1/2*(canvas height) is the middle 
@@ -302,7 +302,7 @@ class LeverageCurve {
       }
     }
 
-    // Stay withing chart bounds
+    // Stay within chart bounds
     if (Math.min(...newPoints) < 1-this.MAX_LEVERAGE_MULTIPLIER || Math.max(...newPoints) > 1+this.MAX_LEVERAGE_MULTIPLIER) {
       this._config.points.forEach((p, i) => {
         newPoints[i] = p;
@@ -322,7 +322,7 @@ class LeverageCurve {
     let slopes = [];
     const points = this._config.points;
     for (let i = 0; i < points.length; i++) {
-      // NOTE: that our points are uniformly spaces right now to all our runs are just set to 1 for simplicity
+      // NOTE: that our points are uniformly spaced right now so all our runs are just set to 1 for simplicity
       let partials = [];
       if (i > 0) {
         partials.push((points[i]-points[i-1])/1);

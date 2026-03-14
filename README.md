@@ -23,13 +23,13 @@ Run `./bikes.py add_bike` to initialize a new data sheet file with basic info.
 
 IMPORTANT: when adding URLs to the bike, please create and provide internet
 archive links so that they don't break or change in the future as companies
-update there websites.
+update their websites.
 
 ### Step 2:
 
-Determine how you've like to specify leverage curve data.
+Determine how you'd like to specify leverage curve data.
 
-#### Option 1: plot pivots and calculator (recommended)
+#### Option 1: plot pivots and calculate (recommended)
 
 Open your newly created bike data sheet and go to the kinematics sections. Your
 first job will be finding a straight on, clear image of the bike/frame in which
@@ -53,7 +53,7 @@ to the `curves` key of your data sheet.
 
 #### Option 2: add curve data directly
 
-If you are able to find leverage curve on the manufacturers website, please
+If you are able to find leverage curve on the manufacturer's website, please
 make sure the resource is listed as a URL in the URLs key of the data sheet, and
 add the curve data directly to the data sheet after approximating with the
 coil-calculator.
@@ -69,8 +69,8 @@ We can use:
 
 - Rider weight and rear wheel bias to determine the "normalized" weight
 - Stroke and wheel travel to generate a leverage ratio
-- [Hooks law](https://en.wikipedia.org/wiki/Hooke%27s_law) to determine
-the spring displacement based on the riders force
+- [Hooke's law](https://en.wikipedia.org/wiki/Hooke%27s_law) to determine
+the spring displacement based on the rider's force
 
 Assuming that the suspension platform has a linear leverage curve (more on
 this later) you can represent the sag with algebra and solve it straight
@@ -90,8 +90,8 @@ the spring.
 Some platforms start with a high leverage ratio which reduces, others the
 opposite, and others make 'U' or other shapes.
 
-This means our once simple algebra equations now needs to incorporate this curve
-data. Said in another way, our equation needs to account for difference forces
+This means our once simple algebra equations now need to incorporate this curve
+data. Said in another way, our equation needs to account for different forces
 at different spring displacements.
 
 #### What a Leverage Curve Represents
@@ -133,7 +133,7 @@ x axis is wheel travel
 y axis is shock stroke / wheel travel
 ```
 
-Consider a bike with 160mm of wheel travel and a 60mm shock stroke. Whats the
+Consider a bike with 160mm of wheel travel and a 60mm shock stroke. What's the
 area under this new (reciprocal) leverage curve? 60mm!
 
 **Taking the integral of the reciprocal of the leverage curve from 0 to the
@@ -151,7 +151,7 @@ and calculate the leverage curve from that. I opted for something else.
 The solution I went for is to provide 6 (for example) "handles" on a curve
 that the user can drag up and down to match the curve of their bike.
 
-I saw it the customization and accompanying math was going to be inevitable.
+I saw that the customization and accompanying math was going to be inevitable.
 I can always add presets later.
 
 **The resulting curve looks like a smooth curve but that is purely a cosmetic
@@ -159,7 +159,7 @@ decision. In reality, we have 5 piecewise defined straight lines**
 
 While you could use either a single or piecewise defined curve(s) to drive 
 the underlying math, using piecewise defined linear equations make the math
-much more approachable with negligible (non existent) real world difference
+much more approachable with negligible (nonexistent) real world difference
 when all is said and done.
 
 **So you can create any curve you want?**
@@ -172,15 +172,15 @@ adjustments to every other part of the curve. The area under the reciprocal of
 this curve must never change, and that is what you see happen.
 
 Ensuring this is the case is what dictates the set of curves that a user can
-move through. It may seem infinitely adjustable, but its actually a finite set.
+move through. It may seem infinitely adjustable, but it's actually a finite set.
 
 
 #### Applying the Curve
 
-In order to insert the leverage curve into hooks law, we need to do a few
-transformation to it. Right now its 5 piecewise defined lines, with leverage on
-the y axis and wheel travel on the x axis. For hooks law, we need to know the
-instantaneous leverage at any give shock stroke... not wheel travel.
+In order to insert the leverage curve into Hooke's law, we need to do a few
+transformations to it. Right now its 5 piecewise defined lines, with leverage on
+the y axis and wheel travel on the x axis. For Hooke's law, we need to know the
+instantaneous leverage at any given shock stroke... not wheel travel.
 
 We can get to this through a series of transformations to each of our piecewise
 defined lines.
@@ -193,13 +193,13 @@ defined lines.
 There may be an easier way to go from 1 to 4... but I couldn't reason about that.
 
 At the end of all this you now have 5 piecewise defined functions that give
-the leverage of on the shock at any given stroke... which inserted into hooks
+the leverage on the shock at any given stroke... which inserted into Hooke's
 law at each interval produce the following line, which we must find its root:
 
 $$y = mx - mY + ln(mX+b) - ln(\frac{kx}{wr})$$
 
-- m, b, are the variables in each leverage curve intervals line (y = mx + b)
-- X, Y are coordinates at the end of the previous intervals integral
+- m, b, are the variables in each leverage curve interval's line (y = mx + b)
+- X, Y are coordinates at the end of the previous interval's integral
 - w is the weight of the rider
 - r is the rear wheel bias (0-1)
 - k is the spring weight
@@ -207,7 +207,7 @@ $$y = mx - mY + ln(mX+b) - ln(\frac{kx}{wr})$$
 As far as I know, this function is considered [transcendental](https://en.wikipedia.org/wiki/Transcendental_function)
 because isolating the sag (x) is not possible, which is why we are using root
 finding at all. To solve, you have to use analytical methods to zero in on the
-solution. I use [newtons method](https://en.wikipedia.org/wiki/Newton%27s_method)
+solution. I use [Newton's method](https://en.wikipedia.org/wiki/Newton%27s_method)
 in this case.
 
 Evaluating this on each interval of our curve gives us our sag.

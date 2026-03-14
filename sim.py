@@ -79,8 +79,8 @@ class Linkage:
         if error == 0:
             return
 
-        # Find the angle that the linkage is as. Lets pull the joints in or
-        # expand then out alongside the same angle by that adjustment
+        # Find the angle that the linkage is at. Let's pull the joints in or
+        # expand them out alongside the same angle by that adjustment
 
         rise = self.j2.y - self.j1.y
         run = self.j2.x - self.j1.x
@@ -212,8 +212,8 @@ class Bike:
         for joint in data['kinematics']['joints']:
             name = joint.get('name')
             x = joint.get('x')
-            # subtract from som big number because the data we get is from the
-            # 0,0 in top left cordinate system of the web
+            # subtract from some big number because the data we get is from the
+            # 0,0 in top left coordinate system of the web
             y = 100000 - joint.get('y')
             x = joint.get('x')
 
@@ -239,7 +239,7 @@ class Bike:
 
         platform = Platform()
         shock = None
-        # a shock_shadow is a link that adds and remove length along with the
+        # a shock_shadow is a link that adds and removes length along with the
         # shock when it moves through the travel. This is used for inline angle
         # restrictions
         shock_shadow = None
@@ -815,8 +815,8 @@ def leverage_curve(bike, draw=False):
     # convert x axis to wheel travel scale
     x_data = [x/x_data[-1]*travel for x in x_data]
 
-    # do error correction based on the area under the reciprical (integral) and
-    # edge it towards to correct solution
+    # do error correction based on the area under the reciprocal (integral) and
+    # edge it towards the correct solution
 
     y_recip = [1/y for y in y_data]
     x_deltas = [d[1] - d[0] for d in zip(x_data[:-1], x_data[1:])]
