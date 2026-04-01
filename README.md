@@ -4,6 +4,12 @@ A calculator to determine the amount of stroke displacement (sag) on the
 rear suspension of a mountain bike a particular rider will produce with a
 particular coil spring.
 
+<video src="demo/sag-calc.webm" controls autoplay loop muted></video>
+
+Input your bikes details, or search for your bike.
+
+<video src="demo/bike-lookup.webm" controls autoplay loop muted></video>
+
 ## Adding a Bike
 
 Adding a bike comes down to creating a new data sheet in the `datasheets/`
