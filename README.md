@@ -12,6 +12,13 @@ Input your bikes details, or search for your bike.
 
 ## Adding a Bike
 
+Below are the instructions for those wanting to submit a pull request that adds
+a new bike. If you are unable to do this, you can also [submit a google
+form](https://docs.google.com/forms/d/e/1FAIpQLScQ-5O3joo0prPavGT_CQed6zikkvbIp3KEnpyDYyL_ibmBvQ/viewform)
+and I may be able to add the bike for you.
+
+---
+
 Adding a bike comes down to creating a new data sheet in the `datasheets/`
 directory. Each data sheet contains the relevant details about a bike, such as
 the make, model, kinematic and/or curve data, etc.

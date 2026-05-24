@@ -119,7 +119,7 @@ function updateResults() {
     div.innerText = 'Bike not found';
     div.setAttribute('class', 'empty');
     const a = document.createElement('a');
-    a.setAttribute('href', 'https://github.com/RyanBerliner/coil-calculator?tab=readme-ov-file#adding-a-bike');
+    a.setAttribute('href', 'https://docs.google.com/forms/d/e/1FAIpQLScQ-5O3joo0prPavGT_CQed6zikkvbIp3KEnpyDYyL_ibmBvQ/viewform');
     a.setAttribute('target', '_blank');
     a.innerText = 'Want to submit a new bike?';
     div.appendChild(a);
