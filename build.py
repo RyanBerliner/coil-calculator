@@ -144,6 +144,7 @@ def get_size_map(s):
     raise Exception('unable to find size map')
 
 
+# These are the fields that are going to be present in the dom
 fields = {
     'make',
     'model',
@@ -170,9 +171,11 @@ with os.scandir('datasheets') as items:
             continue
 
         with open(item.path, 'r') as datasheet_file:
+            # may want to trim the data a bit here if we get a lot of bikes,
+            # all the kinematic data is unnecessary
             full_data = json.loads(datasheet_file.read())
-            trimmed_data = {field: full_data[field] for field in fields}
-            bikes.append(trimmed_data)
+            full_data['id'] = item.name.split('.')[:-1][0]
+            bikes.append(full_data)
 
 output_object = {
     # bikes can be an array with constant time lookup because the "ids" we
@@ -180,12 +183,15 @@ output_object = {
     'bikes': [],
     'terms': {},
     'terms_trie': None,
+    'ids': {},
 }
 
 terms_trie = Trie()
 
-for i, bike_data in enumerate(bikes):
+for i, raw_bike_data in enumerate(bikes):
+    bike_data = {field: raw_bike_data.get(field) for field in fields}
     output_object['bikes'].append(bike_data)
+    output_object['ids'][raw_bike_data['id']] = i
 
     searchable_terms = [str(f).lower() for f in [
         bike_data['make'],
@@ -252,6 +258,7 @@ for i, bike_data in enumerate(bikes):
 
 output_object['terms_trie'] = terms_trie.__dict__()
 
+
 # To build the site we take the src files, put their contents into a map, and
 # apply transformations to the file contents. When we are done, we will write the
 # file contents to new files in the dist dir
@@ -263,8 +270,45 @@ output_object['terms_trie'] = terms_trie.__dict__()
 # 3. Generate assets checksums
 # 4. Swap asset references with new filenames (which include checksums)
 
+
+def bike_toc():
+    bike_list = []
+
+    for letter in 'abcdefghijklmnopqrstuvwxyz':
+        bike_list += [
+            '<div>',
+            f'<h2 id="letter-{letter}">{letter}</h2>',
+        ]
+
+        matching_bikes = filter(lambda b: b['make'].lower().startswith(letter), bikes)
+        matching_bikes = sorted(matching_bikes, key=lambda b: b['make']+b['model']+str(b['year_start']))
+
+        if len(matching_bikes):
+            bike_list += ['<ul>']
+            bike_list += [
+                f"""
+                <li>
+                    <a href="index.html?bike={bike["id"]}">
+                        {bike["make"]} {bike["model"]} {bike["year_start"]} {bike["size_start"]}-{bike["size_end"]}
+                    </a>
+                </li>
+                """
+                for bike in matching_bikes
+            ]
+            bike_list += ['</ul>']
+        else:
+            bike_list += ['<span>No bikes</span>']
+
+        bike_list += ['</div>']
+
+    return ['<div class="bike-toc">'] + bike_list + ['</div>']
+
+
 built_files = {}
 partial_files = {}
+python_code = {
+    'bike-table-of-contents': bike_toc,
+}
 
 html_pattern = re.compile('.+.html$')
 asset_pattern = re.compile('.+.(css|js)$')
@@ -289,6 +333,16 @@ for filename in os.listdir('src/assets'):
 
     with open(f'src/assets/{filename}', 'r') as file:
         built_files[f'assets/{filename}'] = file.read()
+
+for name in built_files.keys():
+    if not html_pattern.match(name):
+        continue
+
+    for python_name, python_output in python_code.items():
+        built_files[name] = built_files[name].replace(
+            f'<!-- python:{python_name} -->',
+            ''.join(python_output()),
+        )
 
 for name in built_files.keys():
     if not html_pattern.match(name):

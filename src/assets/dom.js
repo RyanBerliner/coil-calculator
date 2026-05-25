@@ -195,8 +195,7 @@ function hideIfNotSearch() {
 document.addEventListener('click', hideIfNotSearch);
 document.addEventListener('focusin', hideIfNotSearch);
 
-function selectBike(el) {
-  const bike = bikesData.bikes[parseInt(el.getAttribute('data-bike'))];
+function selectBike(bike) {
   config.points = bike.curve;
   config.stroke = bike.stroke;
   config.travel = bike.wheel_travel;
@@ -206,6 +205,18 @@ function selectBike(el) {
   hideResults();
 }
 
+function selectBikeByElement(el) {
+  const bike = bikesData.bikes[parseInt(el.getAttribute('data-bike'))];
+  selectBike(bike);
+}
+
+const initialBikeId = (new URLSearchParams(window.location.search)).get('bike');
+if (!!initialBikeId) {
+  const bikeIdx = bikesData.ids[initialBikeId];
+  const bike = bikesData.bikes[bikeIdx];
+  if (bike) selectBike(bike);
+}
+
 searchResults.addEventListener('click', function(event) {
   const el = event.target.closest('[data-bike]');
 
@@ -213,7 +224,7 @@ searchResults.addEventListener('click', function(event) {
     return;
   }
 
-  selectBike(el);
+  selectBikeByElement(el);
 });
 
 // select the active bike
@@ -228,7 +239,7 @@ document.addEventListener('keydown', function(event) {
   if (c === 13 || c === 32) {
     event.preventDefault();
     event.stopPropagation();
-    selectBike(el);
+    selectBikeByElement(el);
   };
 });
 
