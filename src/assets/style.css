@@ -70,9 +70,13 @@ header {
       text-decoration: none;
     }
 
-    span {
+    span.top {
       font-size: 0.65em;
       opacity: 0.8;
+    }
+
+    span.mobile {
+      display: none;
     }
   }
 }
@@ -96,6 +100,8 @@ nav {
     transform-origin: 0 0;
     display: inline-block;
     transition: .2s all;
+    white-space: nowrap;
+    width: 104px;
   }
 
   a:hover,
@@ -435,6 +441,14 @@ button:active {
 }
 
 @media (max-width: 550px) {
+  header h1 span:not(.mobile) {
+    display: none;
+  }
+
+  header h1 span.mobile {
+    display: unset;
+  }
+
   .bike-toc {
     column-count: 1;
   }
