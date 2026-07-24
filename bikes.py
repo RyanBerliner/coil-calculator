@@ -70,7 +70,9 @@ def update_kinematics(args):
         joints = ','.join([j['name'] for j in data['kinematics']['joints']])
 
         simhtml = os.path.abspath('sim.html')
-        url = f'file://{simhtml}?img={data["kinematics"]["img"]}&js={joints}'
+        params = f'img={data["kinematics"]["img"]}&js={joints}'
+        print(f'(the params in case it doesnt work): {params}')
+        url = f'file://{simhtml}?{params}'
         webbrowser.open(url, new=2)
 
         kin_data = input('Update kinematics in browser, paste output here: ')

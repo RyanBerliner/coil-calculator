@@ -1,0 +1,146 @@
+{
+  "make": "Canyon",
+  "model": "Sender CFR",
+  "year_start": 2025,
+  "year_end": 2025,
+  "size_start": "SM",
+  "size_end": "XL",
+  "wheel_travel": 200,
+  "stroke": 75.0,
+  "eyetoeye": 250,
+  "urls": [
+    "https://web.archive.org/web/20260723233838/https://www.canyon.com/en-us/mountain-bikes/downhill-bikes/sender/sender-cfr-team/3655.html"
+  ],
+  "kinematics": {
+    "img": "https://www.bikemag.com/.image/w_3840,q_auto:good,c_limit/MjE0NjkyOTM3MTczMzEyNTM1/canyon-koblenz-0o9a9852-1b3fd9.jpg",
+    "joints": [
+      {
+        "name": "bb",
+        "is_fixed": true,
+        "x": 373,
+        "y": 323
+      },
+      {
+        "name": "lower bb",
+        "x": 371,
+        "y": 375
+      },
+      {
+        "name": "left bb",
+        "x": 338,
+        "y": 343
+      },
+      {
+        "name": "shock lever fixed",
+        "is_fixed": true,
+        "x": 409,
+        "y": 324
+      },
+      {
+        "name": "shock lever middle",
+        "x": 369,
+        "y": 297
+      },
+      {
+        "name": "shock lever top",
+        "x": 352,
+        "y": 267
+      },
+      {
+        "name": "shock left",
+        "x": 363,
+        "y": 257
+      },
+      {
+        "name": "shock right",
+        "is_fixed": true,
+        "x": 471,
+        "y": 139
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 81,
+        "y": 332
+      },
+      {
+        "name": "seat stay right",
+        "is_fixed": true,
+        "x": 339,
+        "y": 237
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock left",
+        "j2": "shock right"
+      },
+      {
+        "name": "shock mini link",
+        "j1": "shock left",
+        "j2": "shock lever top"
+      },
+      {
+        "name": "shock inline",
+        "j1": "shock right",
+        "j2": "shock lever top",
+        "is_shock_shadow": true
+      },
+      {
+        "name": "chain stay",
+        "j1": "lower bb",
+        "j2": "axle"
+      },
+      {
+        "name": "seat stay",
+        "j1": "seat stay right",
+        "j2": "axle"
+      },
+      {
+        "name": "shock lever top",
+        "j1": "shock lever top",
+        "j2": "shock lever middle"
+      },
+      {
+        "name": "shock lever bottom",
+        "j1": "shock lever fixed",
+        "j2": "shock lever middle"
+      },
+      {
+        "name": "shock lever long",
+        "j1": "shock lever fixed",
+        "j2": "shock lever top"
+      },
+      {
+        "name": "bb link bottom",
+        "j1": "bb",
+        "j2": "lower bb"
+      },
+      {
+        "name": "bb link top",
+        "j1": "bb",
+        "j2": "left bb"
+      },
+      {
+        "name": "bb link triangle",
+        "j1": "lower bb",
+        "j2": "left bb"
+      },
+      {
+        "name": "connector",
+        "j1": "left bb",
+        "j2": "shock lever middle"
+      }
+    ]
+  },
+  "curve": [
+    1.2106868671644837,
+    1.0983239927149613,
+    0.9967934642767751,
+    0.9345639315235108,
+    0.9148079614491363,
+    0.9800598213017574
+  ]
+}
