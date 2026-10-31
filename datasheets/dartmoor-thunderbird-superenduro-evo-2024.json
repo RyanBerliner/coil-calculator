@@ -1,0 +1,109 @@
+{
+  "make": "Dartmoor",
+  "model": "Thunderbird Superenduro Evo",
+  "year_start": 2024,
+  "year_end": 2026,
+  "size_start": "SM",
+  "size_end": "LG",
+  "wheel_travel": 170,
+  "stroke": 65.0,
+  "eyetoeye": 205,
+  "urls": [
+    "https://web.archive.org/web/20261031121800/https://dartmoor-bikes.com/hardware/freeride/thunderbird-superenduro-evo"
+  ],
+  "kinematics": {
+    "img": "https://dartmoor-bikes.com/sites/dartmoor/files/styles/lightbox/public/products/2023_thunderbird_superenduro_evo_29_1.jpg.webp",
+    "joints": [
+      {
+        "name": "chainstay right",
+        "is_fixed": true,
+        "x": 241,
+        "y": 147
+      },
+      {
+        "name": "chainstay left",
+        "x": 122,
+        "y": 157
+      },
+      {
+        "name": "axle",
+        "is_axle": true,
+        "x": 112,
+        "y": 156
+      },
+      {
+        "name": "triangle left",
+        "x": 217,
+        "y": 96
+      },
+      {
+        "name": "triangle bottom",
+        "is_fixed": true,
+        "x": 253,
+        "y": 101
+      },
+      {
+        "name": "shock top",
+        "x": 275,
+        "y": 84
+      },
+      {
+        "name": "shock bottom",
+        "is_fixed": true,
+        "x": 260,
+        "y": 142
+      }
+    ],
+    "links": [
+      {
+        "name": "shock",
+        "is_shock": true,
+        "j1": "shock top",
+        "j2": "shock bottom"
+      },
+      {
+        "name": "chainstay",
+        "j1": "chainstay right",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "little chainstay",
+        "j1": "axle",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "seatstay",
+        "j1": "triangle left",
+        "j2": "axle"
+      },
+      {
+        "name": "seatstay weld",
+        "j1": "triangle left",
+        "j2": "chainstay left"
+      },
+      {
+        "name": "triangle top",
+        "j1": "triangle left",
+        "j2": "shock top"
+      },
+      {
+        "name": "triangle left",
+        "j1": "triangle left",
+        "j2": "triangle bottom"
+      },
+      {
+        "name": "triangle right",
+        "j1": "shock top",
+        "j2": "triangle bottom"
+      }
+    ]
+  },
+  "curve": [
+    1.1805873944943188,
+    1.1191660910323897,
+    1.0450274046479973,
+    0.9731667244542591,
+    0.9057960630800226,
+    0.8410818540797249
+  ]
+}
